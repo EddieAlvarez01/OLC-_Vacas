@@ -118,6 +118,7 @@ class NodoAST* nodito;
 %type<nodito> TERMARRAY;
 %type<nodito> LDECLARRAY;
 %type<nodito> LLLAVE;
+%type<nodito> ASIGNACION;
 
 %left opor opnor
 %left opand opnand
@@ -147,9 +148,13 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA
              |SENTENCIA;
 
 SENTENCIA : DECLARACION
+           |ASIGNACION;
 
 DECLARACION : TIPO LIDS TERMDECLAR
              |parreglo TIPO LIDS DIMENSION TERMARRAY;
+
+ASIGNACION : id igual EXPL finalizacion
+            |id DIMENSION igual EXPL finalizacion;
 
 TIPO : pint
       |pdouble
