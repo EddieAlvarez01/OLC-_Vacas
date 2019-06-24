@@ -27,12 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    main.cpp
+    nodoast.cpp \
+    scanner.cpp \
+    parser.cpp
 
 HEADERS += \
         mainwindow.h \
-    lexico.l \
-    parser.yy
+    nodoast.h \
+    scanner.h \
+    parser.h
 
 FORMS += \
         mainwindow.ui
@@ -43,4 +46,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    lexico.l \
+    parser.yy \
     generador.bat
