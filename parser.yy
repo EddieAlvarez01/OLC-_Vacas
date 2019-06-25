@@ -75,6 +75,7 @@ class NodoAST* nodito;
 %token<TEXT> abrir_corchete;
 %token<TEXT> cerrar_corchete;
 %token<TEXT> coma;
+%token<TEXT> punto;
 %token<TEXT> finalizacion;
 %token<TEXT> igual;
 %token<TEXT> aumento;
@@ -106,6 +107,8 @@ class NodoAST* nodito;
 %type<nodito> INICIO;
 %type<nodito> LCLASES;
 %type<nodito> CLASE;
+%type<nodito> TERMINACIONCLASE;
+%type<nodito> RELLENOCLASE;
 %type<nodito> LIDS;
 %type<nodito> LSENTENCIAS;
 %type<nodito> TERMDECLAR;
@@ -120,8 +123,9 @@ class NodoAST* nodito;
 %type<nodito> LDECLARRAY;
 %type<nodito> LLLAVE;
 %type<nodito> ASIGNACION;
-%type<nodito> AUMENTO;
-%type<nodito> DECREMENTO;
+%type<nodito> LLAMADAFUNC;
+%type<nodito> VARF;
+%type<nodito> VISIBILIDAD;
 
 %left opor opnor
 %left opand opnand
@@ -139,10 +143,13 @@ INICIO : LCLASES;
 LCLASES : LCLASES CLASE
           |CLASE;
 
-CLASE : pclase id pextender LIDS abrir_llave cerrar_llave
-       |pclase id pextender LIDS abrir_llave LSENTENCIAS cerrar_llave
-       |pclase id abrir_llave cerrar_llave
-       |pclase id abrir_llave LSENTENCIAS cerrar_llave;
+CLASE : pclase id TERMINACIONCLASE;
+
+TERMINACIONCLASE : pextender LIDS abrir_llave RELLENOCLASE cerrar_llave
+                   |abrir_llave RELLENOCLASE cerrar_llave;
+
+RELLENOCLASE :
+              |LSENTENCIAS;
 
 LIDS : LIDS coma id
       |id;
@@ -152,14 +159,19 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA
 
 SENTENCIA : DECLARACION
            |ASIGNACION
-           |AUMENTO
-           |DECREMENTO;
+           |LLAMADAFUNC
+           |PRINCIPAL;
 
-DECLARACION : TIPO LIDS TERMDECLAR
+DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
+             |TIPO LIDS TERMDECLAR
+             |VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY
              |parreglo TIPO LIDS DIMENSION TERMARRAY;
 
 ASIGNACION : id igual EXPL finalizacion
-            |id DIMENSION igual EXPL finalizacion;
+            |id DIMENSION igual EXPL finalizacion
+            |id punto id igual EXPL finalizacion;
+
+PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
 TIPO : pint
       |pdouble
@@ -176,9 +188,6 @@ DIMENSION : abrir_corchete EXPL cerrar_corchete
            |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
            |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete;
 
-AUMENTO : EXPL aumento finalizacion;
-
-DECREMENTO : EXPL decremento finalizacion;
 
 TERMARRAY : finalizacion
            |igual LDECLARRAY finalizacion;
@@ -220,7 +229,26 @@ EXPA : EXPA suma EXPA
       |booleano
       |cadena
       |id
-      |id DIMENSION;
+      |id DIMENSION
+      |id aumento
+      |id decremento
+      |numero aumento
+      |numero decremento
+      |decimal aumento
+      |decimal decremento
+      |caracter aumento
+      |caracter decremento
+      |id punto id;
+
+LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis
+             |id abrir_parentesis VARF cerrar_parentesis;
+
+VARF : /*%empty*/
+      |LEXP;
+
+VISIBILIDAD : ppublico
+            |pprivado
+            |pprotegido;
 
 
 %%

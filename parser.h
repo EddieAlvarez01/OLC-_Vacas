@@ -96,31 +96,32 @@ extern int yydebug;
      abrir_corchete = 305,
      cerrar_corchete = 306,
      coma = 307,
-     finalizacion = 308,
-     igual = 309,
-     aumento = 310,
-     decremento = 311,
-     abrir_parentesis = 312,
-     cerrar_parentesis = 313,
-     abrir_llave = 314,
-     cerrar_llave = 315,
-     igual_igual = 316,
-     diferente_de = 317,
-     menor_que = 318,
-     menorigual_que = 319,
-     mayor_que = 320,
-     mayorigual_que = 321,
-     opor = 322,
-     opand = 323,
-     opnand = 324,
-     opnot = 325,
-     opnor = 326,
-     suma = 327,
-     resta = 328,
-     multi = 329,
-     division = 330,
-     potencia = 331,
-     menos = 332
+     punto = 308,
+     finalizacion = 309,
+     igual = 310,
+     aumento = 311,
+     decremento = 312,
+     abrir_parentesis = 313,
+     cerrar_parentesis = 314,
+     abrir_llave = 315,
+     cerrar_llave = 316,
+     igual_igual = 317,
+     diferente_de = 318,
+     menor_que = 319,
+     menorigual_que = 320,
+     mayor_que = 321,
+     mayorigual_que = 322,
+     opor = 323,
+     opand = 324,
+     opnand = 325,
+     opnot = 326,
+     opnor = 327,
+     suma = 328,
+     resta = 329,
+     multi = 330,
+     division = 331,
+     potencia = 332,
+     menos = 333
    };
 #endif
 
@@ -136,7 +137,7 @@ class NodoAST* nodito;
 
 
 /* Line 2058 of yacc.c  */
-#line 140 "parser.h"
+#line 141 "parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
