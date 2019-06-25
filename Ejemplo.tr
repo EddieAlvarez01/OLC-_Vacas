@@ -14,4 +14,14 @@ clase animal {
 clase los {
 	publico entero losva = 4*8$
 	c3.posas = 4564$
+	void sumar(){
+		int suma = an +vb$
+	}
+	caracter sausa(doble var,  entero ui[3][dsda*8]){}
+	publico void togeter(){
+
+	}
+	sobrescribir publico clase45 sourcer(doble soulmas){
+
+	}
 }

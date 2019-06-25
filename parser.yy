@@ -126,6 +126,9 @@ class NodoAST* nodito;
 %type<nodito> LLAMADAFUNC;
 %type<nodito> VARF;
 %type<nodito> VISIBILIDAD;
+%type<nodito> FUNCIONES;
+%type<nodtio> SOBREESCRITURA;
+%type<nodito> LTIPOS;
 
 %left opor opnor
 %left opand opnand
@@ -163,7 +166,9 @@ SENTENCIA : DECLARACION
            |PRINCIPAL;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
+             |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
              |TIPO LIDS TERMDECLAR
+             |SOBREESCRITURA TIPO LIDS TERMDECLAR
              |VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY
              |parreglo TIPO LIDS DIMENSION TERMARRAY;
 
@@ -173,14 +178,25 @@ ASIGNACION : id igual EXPL finalizacion
 
 PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
+FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+           |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
 TIPO : pint
       |pdouble
       |pbool
       |pchar
       |pstring
-      |id;
+      |id
+      |pvoid;
+
+LTIPOS : LTIPOS coma TIPO id
+        |LTIPOS coma TIPO id DIMENSION
+        |TIPO id
+        |TIPO id DIMENSION;
+
 
 TERMDECLAR : finalizacion
+            |FUNCIONES
             |igual EXPL finalizacion
             |igual pnew id abrir_parentesis cerrar_parentesis finalizacion;
 
@@ -191,6 +207,8 @@ DIMENSION : abrir_corchete EXPL cerrar_corchete
 
 TERMARRAY : finalizacion
            |igual LDECLARRAY finalizacion;
+
+SOBREESCRITURA : psobrescribir;
 
 LDECLARRAY : abrir_llave LEXP cerrar_llave
             |abrir_llave LLLAVE cerrar_llave;
