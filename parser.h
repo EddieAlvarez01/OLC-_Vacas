@@ -91,35 +91,36 @@ extern int yydebug;
      pimprimirtransaccionescuenta = 300,
      pconsultarcuenta = 301,
      ptransferir = 302,
-     id = 303,
-     abrir_corchete = 304,
-     cerrar_corchete = 305,
-     coma = 306,
-     finalizacion = 307,
-     igual = 308,
-     aumento = 309,
-     decremento = 310,
-     abrir_parentesis = 311,
-     cerrar_parentesis = 312,
-     abrir_llave = 313,
-     cerrar_llave = 314,
-     igual_igual = 315,
-     diferente_de = 316,
-     menor_que = 317,
-     menorigual_que = 318,
-     mayor_que = 319,
-     mayorigual_que = 320,
-     opor = 321,
-     opand = 322,
-     opnand = 323,
-     opnot = 324,
-     opnor = 325,
-     suma = 326,
-     resta = 327,
-     multi = 328,
-     division = 329,
-     potencia = 330,
-     menos = 331
+     pnew = 303,
+     id = 304,
+     abrir_corchete = 305,
+     cerrar_corchete = 306,
+     coma = 307,
+     finalizacion = 308,
+     igual = 309,
+     aumento = 310,
+     decremento = 311,
+     abrir_parentesis = 312,
+     cerrar_parentesis = 313,
+     abrir_llave = 314,
+     cerrar_llave = 315,
+     igual_igual = 316,
+     diferente_de = 317,
+     menor_que = 318,
+     menorigual_que = 319,
+     mayor_que = 320,
+     mayorigual_que = 321,
+     opor = 322,
+     opand = 323,
+     opnand = 324,
+     opnot = 325,
+     opnor = 326,
+     suma = 327,
+     resta = 328,
+     multi = 329,
+     division = 330,
+     potencia = 331,
+     menos = 332
    };
 #endif
 
@@ -135,7 +136,7 @@ class NodoAST* nodito;
 
 
 /* Line 2058 of yacc.c  */
-#line 139 "parser.h"
+#line 140 "parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

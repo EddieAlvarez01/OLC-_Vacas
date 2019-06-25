@@ -70,6 +70,7 @@ class NodoAST* nodito;
 %token<TEXT> pimprimirtransaccionescuenta;
 %token<TEXT> pconsultarcuenta;
 %token<TEXT> ptransferir;
+%token<TEXT> pnew;
 %token<TEXT> id;
 %token<TEXT> abrir_corchete;
 %token<TEXT> cerrar_corchete;
@@ -119,6 +120,8 @@ class NodoAST* nodito;
 %type<nodito> LDECLARRAY;
 %type<nodito> LLLAVE;
 %type<nodito> ASIGNACION;
+%type<nodito> AUMENTO;
+%type<nodito> DECREMENTO;
 
 %left opor opnor
 %left opand opnand
@@ -148,7 +151,9 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA
              |SENTENCIA;
 
 SENTENCIA : DECLARACION
-           |ASIGNACION;
+           |ASIGNACION
+           |AUMENTO
+           |DECREMENTO;
 
 DECLARACION : TIPO LIDS TERMDECLAR
              |parreglo TIPO LIDS DIMENSION TERMARRAY;
@@ -164,11 +169,16 @@ TIPO : pint
       |id;
 
 TERMDECLAR : finalizacion
-            |igual EXPL finalizacion;
+            |igual EXPL finalizacion
+            |igual pnew id abrir_parentesis cerrar_parentesis finalizacion;
 
 DIMENSION : abrir_corchete EXPL cerrar_corchete
            |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
            |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete;
+
+AUMENTO : EXPL aumento finalizacion;
+
+DECREMENTO : EXPL decremento finalizacion;
 
 TERMARRAY : finalizacion
            |igual LDECLARRAY finalizacion;
@@ -209,7 +219,8 @@ EXPA : EXPA suma EXPA
       |caracter
       |booleano
       |cadena
-      |id;
+      |id
+      |id DIMENSION;
 
 
 %%

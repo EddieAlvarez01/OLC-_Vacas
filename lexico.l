@@ -84,6 +84,7 @@ INITIAL
 "imprimirtransaccionescuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pimprimirtransaccionescuenta;}
 "consultarcuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pconsultarcuenta;}
 "transferir" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return ptransferir;}
+"nuevo" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pnew;}
 {id} { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return id;}
 "[" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return abrir_corchete;}
 "]" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return cerrar_corchete;}
