@@ -64,8 +64,15 @@ clase los {
 	
 	}sino si(5<ga){
 	}
+	incluir("ss.der")$
 	hacer{
 		vv()$
 		continuar$
 	}mientras((1+2)<=(a+b+c)&&(a==b))$
+}
+
+clase omaen {
+	Archivo file1 = crearArchivoDer("dasdas")$
+	Archivo dd = crearArchivoDer(dda + da)$
+	dd.crearConjunto(caaa, "dasda das")$
 }

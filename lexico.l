@@ -80,6 +80,7 @@ INITIAL
 "crearregex" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pcrearregex;}
 "crearentrada" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pcrearentrada;}
 "guardararchivo" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pguardararchivo;}
+"cuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pcuenta;}
 "crearcuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pcrearcuenta;}
 "verificarcuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pverificarcuenta;}
 "depositarcuenta" { columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return pdepositarcuenta;}

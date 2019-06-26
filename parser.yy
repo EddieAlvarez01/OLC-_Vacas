@@ -104,6 +104,7 @@ class NodoAST* nodito;
 %token<TEXT> psalir;
 %token<TEXT> pdefecto;
 %token<TEXT> dos_puntos;
+%token<TEXT> pcuenta;
 
 
 
@@ -147,6 +148,8 @@ class NodoAST* nodito;
 %type<nodito> CASOS;
 %type<nodito> HACER;
 %type<nodito> CONTINUAR;
+%type<nodito> INCLUIR;
+%type<nodito> TRANSFERIR;
 
 
 %left opor opnor
@@ -193,7 +196,9 @@ SENTENCIA : DECLARACION
            |MIENTRAS
            |COMPROBAR
            |HACER
-           |CONTINUAR;
+           |CONTINUAR
+           |INCLUIR
+           |TRANSFERIR;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
@@ -227,7 +232,7 @@ ROMPER : promper finalizacion;
 
 MIENTRAS : pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
-COMPROBAR : pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave CASOS cerrar_llave;
+COMPROBAR : pcomprobar abrir_parentesis EXPL cerrar_parentesis abrir_llave CASOS cerrar_llave;
 
 CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
        |CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion
@@ -237,6 +242,10 @@ CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
 HACER : phacer abrir_llave RELLENOCLASE cerrar_llave pmientras abrir_parentesis EXPL cerrar_parentesis finalizacion;
 
 CONTINUAR : pcontinuar finalizacion;
+
+INCLUIR : pincluir abrir_parentesis EXPL cerrar_parentesis finalizacion;
+
+TRANSFERIR : ptransferir abrir_parentesis EXPL coma EXPL coma EXPL cerrar_parentesis finalizacion;
 
 PRIMERFOR : DECLARACION
            |ASIGNACION;
@@ -252,7 +261,9 @@ TIPO : pint
       |pchar
       |pstring
       |id
-      |pvoid;
+      |pvoid
+      |parchivo
+      |pcuenta;
 
 LTIPOS : LTIPOS coma TIPO id
         |LTIPOS coma TIPO id DIMENSION
@@ -263,6 +274,8 @@ LTIPOS : LTIPOS coma TIPO id
 TERMDECLAR : finalizacion
             |FUNCIONES
             |igual EXPL finalizacion
+            |igual pcrearcuenta abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
+            |igual pcreararchivoder abrir_parentesis EXPL cerrar_parentesis finalizacion
             |igual pnew id abrir_parentesis cerrar_parentesis finalizacion;
 
 DIMENSION : abrir_corchete EXPL cerrar_corchete
@@ -325,6 +338,15 @@ EXPA : EXPA suma EXPA
       |LLAMADAFUNC;
 
 LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis
+             |id punto pcrearconjunto abrir_parentesis EXPL coma EXPL cerrar_parentesis
+             |id punto pverificarcuenta abrir_parentesis cerrar_parentesis
+             |id punto pdepositarcuenta abrir_parentesis EXPL cerrar_parentesis
+             |id punto prestarcuenta abrir_parentesis EXPL cerrar_parentesis
+             |id punto pimprimirtransaccionescuenta abrir_parentesis cerrar_parentesis
+             |id punto pconsultarcuenta abrir_parentesis cerrar_parentesis
+             |id punto pcrearregex abrir_parentesis EXPL coma EXPL cerrar_parentesis
+             |id punto pcrearentrada abrir_parentesis EXPL coma EXPL cerrar_parentesis
+             |id punto pguardararchivo abrir_parentesis cerrar_parentesis
              |id abrir_parentesis VARF cerrar_parentesis;
 
 VARF : /*%empty*/
