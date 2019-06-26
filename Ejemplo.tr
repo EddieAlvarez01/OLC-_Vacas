@@ -9,6 +9,10 @@ clase persona extender asasa, id,alala{
 clase animal {
 	doble ad, ser = 4*8*exex - 36 && val$
 	ser s = nuevo perro()$
+	para(entero cont = 0$ cont != 5$ cont++){
+	}
+	para( cont = 0$ cont < 5$ cont++){
+	}
 }
 
 clase los {
@@ -30,4 +34,16 @@ clase los {
 	}
 	imprimir(var)$
 	mostrarnotificacion(d, 45)$
+	si(5 != sadas){
+	}
+	si(aos == 78*8){
+		int su = 4-9$
+		Cajs su$
+	}sino{
+		
+	}
+	si (nua){
+	
+	}sino si(5<ga){
+	}
 }

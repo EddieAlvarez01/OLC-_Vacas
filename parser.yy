@@ -132,6 +132,11 @@ class NodoAST* nodito;
 %type<nodito> RETORNAR;
 %type<nodito> IMPRIMIR;
 %type<nodito> MOSTRARNOTIFI;
+%type<nodito> SI;
+%type<nodito> TERMINSI;
+%type<nodito> PARA;
+%type<nodito> PRIMERFOR;
+
 
 %left opor opnor
 %left opand opnand
@@ -169,7 +174,9 @@ SENTENCIA : DECLARACION
            |PRINCIPAL
            |RETORNAR
            |IMPRIMIR
-           |MOSTRARNOTIFI;
+           |MOSTRARNOTIFI
+           |SI
+           |PARA;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
@@ -192,6 +199,17 @@ RETORNAR : pretornar EXPL finalizacion;
 IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion;
 
 MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion;
+
+SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI;
+
+PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
+PRIMERFOR : DECLARACION
+           |ASIGNACION;
+
+TERMINSI : /* %empty */
+          |psino abrir_llave RELLENOCLASE cerrar_llave
+          |psino SI;
 
 
 TIPO : pint
