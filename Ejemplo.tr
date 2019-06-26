@@ -14,6 +14,8 @@ clase animal {
 clase los {
 	publico entero losva = 4*8$
 	c3.posas = 4564$
+	sumando()$
+	lsasoas(454, 1212)$
 	void sumar(){
 		int suma = an +vb$
 	}
@@ -22,6 +24,10 @@ clase los {
 
 	}
 	sobrescribir publico clase45 sourcer(doble soulmas){
-
+		entero suma = 555+41$
+		retornar suma$
+		
 	}
+	imprimir(var)$
+	mostrarnotificacion(d, 45)$
 }

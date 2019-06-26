@@ -129,6 +129,9 @@ class NodoAST* nodito;
 %type<nodito> FUNCIONES;
 %type<nodtio> SOBREESCRITURA;
 %type<nodito> LTIPOS;
+%type<nodito> RETORNAR;
+%type<nodito> IMPRIMIR;
+%type<nodito> MOSTRARNOTIFI;
 
 %left opor opnor
 %left opand opnand
@@ -162,8 +165,11 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA
 
 SENTENCIA : DECLARACION
            |ASIGNACION
-           |LLAMADAFUNC
-           |PRINCIPAL;
+           |LLAMADAFUNC finalizacion
+           |PRINCIPAL
+           |RETORNAR
+           |IMPRIMIR
+           |MOSTRARNOTIFI;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
@@ -180,6 +186,13 @@ PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLA
 
 FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
            |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
+RETORNAR : pretornar EXPL finalizacion;
+
+IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion;
+
+MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion;
+
 
 TIPO : pint
       |pdouble
@@ -256,7 +269,8 @@ EXPA : EXPA suma EXPA
       |decimal decremento
       |caracter aumento
       |caracter decremento
-      |id punto id;
+      |id punto id
+      |LLAMADAFUNC;
 
 LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis
              |id abrir_parentesis VARF cerrar_parentesis;
