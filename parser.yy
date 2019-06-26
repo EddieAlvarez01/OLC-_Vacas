@@ -145,6 +145,8 @@ class NodoAST* nodito;
 %type<nodtio> MIENTRAS;
 %type<nodito> COMPROBAR;
 %type<nodito> CASOS;
+%type<nodito> HACER;
+%type<nodito> CONTINUAR;
 
 
 %left opor opnor
@@ -189,7 +191,9 @@ SENTENCIA : DECLARACION
            |REPETIR
            |ROMPER
            |MIENTRAS
-           |COMPROBAR;
+           |COMPROBAR
+           |HACER
+           |CONTINUAR;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
@@ -229,6 +233,10 @@ CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
        |CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion
        |pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
        |pdefecto dos_puntos RELLENOCLASE psalir finalizacion;
+
+HACER : phacer abrir_llave RELLENOCLASE cerrar_llave pmientras abrir_parentesis EXPL cerrar_parentesis finalizacion;
+
+CONTINUAR : pcontinuar finalizacion;
 
 PRIMERFOR : DECLARACION
            |ASIGNACION;
@@ -297,7 +305,7 @@ EXPA : EXPA suma EXPA
       |EXPA division EXPA
       |EXPA potencia EXPA
       |resta EXPA
-      |abrir_parentesis EXPA cerrar_parentesis
+      |abrir_parentesis EXPL cerrar_parentesis
       |numero
       |decimal
       |caracter

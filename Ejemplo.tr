@@ -64,4 +64,8 @@ clase los {
 	
 	}sino si(5<ga){
 	}
+	hacer{
+		vv()$
+		continuar$
+	}mientras((1+2)<=(a+b+c)&&(a==b))$
 }
