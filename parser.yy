@@ -100,6 +100,10 @@ class NodoAST* nodito;
 %token<TEXT> multi;
 %token<TEXT> division;
 %token<TEXT> potencia;
+%token<TEXT> pcaso;
+%token<TEXT> psalir;
+%token<TEXT> pdefecto;
+%token<TEXT> dos_puntos;
 
 
 
@@ -136,6 +140,11 @@ class NodoAST* nodito;
 %type<nodito> TERMINSI;
 %type<nodito> PARA;
 %type<nodito> PRIMERFOR;
+%type<nodito> REPETIR;
+%type<nodito> ROMPER;
+%type<nodtio> MIENTRAS;
+%type<nodito> COMPROBAR;
+%type<nodito> CASOS;
 
 
 %left opor opnor
@@ -176,7 +185,11 @@ SENTENCIA : DECLARACION
            |IMPRIMIR
            |MOSTRARNOTIFI
            |SI
-           |PARA;
+           |PARA
+           |REPETIR
+           |ROMPER
+           |MIENTRAS
+           |COMPROBAR;
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
@@ -203,6 +216,19 @@ MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_pare
 SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI;
 
 PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
+REPETIR : prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
+ROMPER : promper finalizacion;
+
+MIENTRAS : pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+
+COMPROBAR : pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave CASOS cerrar_llave;
+
+CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
+       |CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion
+       |pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
+       |pdefecto dos_puntos RELLENOCLASE psalir finalizacion;
 
 PRIMERFOR : DECLARACION
            |ASIGNACION;

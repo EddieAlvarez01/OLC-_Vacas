@@ -1,9 +1,5 @@
 Terminals unused in grammar
 
-   prepetir
-   promper
-   pmientras
-   pcomprobar
    phacer
    pcontinuar
    pincluir
@@ -23,12 +19,12 @@ Terminals unused in grammar
    menos
 
 
-State 96 conflicts: 5 shift/reduce
-State 151 conflicts: 1 shift/reduce
-State 152 conflicts: 5 shift/reduce
-State 153 conflicts: 1 shift/reduce
-State 154 conflicts: 1 shift/reduce
-State 155 conflicts: 1 shift/reduce
+State 108 conflicts: 5 shift/reduce
+State 166 conflicts: 1 shift/reduce
+State 167 conflicts: 5 shift/reduce
+State 168 conflicts: 1 shift/reduce
+State 169 conflicts: 1 shift/reduce
+State 170 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -63,160 +59,177 @@ Grammar
    19          | MOSTRARNOTIFI
    20          | SI
    21          | PARA
+   22          | REPETIR
+   23          | ROMPER
+   24          | MIENTRAS
+   25          | COMPROBAR
 
-   22 DECLARACION: VISIBILIDAD TIPO LIDS TERMDECLAR
-   23            | SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
-   24            | TIPO LIDS TERMDECLAR
-   25            | SOBREESCRITURA TIPO LIDS TERMDECLAR
-   26            | VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY
-   27            | parreglo TIPO LIDS DIMENSION TERMARRAY
+   26 DECLARACION: VISIBILIDAD TIPO LIDS TERMDECLAR
+   27            | SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
+   28            | TIPO LIDS TERMDECLAR
+   29            | SOBREESCRITURA TIPO LIDS TERMDECLAR
+   30            | VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY
+   31            | parreglo TIPO LIDS DIMENSION TERMARRAY
 
-   28 ASIGNACION: id igual EXPL finalizacion
-   29           | id DIMENSION igual EXPL finalizacion
-   30           | id punto id igual EXPL finalizacion
+   32 ASIGNACION: id igual EXPL finalizacion
+   33           | id DIMENSION igual EXPL finalizacion
+   34           | id punto id igual EXPL finalizacion
 
-   31 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   35 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-   32 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-   33          | abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   36 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   37          | abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-   34 RETORNAR: pretornar EXPL finalizacion
+   38 RETORNAR: pretornar EXPL finalizacion
 
-   35 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion
+   39 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
 
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-   39 PRIMERFOR: DECLARACION
-   40          | ASIGNACION
+   43 REPETIR: prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-   41 TERMINSI: /* empty */
-   42         | psino abrir_llave RELLENOCLASE cerrar_llave
-   43         | psino SI
+   44 ROMPER: promper finalizacion
 
-   44 TIPO: pint
-   45     | pdouble
-   46     | pbool
-   47     | pchar
-   48     | pstring
-   49     | id
-   50     | pvoid
+   45 MIENTRAS: pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-   51 LTIPOS: LTIPOS coma TIPO id
-   52       | LTIPOS coma TIPO id DIMENSION
-   53       | TIPO id
-   54       | TIPO id DIMENSION
+   46 COMPROBAR: pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave CASOS cerrar_llave
 
-   55 TERMDECLAR: finalizacion
-   56           | FUNCIONES
-   57           | igual EXPL finalizacion
-   58           | igual pnew id abrir_parentesis cerrar_parentesis finalizacion
+   47 CASOS: CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
+   48      | CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion
+   49      | pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
+   50      | pdefecto dos_puntos RELLENOCLASE psalir finalizacion
 
-   59 DIMENSION: abrir_corchete EXPL cerrar_corchete
-   60          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
-   61          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   51 PRIMERFOR: DECLARACION
+   52          | ASIGNACION
 
-   62 TERMARRAY: finalizacion
-   63          | igual LDECLARRAY finalizacion
+   53 TERMINSI: /* empty */
+   54         | psino abrir_llave RELLENOCLASE cerrar_llave
+   55         | psino SI
 
-   64 SOBREESCRITURA: psobrescribir
+   56 TIPO: pint
+   57     | pdouble
+   58     | pbool
+   59     | pchar
+   60     | pstring
+   61     | id
+   62     | pvoid
 
-   65 LDECLARRAY: abrir_llave LEXP cerrar_llave
-   66           | abrir_llave LLLAVE cerrar_llave
+   63 LTIPOS: LTIPOS coma TIPO id
+   64       | LTIPOS coma TIPO id DIMENSION
+   65       | TIPO id
+   66       | TIPO id DIMENSION
 
-   67 LLLAVE: LLLAVE coma abrir_llave LEXP cerrar_llave
-   68       | abrir_llave LEXP cerrar_llave
+   67 TERMDECLAR: finalizacion
+   68           | FUNCIONES
+   69           | igual EXPL finalizacion
+   70           | igual pnew id abrir_parentesis cerrar_parentesis finalizacion
 
-   69 LEXP: LEXP coma EXPL
-   70     | EXPL
+   71 DIMENSION: abrir_corchete EXPL cerrar_corchete
+   72          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   73          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
 
-   71 EXPL: EXPR opor EXPR
-   72     | EXPR opnor EXPR
-   73     | EXPR opand EXPR
-   74     | EXPR opnand EXPR
-   75     | opnot EXPL
-   76     | EXPR
+   74 TERMARRAY: finalizacion
+   75          | igual LDECLARRAY finalizacion
 
-   77 EXPR: EXPA igual_igual EXPA
-   78     | EXPA diferente_de EXPA
-   79     | EXPA menor_que EXPA
-   80     | EXPA mayor_que EXPA
-   81     | EXPA menorigual_que EXPA
-   82     | EXPA mayorigual_que EXPA
-   83     | EXPA
+   76 SOBREESCRITURA: psobrescribir
 
-   84 EXPA: EXPA suma EXPA
-   85     | EXPA resta EXPA
-   86     | EXPA multi EXPA
-   87     | EXPA division EXPA
-   88     | EXPA potencia EXPA
-   89     | resta EXPA
-   90     | abrir_parentesis EXPA cerrar_parentesis
-   91     | numero
-   92     | decimal
-   93     | caracter
-   94     | booleano
-   95     | cadena
-   96     | id
-   97     | id DIMENSION
-   98     | id aumento
-   99     | id decremento
-  100     | numero aumento
-  101     | numero decremento
-  102     | decimal aumento
-  103     | decimal decremento
-  104     | caracter aumento
-  105     | caracter decremento
-  106     | id punto id
-  107     | LLAMADAFUNC
+   77 LDECLARRAY: abrir_llave LEXP cerrar_llave
+   78           | abrir_llave LLLAVE cerrar_llave
 
-  108 LLAMADAFUNC: id punto id abrir_parentesis VARF cerrar_parentesis
-  109            | id abrir_parentesis VARF cerrar_parentesis
+   79 LLLAVE: LLLAVE coma abrir_llave LEXP cerrar_llave
+   80       | abrir_llave LEXP cerrar_llave
 
-  110 VARF: /* empty */
-  111     | LEXP
+   81 LEXP: LEXP coma EXPL
+   82     | EXPL
 
-  112 VISIBILIDAD: ppublico
-  113            | pprivado
-  114            | pprotegido
+   83 EXPL: EXPR opor EXPR
+   84     | EXPR opnor EXPR
+   85     | EXPR opand EXPR
+   86     | EXPR opnand EXPR
+   87     | opnot EXPL
+   88     | EXPR
+
+   89 EXPR: EXPA igual_igual EXPA
+   90     | EXPA diferente_de EXPA
+   91     | EXPA menor_que EXPA
+   92     | EXPA mayor_que EXPA
+   93     | EXPA menorigual_que EXPA
+   94     | EXPA mayorigual_que EXPA
+   95     | EXPA
+
+   96 EXPA: EXPA suma EXPA
+   97     | EXPA resta EXPA
+   98     | EXPA multi EXPA
+   99     | EXPA division EXPA
+  100     | EXPA potencia EXPA
+  101     | resta EXPA
+  102     | abrir_parentesis EXPA cerrar_parentesis
+  103     | numero
+  104     | decimal
+  105     | caracter
+  106     | booleano
+  107     | cadena
+  108     | id
+  109     | id DIMENSION
+  110     | id aumento
+  111     | id decremento
+  112     | numero aumento
+  113     | numero decremento
+  114     | decimal aumento
+  115     | decimal decremento
+  116     | caracter aumento
+  117     | caracter decremento
+  118     | id punto id
+  119     | LLAMADAFUNC
+
+  120 LLAMADAFUNC: id punto id abrir_parentesis VARF cerrar_parentesis
+  121            | id abrir_parentesis VARF cerrar_parentesis
+
+  122 VARF: /* empty */
+  123     | LEXP
+
+  124 VISIBILIDAD: ppublico
+  125            | pprivado
+  126            | pprotegido
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-numero (258) 91 100 101
-decimal (259) 92 102 103
-caracter (260) 93 104 105
-booleano (261) 94
-cadena (262) 95
-pint (263) 44
-pdouble (264) 45
-pbool (265) 46
-pchar (266) 47
-pstring (267) 48
-parreglo (268) 26 27
+numero (258) 103 112 113
+decimal (259) 104 114 115
+caracter (260) 105 116 117
+booleano (261) 106
+cadena (262) 107
+pint (263) 56
+pdouble (264) 57
+pbool (265) 58
+pchar (266) 59
+pstring (267) 60
+parreglo (268) 30 31
 pclase (269) 4
 pextender (270) 5
-psobrescribir (271) 64
-ppublico (272) 112
-pprivado (273) 113
-pprotegido (274) 114
-pretornar (275) 34
-pvoid (276) 50
-pmostrarnotificacion (277) 36
-pimprimir (278) 35
-psi (279) 37
-psino (280) 42 43
-ppara (281) 38
-pprincipal (282) 31
-prepetir (283)
-promper (284)
-pmientras (285)
-pcomprobar (286)
+psobrescribir (271) 76
+ppublico (272) 124
+pprivado (273) 125
+pprotegido (274) 126
+pretornar (275) 38
+pvoid (276) 62
+pmostrarnotificacion (277) 40
+pimprimir (278) 39
+psi (279) 41
+psino (280) 54 55
+ppara (281) 42
+pprincipal (282) 35
+prepetir (283) 43
+promper (284) 44
+pmientras (285) 45
+pcomprobar (286) 46
 phacer (287)
 pcontinuar (288)
 pincluir (289)
@@ -233,115 +246,131 @@ prestarcuenta (299)
 pimprimirtransaccionescuenta (300)
 pconsultarcuenta (301)
 ptransferir (302)
-pnew (303) 58
-id (304) 4 9 10 28 29 30 49 51 52 53 54 58 96 97 98 99 106 108 109
-abrir_corchete (305) 59 60 61
-cerrar_corchete (306) 59 60 61
-coma (307) 9 36 51 52 67 69
-punto (308) 30 106 108
-finalizacion (309) 15 28 29 30 34 35 36 38 55 57 58 62 63
-igual (310) 28 29 30 57 58 63
-aumento (311) 98 100 102 104
-decremento (312) 99 101 103 105
-abrir_parentesis (313) 31 32 33 35 36 37 38 58 90 108 109
-cerrar_parentesis (314) 31 32 33 35 36 37 38 58 90 108 109
-abrir_llave (315) 5 6 31 32 33 37 38 42 65 66 67 68
-cerrar_llave (316) 5 6 31 32 33 37 38 42 65 66 67 68
-igual_igual (317) 77
-diferente_de (318) 78
-menor_que (319) 79
-menorigual_que (320) 81
-mayor_que (321) 80
-mayorigual_que (322) 82
-opor (323) 71
-opand (324) 73
-opnand (325) 74
-opnot (326) 75
-opnor (327) 72
-suma (328) 84
-resta (329) 85 89
-multi (330) 86
-division (331) 87
-potencia (332) 88
-menos (333)
+pnew (303) 70
+id (304) 4 9 10 32 33 34 46 61 63 64 65 66 70 108 109 110 111 118 120
+    121
+abrir_corchete (305) 71 72 73
+cerrar_corchete (306) 71 72 73
+coma (307) 9 40 63 64 79 81
+punto (308) 34 118 120
+finalizacion (309) 15 32 33 34 38 39 40 42 44 47 48 49 50 67 69 70
+    74 75
+igual (310) 32 33 34 69 70 75
+aumento (311) 110 112 114 116
+decremento (312) 111 113 115 117
+abrir_parentesis (313) 35 36 37 39 40 41 42 43 45 46 70 102 120 121
+cerrar_parentesis (314) 35 36 37 39 40 41 42 43 45 46 70 102 120 121
+abrir_llave (315) 5 6 35 36 37 41 42 43 45 46 54 77 78 79 80
+cerrar_llave (316) 5 6 35 36 37 41 42 43 45 46 54 77 78 79 80
+igual_igual (317) 89
+diferente_de (318) 90
+menor_que (319) 91
+menorigual_que (320) 93
+mayor_que (321) 92
+mayorigual_que (322) 94
+opor (323) 83
+opand (324) 85
+opnand (325) 86
+opnot (326) 87
+opnor (327) 84
+suma (328) 96
+resta (329) 97 101
+multi (330) 98
+division (331) 99
+potencia (332) 100
+pcaso (333) 47 49
+psalir (334) 47 48 49 50
+pdefecto (335) 48 50
+dos_puntos (336) 47 48 49 50
+menos (337)
 
 
 Nonterminals, with rules where they appear
 
-$accept (79)
+$accept (83)
     on left: 0
-INICIO (80)
+INICIO (84)
     on left: 1, on right: 0
-LCLASES (81)
+LCLASES (85)
     on left: 2 3, on right: 1 2
-CLASE (82)
+CLASE (86)
     on left: 4, on right: 2 3
-TERMINACIONCLASE (83)
+TERMINACIONCLASE (87)
     on left: 5 6, on right: 4
-RELLENOCLASE (84)
-    on left: 7 8, on right: 5 6 31 32 33 37 38 42
-LIDS (85)
-    on left: 9 10, on right: 5 9 22 23 24 25 26 27
-LSENTENCIAS (86)
+RELLENOCLASE (88)
+    on left: 7 8, on right: 5 6 35 36 37 41 42 43 45 47 48 49 50 54
+LIDS (89)
+    on left: 9 10, on right: 5 9 26 27 28 29 30 31
+LSENTENCIAS (90)
     on left: 11 12, on right: 8 11
-SENTENCIA (87)
-    on left: 13 14 15 16 17 18 19 20 21, on right: 11 12
-DECLARACION (88)
-    on left: 22 23 24 25 26 27, on right: 13 39
-ASIGNACION (89)
-    on left: 28 29 30, on right: 14 40
-PRINCIPAL (90)
-    on left: 31, on right: 16
-FUNCIONES (91)
-    on left: 32 33, on right: 56
-RETORNAR (92)
-    on left: 34, on right: 17
-IMPRIMIR (93)
-    on left: 35, on right: 18
-MOSTRARNOTIFI (94)
-    on left: 36, on right: 19
-SI (95)
-    on left: 37, on right: 20 43
-PARA (96)
-    on left: 38, on right: 21
-PRIMERFOR (97)
-    on left: 39 40, on right: 38
-TERMINSI (98)
-    on left: 41 42 43, on right: 37
-TIPO (99)
-    on left: 44 45 46 47 48 49 50, on right: 22 23 24 25 26 27 51 52
-    53 54
-LTIPOS (100)
-    on left: 51 52 53 54, on right: 32 51 52
-TERMDECLAR (101)
-    on left: 55 56 57 58, on right: 22 23 24 25
-DIMENSION (102)
-    on left: 59 60 61, on right: 26 27 29 52 54 97
-TERMARRAY (103)
-    on left: 62 63, on right: 26 27
-SOBREESCRITURA (104)
-    on left: 64, on right: 23 25
-LDECLARRAY (105)
-    on left: 65 66, on right: 63
-LLLAVE (106)
-    on left: 67 68, on right: 66 67
-LEXP (107)
-    on left: 69 70, on right: 65 67 68 69 111
-EXPL (108)
-    on left: 71 72 73 74 75 76, on right: 28 29 30 34 35 36 37 38 57
-    59 60 61 69 70 75
-EXPR (109)
-    on left: 77 78 79 80 81 82 83, on right: 71 72 73 74 76
-EXPA (110)
-    on left: 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101
-    102 103 104 105 106 107, on right: 77 78 79 80 81 82 83 84 85 86
-    87 88 89 90
-LLAMADAFUNC (111)
-    on left: 108 109, on right: 15 107
-VARF (112)
-    on left: 110 111, on right: 108 109
-VISIBILIDAD (113)
-    on left: 112 113 114, on right: 22 23 26
+SENTENCIA (91)
+    on left: 13 14 15 16 17 18 19 20 21 22 23 24 25, on right: 11 12
+DECLARACION (92)
+    on left: 26 27 28 29 30 31, on right: 13 51
+ASIGNACION (93)
+    on left: 32 33 34, on right: 14 52
+PRINCIPAL (94)
+    on left: 35, on right: 16
+FUNCIONES (95)
+    on left: 36 37, on right: 68
+RETORNAR (96)
+    on left: 38, on right: 17
+IMPRIMIR (97)
+    on left: 39, on right: 18
+MOSTRARNOTIFI (98)
+    on left: 40, on right: 19
+SI (99)
+    on left: 41, on right: 20 55
+PARA (100)
+    on left: 42, on right: 21
+REPETIR (101)
+    on left: 43, on right: 22
+ROMPER (102)
+    on left: 44, on right: 23
+MIENTRAS (103)
+    on left: 45, on right: 24
+COMPROBAR (104)
+    on left: 46, on right: 25
+CASOS (105)
+    on left: 47 48 49 50, on right: 46 47 48
+PRIMERFOR (106)
+    on left: 51 52, on right: 42
+TERMINSI (107)
+    on left: 53 54 55, on right: 41
+TIPO (108)
+    on left: 56 57 58 59 60 61 62, on right: 26 27 28 29 30 31 63 64
+    65 66
+LTIPOS (109)
+    on left: 63 64 65 66, on right: 36 63 64
+TERMDECLAR (110)
+    on left: 67 68 69 70, on right: 26 27 28 29
+DIMENSION (111)
+    on left: 71 72 73, on right: 30 31 33 64 66 109
+TERMARRAY (112)
+    on left: 74 75, on right: 30 31
+SOBREESCRITURA (113)
+    on left: 76, on right: 27 29
+LDECLARRAY (114)
+    on left: 77 78, on right: 75
+LLLAVE (115)
+    on left: 79 80, on right: 78 79
+LEXP (116)
+    on left: 81 82, on right: 77 79 80 81 123
+EXPL (117)
+    on left: 83 84 85 86 87 88, on right: 32 33 34 38 39 40 41 42 43
+    45 47 49 69 71 72 73 81 82 87
+EXPR (118)
+    on left: 89 90 91 92 93 94 95, on right: 83 84 85 86 88
+EXPA (119)
+    on left: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110
+    111 112 113 114 115 116 117 118 119, on right: 89 90 91 92 93 94
+    95 96 97 98 99 100 101 102
+LLAMADAFUNC (120)
+    on left: 120 121, on right: 15 119
+VARF (121)
+    on left: 122 123, on right: 120 121
+VISIBILIDAD (122)
+    on left: 124 125 126, on right: 26 27 30
 
 
 State 0
@@ -442,25 +471,33 @@ State 9
     psi                   shift, and go to state 27
     ppara                 shift, and go to state 28
     pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
 
     $default  reduce using rule 7 (RELLENOCLASE)
 
-    RELLENOCLASE    go to state 31
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    RELLENOCLASE    go to state 35
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
 
 
 State 10
@@ -482,48 +519,48 @@ State 12
     5 TERMINACIONCLASE: pextender LIDS . abrir_llave RELLENOCLASE cerrar_llave
     9 LIDS: LIDS . coma id
 
-    coma         shift, and go to state 46
-    abrir_llave  shift, and go to state 47
+    coma         shift, and go to state 54
+    abrir_llave  shift, and go to state 55
 
 
 State 13
 
-   44 TIPO: pint .
+   56 TIPO: pint .
 
-    $default  reduce using rule 44 (TIPO)
+    $default  reduce using rule 56 (TIPO)
 
 
 State 14
 
-   45 TIPO: pdouble .
+   57 TIPO: pdouble .
 
-    $default  reduce using rule 45 (TIPO)
+    $default  reduce using rule 57 (TIPO)
 
 
 State 15
 
-   46 TIPO: pbool .
+   58 TIPO: pbool .
 
-    $default  reduce using rule 46 (TIPO)
+    $default  reduce using rule 58 (TIPO)
 
 
 State 16
 
-   47 TIPO: pchar .
+   59 TIPO: pchar .
 
-    $default  reduce using rule 47 (TIPO)
+    $default  reduce using rule 59 (TIPO)
 
 
 State 17
 
-   48 TIPO: pstring .
+   60 TIPO: pstring .
 
-    $default  reduce using rule 48 (TIPO)
+    $default  reduce using rule 60 (TIPO)
 
 
 State 18
 
-   27 DECLARACION: parreglo . TIPO LIDS DIMENSION TERMARRAY
+   31 DECLARACION: parreglo . TIPO LIDS DIMENSION TERMARRAY
 
     pint     shift, and go to state 13
     pdouble  shift, and go to state 14
@@ -531,128 +568,156 @@ State 18
     pchar    shift, and go to state 16
     pstring  shift, and go to state 17
     pvoid    shift, and go to state 24
-    id       shift, and go to state 48
+    id       shift, and go to state 56
 
-    TIPO  go to state 49
+    TIPO  go to state 57
 
 
 State 19
 
-   64 SOBREESCRITURA: psobrescribir .
+   76 SOBREESCRITURA: psobrescribir .
 
-    $default  reduce using rule 64 (SOBREESCRITURA)
+    $default  reduce using rule 76 (SOBREESCRITURA)
 
 
 State 20
 
-  112 VISIBILIDAD: ppublico .
+  124 VISIBILIDAD: ppublico .
 
-    $default  reduce using rule 112 (VISIBILIDAD)
+    $default  reduce using rule 124 (VISIBILIDAD)
 
 
 State 21
 
-  113 VISIBILIDAD: pprivado .
+  125 VISIBILIDAD: pprivado .
 
-    $default  reduce using rule 113 (VISIBILIDAD)
+    $default  reduce using rule 125 (VISIBILIDAD)
 
 
 State 22
 
-  114 VISIBILIDAD: pprotegido .
+  126 VISIBILIDAD: pprotegido .
 
-    $default  reduce using rule 114 (VISIBILIDAD)
+    $default  reduce using rule 126 (VISIBILIDAD)
 
 
 State 23
 
-   34 RETORNAR: pretornar . EXPL finalizacion
+   38 RETORNAR: pretornar . EXPL finalizacion
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
 
-    EXPL         go to state 59
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    EXPL         go to state 67
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 24
 
-   50 TIPO: pvoid .
+   62 TIPO: pvoid .
 
-    $default  reduce using rule 50 (TIPO)
+    $default  reduce using rule 62 (TIPO)
 
 
 State 25
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion . abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
+   40 MOSTRARNOTIFI: pmostrarnotificacion . abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
 
-    abrir_parentesis  shift, and go to state 63
+    abrir_parentesis  shift, and go to state 71
 
 
 State 26
 
-   35 IMPRIMIR: pimprimir . abrir_parentesis EXPL cerrar_parentesis finalizacion
+   39 IMPRIMIR: pimprimir . abrir_parentesis EXPL cerrar_parentesis finalizacion
 
-    abrir_parentesis  shift, and go to state 64
+    abrir_parentesis  shift, and go to state 72
 
 
 State 27
 
-   37 SI: psi . abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+   41 SI: psi . abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
 
-    abrir_parentesis  shift, and go to state 65
+    abrir_parentesis  shift, and go to state 73
 
 
 State 28
 
-   38 PARA: ppara . abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   42 PARA: ppara . abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    abrir_parentesis  shift, and go to state 66
+    abrir_parentesis  shift, and go to state 74
 
 
 State 29
 
-   31 PRINCIPAL: pprincipal . abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   35 PRINCIPAL: pprincipal . abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    abrir_parentesis  shift, and go to state 67
+    abrir_parentesis  shift, and go to state 75
 
 
 State 30
 
-   28 ASIGNACION: id . igual EXPL finalizacion
-   29           | id . DIMENSION igual EXPL finalizacion
-   30           | id . punto id igual EXPL finalizacion
-   49 TIPO: id .
-  108 LLAMADAFUNC: id . punto id abrir_parentesis VARF cerrar_parentesis
-  109            | id . abrir_parentesis VARF cerrar_parentesis
+   43 REPETIR: prepetir . abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    abrir_corchete    shift, and go to state 68
-    punto             shift, and go to state 69
-    igual             shift, and go to state 70
-    abrir_parentesis  shift, and go to state 71
-
-    $default  reduce using rule 49 (TIPO)
-
-    DIMENSION  go to state 72
+    abrir_parentesis  shift, and go to state 76
 
 
 State 31
 
-    6 TERMINACIONCLASE: abrir_llave RELLENOCLASE . cerrar_llave
+   44 ROMPER: promper . finalizacion
 
-    cerrar_llave  shift, and go to state 73
+    finalizacion  shift, and go to state 77
 
 
 State 32
+
+   45 MIENTRAS: pmientras . abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+
+    abrir_parentesis  shift, and go to state 78
+
+
+State 33
+
+   46 COMPROBAR: pcomprobar . abrir_parentesis id cerrar_parentesis abrir_llave CASOS cerrar_llave
+
+    abrir_parentesis  shift, and go to state 79
+
+
+State 34
+
+   32 ASIGNACION: id . igual EXPL finalizacion
+   33           | id . DIMENSION igual EXPL finalizacion
+   34           | id . punto id igual EXPL finalizacion
+   61 TIPO: id .
+  120 LLAMADAFUNC: id . punto id abrir_parentesis VARF cerrar_parentesis
+  121            | id . abrir_parentesis VARF cerrar_parentesis
+
+    abrir_corchete    shift, and go to state 80
+    punto             shift, and go to state 81
+    igual             shift, and go to state 82
+    abrir_parentesis  shift, and go to state 83
+
+    $default  reduce using rule 61 (TIPO)
+
+    DIMENSION  go to state 84
+
+
+State 35
+
+    6 TERMINACIONCLASE: abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 85
+
+
+State 36
 
     8 RELLENOCLASE: LSENTENCIAS .
    11 LSENTENCIAS: LSENTENCIAS . SENTENCIA
@@ -674,101 +739,137 @@ State 32
     psi                   shift, and go to state 27
     ppara                 shift, and go to state 28
     pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
 
     $default  reduce using rule 8 (RELLENOCLASE)
 
-    SENTENCIA       go to state 74
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    SENTENCIA       go to state 86
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
 
 
-State 33
+State 37
 
    12 LSENTENCIAS: SENTENCIA .
 
     $default  reduce using rule 12 (LSENTENCIAS)
 
 
-State 34
+State 38
 
    13 SENTENCIA: DECLARACION .
 
     $default  reduce using rule 13 (SENTENCIA)
 
 
-State 35
+State 39
 
    14 SENTENCIA: ASIGNACION .
 
     $default  reduce using rule 14 (SENTENCIA)
 
 
-State 36
+State 40
 
    16 SENTENCIA: PRINCIPAL .
 
     $default  reduce using rule 16 (SENTENCIA)
 
 
-State 37
+State 41
 
    17 SENTENCIA: RETORNAR .
 
     $default  reduce using rule 17 (SENTENCIA)
 
 
-State 38
+State 42
 
    18 SENTENCIA: IMPRIMIR .
 
     $default  reduce using rule 18 (SENTENCIA)
 
 
-State 39
+State 43
 
    19 SENTENCIA: MOSTRARNOTIFI .
 
     $default  reduce using rule 19 (SENTENCIA)
 
 
-State 40
+State 44
 
    20 SENTENCIA: SI .
 
     $default  reduce using rule 20 (SENTENCIA)
 
 
-State 41
+State 45
 
    21 SENTENCIA: PARA .
 
     $default  reduce using rule 21 (SENTENCIA)
 
 
-State 42
+State 46
 
-   24 DECLARACION: TIPO . LIDS TERMDECLAR
+   22 SENTENCIA: REPETIR .
+
+    $default  reduce using rule 22 (SENTENCIA)
+
+
+State 47
+
+   23 SENTENCIA: ROMPER .
+
+    $default  reduce using rule 23 (SENTENCIA)
+
+
+State 48
+
+   24 SENTENCIA: MIENTRAS .
+
+    $default  reduce using rule 24 (SENTENCIA)
+
+
+State 49
+
+   25 SENTENCIA: COMPROBAR .
+
+    $default  reduce using rule 25 (SENTENCIA)
+
+
+State 50
+
+   28 DECLARACION: TIPO . LIDS TERMDECLAR
 
     id  shift, and go to state 11
 
-    LIDS  go to state 75
+    LIDS  go to state 87
 
 
-State 43
+State 51
 
-   23 DECLARACION: SOBREESCRITURA . VISIBILIDAD TIPO LIDS TERMDECLAR
-   25            | SOBREESCRITURA . TIPO LIDS TERMDECLAR
+   27 DECLARACION: SOBREESCRITURA . VISIBILIDAD TIPO LIDS TERMDECLAR
+   29            | SOBREESCRITURA . TIPO LIDS TERMDECLAR
 
     pint        shift, and go to state 13
     pdouble     shift, and go to state 14
@@ -779,44 +880,44 @@ State 43
     pprivado    shift, and go to state 21
     pprotegido  shift, and go to state 22
     pvoid       shift, and go to state 24
-    id          shift, and go to state 48
+    id          shift, and go to state 56
 
-    TIPO         go to state 76
-    VISIBILIDAD  go to state 77
+    TIPO         go to state 88
+    VISIBILIDAD  go to state 89
 
 
-State 44
+State 52
 
    15 SENTENCIA: LLAMADAFUNC . finalizacion
 
-    finalizacion  shift, and go to state 78
+    finalizacion  shift, and go to state 90
 
 
-State 45
+State 53
 
-   22 DECLARACION: VISIBILIDAD . TIPO LIDS TERMDECLAR
-   26            | VISIBILIDAD . parreglo TIPO LIDS DIMENSION TERMARRAY
+   26 DECLARACION: VISIBILIDAD . TIPO LIDS TERMDECLAR
+   30            | VISIBILIDAD . parreglo TIPO LIDS DIMENSION TERMARRAY
 
     pint      shift, and go to state 13
     pdouble   shift, and go to state 14
     pbool     shift, and go to state 15
     pchar     shift, and go to state 16
     pstring   shift, and go to state 17
-    parreglo  shift, and go to state 79
+    parreglo  shift, and go to state 91
     pvoid     shift, and go to state 24
-    id        shift, and go to state 48
+    id        shift, and go to state 56
 
-    TIPO  go to state 80
+    TIPO  go to state 92
 
 
-State 46
+State 54
 
     9 LIDS: LIDS coma . id
 
-    id  shift, and go to state 81
+    id  shift, and go to state 93
 
 
-State 47
+State 55
 
     5 TERMINACIONCLASE: pextender LIDS abrir_llave . RELLENOCLASE cerrar_llave
 
@@ -837,291 +938,299 @@ State 47
     psi                   shift, and go to state 27
     ppara                 shift, and go to state 28
     pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
 
     $default  reduce using rule 7 (RELLENOCLASE)
 
-    RELLENOCLASE    go to state 82
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
-
-
-State 48
-
-   49 TIPO: id .
-
-    $default  reduce using rule 49 (TIPO)
-
-
-State 49
-
-   27 DECLARACION: parreglo TIPO . LIDS DIMENSION TERMARRAY
-
-    id  shift, and go to state 11
-
-    LIDS  go to state 83
-
-
-State 50
-
-   91 EXPA: numero .
-  100     | numero . aumento
-  101     | numero . decremento
-
-    aumento     shift, and go to state 84
-    decremento  shift, and go to state 85
-
-    $default  reduce using rule 91 (EXPA)
-
-
-State 51
-
-   92 EXPA: decimal .
-  102     | decimal . aumento
-  103     | decimal . decremento
-
-    aumento     shift, and go to state 86
-    decremento  shift, and go to state 87
-
-    $default  reduce using rule 92 (EXPA)
-
-
-State 52
-
-   93 EXPA: caracter .
-  104     | caracter . aumento
-  105     | caracter . decremento
-
-    aumento     shift, and go to state 88
-    decremento  shift, and go to state 89
-
-    $default  reduce using rule 93 (EXPA)
-
-
-State 53
-
-   94 EXPA: booleano .
-
-    $default  reduce using rule 94 (EXPA)
-
-
-State 54
-
-   95 EXPA: cadena .
-
-    $default  reduce using rule 95 (EXPA)
-
-
-State 55
-
-   96 EXPA: id .
-   97     | id . DIMENSION
-   98     | id . aumento
-   99     | id . decremento
-  106     | id . punto id
-  108 LLAMADAFUNC: id . punto id abrir_parentesis VARF cerrar_parentesis
-  109            | id . abrir_parentesis VARF cerrar_parentesis
-
-    abrir_corchete    shift, and go to state 68
-    punto             shift, and go to state 90
-    aumento           shift, and go to state 91
-    decremento        shift, and go to state 92
-    abrir_parentesis  shift, and go to state 71
-
-    $default  reduce using rule 96 (EXPA)
-
-    DIMENSION  go to state 93
+    RELLENOCLASE    go to state 94
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
 
 
 State 56
 
-   90 EXPA: abrir_parentesis . EXPA cerrar_parentesis
+   61 TIPO: id .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 94
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 61 (TIPO)
 
 
 State 57
 
-   75 EXPL: opnot . EXPL
+   31 DECLARACION: parreglo TIPO . LIDS DIMENSION TERMARRAY
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    id  shift, and go to state 11
 
-    EXPL         go to state 95
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    LIDS  go to state 95
 
 
 State 58
 
-   89 EXPA: resta . EXPA
+  103 EXPA: numero .
+  112     | numero . aumento
+  113     | numero . decremento
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
+    aumento     shift, and go to state 96
+    decremento  shift, and go to state 97
 
-    EXPA         go to state 96
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 103 (EXPA)
 
 
 State 59
 
-   34 RETORNAR: pretornar EXPL . finalizacion
+  104 EXPA: decimal .
+  114     | decimal . aumento
+  115     | decimal . decremento
 
-    finalizacion  shift, and go to state 97
+    aumento     shift, and go to state 98
+    decremento  shift, and go to state 99
+
+    $default  reduce using rule 104 (EXPA)
 
 
 State 60
 
-   71 EXPL: EXPR . opor EXPR
-   72     | EXPR . opnor EXPR
-   73     | EXPR . opand EXPR
-   74     | EXPR . opnand EXPR
-   76     | EXPR .
+  105 EXPA: caracter .
+  116     | caracter . aumento
+  117     | caracter . decremento
 
-    opor    shift, and go to state 98
-    opand   shift, and go to state 99
-    opnand  shift, and go to state 100
-    opnor   shift, and go to state 101
+    aumento     shift, and go to state 100
+    decremento  shift, and go to state 101
 
-    $default  reduce using rule 76 (EXPL)
+    $default  reduce using rule 105 (EXPA)
 
 
 State 61
 
-   77 EXPR: EXPA . igual_igual EXPA
-   78     | EXPA . diferente_de EXPA
-   79     | EXPA . menor_que EXPA
-   80     | EXPA . mayor_que EXPA
-   81     | EXPA . menorigual_que EXPA
-   82     | EXPA . mayorigual_que EXPA
-   83     | EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
+  106 EXPA: booleano .
 
-    igual_igual     shift, and go to state 102
-    diferente_de    shift, and go to state 103
-    menor_que       shift, and go to state 104
-    menorigual_que  shift, and go to state 105
-    mayor_que       shift, and go to state 106
-    mayorigual_que  shift, and go to state 107
-    suma            shift, and go to state 108
-    resta           shift, and go to state 109
-    multi           shift, and go to state 110
-    division        shift, and go to state 111
-    potencia        shift, and go to state 112
-
-    $default  reduce using rule 83 (EXPR)
+    $default  reduce using rule 106 (EXPA)
 
 
 State 62
 
-  107 EXPA: LLAMADAFUNC .
+  107 EXPA: cadena .
 
     $default  reduce using rule 107 (EXPA)
 
 
 State 63
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis . EXPL coma EXPL cerrar_parentesis finalizacion
+  108 EXPA: id .
+  109     | id . DIMENSION
+  110     | id . aumento
+  111     | id . decremento
+  118     | id . punto id
+  120 LLAMADAFUNC: id . punto id abrir_parentesis VARF cerrar_parentesis
+  121            | id . abrir_parentesis VARF cerrar_parentesis
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    abrir_corchete    shift, and go to state 80
+    punto             shift, and go to state 102
+    aumento           shift, and go to state 103
+    decremento        shift, and go to state 104
+    abrir_parentesis  shift, and go to state 83
 
-    EXPL         go to state 113
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 108 (EXPA)
+
+    DIMENSION  go to state 105
 
 
 State 64
 
-   35 IMPRIMIR: pimprimir abrir_parentesis . EXPL cerrar_parentesis finalizacion
+  102 EXPA: abrir_parentesis . EXPA cerrar_parentesis
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    EXPL         go to state 114
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    EXPA         go to state 106
+    LLAMADAFUNC  go to state 70
 
 
 State 65
 
-   37 SI: psi abrir_parentesis . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+   87 EXPL: opnot . EXPL
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
 
-    EXPL         go to state 115
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    EXPL         go to state 107
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 66
 
-   38 PARA: ppara abrir_parentesis . PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+  101 EXPA: resta . EXPA
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 108
+    LLAMADAFUNC  go to state 70
+
+
+State 67
+
+   38 RETORNAR: pretornar EXPL . finalizacion
+
+    finalizacion  shift, and go to state 109
+
+
+State 68
+
+   83 EXPL: EXPR . opor EXPR
+   84     | EXPR . opnor EXPR
+   85     | EXPR . opand EXPR
+   86     | EXPR . opnand EXPR
+   88     | EXPR .
+
+    opor    shift, and go to state 110
+    opand   shift, and go to state 111
+    opnand  shift, and go to state 112
+    opnor   shift, and go to state 113
+
+    $default  reduce using rule 88 (EXPL)
+
+
+State 69
+
+   89 EXPR: EXPA . igual_igual EXPA
+   90     | EXPA . diferente_de EXPA
+   91     | EXPA . menor_que EXPA
+   92     | EXPA . mayor_que EXPA
+   93     | EXPA . menorigual_que EXPA
+   94     | EXPA . mayorigual_que EXPA
+   95     | EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
+
+    igual_igual     shift, and go to state 114
+    diferente_de    shift, and go to state 115
+    menor_que       shift, and go to state 116
+    menorigual_que  shift, and go to state 117
+    mayor_que       shift, and go to state 118
+    mayorigual_que  shift, and go to state 119
+    suma            shift, and go to state 120
+    resta           shift, and go to state 121
+    multi           shift, and go to state 122
+    division        shift, and go to state 123
+    potencia        shift, and go to state 124
+
+    $default  reduce using rule 95 (EXPR)
+
+
+State 70
+
+  119 EXPA: LLAMADAFUNC .
+
+    $default  reduce using rule 119 (EXPA)
+
+
+State 71
+
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis . EXPL coma EXPL cerrar_parentesis finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 125
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 72
+
+   39 IMPRIMIR: pimprimir abrir_parentesis . EXPL cerrar_parentesis finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 126
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 73
+
+   41 SI: psi abrir_parentesis . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 127
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 74
+
+   42 PARA: ppara abrir_parentesis . PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
     pint           shift, and go to state 13
     pdouble        shift, and go to state 14
@@ -1134,144 +1243,198 @@ State 66
     pprivado       shift, and go to state 21
     pprotegido     shift, and go to state 22
     pvoid          shift, and go to state 24
-    id             shift, and go to state 116
+    id             shift, and go to state 128
 
-    DECLARACION     go to state 117
-    ASIGNACION      go to state 118
-    PRIMERFOR       go to state 119
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    VISIBILIDAD     go to state 45
-
-
-State 67
-
-   31 PRINCIPAL: pprincipal abrir_parentesis . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-
-    cerrar_parentesis  shift, and go to state 120
+    DECLARACION     go to state 129
+    ASIGNACION      go to state 130
+    PRIMERFOR       go to state 131
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    VISIBILIDAD     go to state 53
 
 
-State 68
+State 75
 
-   59 DIMENSION: abrir_corchete . EXPL cerrar_corchete
-   60          | abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
-   61          | abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   35 PRINCIPAL: pprincipal abrir_parentesis . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 121
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    cerrar_parentesis  shift, and go to state 132
 
 
-State 69
+State 76
 
-   30 ASIGNACION: id punto . id igual EXPL finalizacion
-  108 LLAMADAFUNC: id punto . id abrir_parentesis VARF cerrar_parentesis
+   43 REPETIR: prepetir abrir_parentesis . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    id  shift, and go to state 122
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
 
-
-State 70
-
-   28 ASIGNACION: id igual . EXPL finalizacion
-
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 123
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    EXPL         go to state 133
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
-State 71
+State 77
 
-  109 LLAMADAFUNC: id abrir_parentesis . VARF cerrar_parentesis
+   44 ROMPER: promper finalizacion .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    $default  reduce using rule 110 (VARF)
-
-    LEXP         go to state 124
-    EXPL         go to state 125
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
-    VARF         go to state 126
+    $default  reduce using rule 44 (ROMPER)
 
 
-State 72
+State 78
 
-   29 ASIGNACION: id DIMENSION . igual EXPL finalizacion
+   45 MIENTRAS: pmientras abrir_parentesis . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    igual  shift, and go to state 127
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 134
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
-State 73
+State 79
+
+   46 COMPROBAR: pcomprobar abrir_parentesis . id cerrar_parentesis abrir_llave CASOS cerrar_llave
+
+    id  shift, and go to state 135
+
+
+State 80
+
+   71 DIMENSION: abrir_corchete . EXPL cerrar_corchete
+   72          | abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   73          | abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 136
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 81
+
+   34 ASIGNACION: id punto . id igual EXPL finalizacion
+  120 LLAMADAFUNC: id punto . id abrir_parentesis VARF cerrar_parentesis
+
+    id  shift, and go to state 137
+
+
+State 82
+
+   32 ASIGNACION: id igual . EXPL finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 138
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 83
+
+  121 LLAMADAFUNC: id abrir_parentesis . VARF cerrar_parentesis
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    $default  reduce using rule 122 (VARF)
+
+    LEXP         go to state 139
+    EXPL         go to state 140
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+    VARF         go to state 141
+
+
+State 84
+
+   33 ASIGNACION: id DIMENSION . igual EXPL finalizacion
+
+    igual  shift, and go to state 142
+
+
+State 85
 
     6 TERMINACIONCLASE: abrir_llave RELLENOCLASE cerrar_llave .
 
     $default  reduce using rule 6 (TERMINACIONCLASE)
 
 
-State 74
+State 86
 
    11 LSENTENCIAS: LSENTENCIAS SENTENCIA .
 
     $default  reduce using rule 11 (LSENTENCIAS)
 
 
-State 75
+State 87
 
     9 LIDS: LIDS . coma id
-   24 DECLARACION: TIPO LIDS . TERMDECLAR
+   28 DECLARACION: TIPO LIDS . TERMDECLAR
 
-    coma              shift, and go to state 46
-    finalizacion      shift, and go to state 128
-    igual             shift, and go to state 129
-    abrir_parentesis  shift, and go to state 130
+    coma              shift, and go to state 54
+    finalizacion      shift, and go to state 143
+    igual             shift, and go to state 144
+    abrir_parentesis  shift, and go to state 145
 
-    FUNCIONES   go to state 131
-    TERMDECLAR  go to state 132
+    FUNCIONES   go to state 146
+    TERMDECLAR  go to state 147
 
 
-State 76
+State 88
 
-   25 DECLARACION: SOBREESCRITURA TIPO . LIDS TERMDECLAR
+   29 DECLARACION: SOBREESCRITURA TIPO . LIDS TERMDECLAR
 
     id  shift, and go to state 11
 
-    LIDS  go to state 133
+    LIDS  go to state 148
 
 
-State 77
+State 89
 
-   23 DECLARACION: SOBREESCRITURA VISIBILIDAD . TIPO LIDS TERMDECLAR
+   27 DECLARACION: SOBREESCRITURA VISIBILIDAD . TIPO LIDS TERMDECLAR
 
     pint     shift, and go to state 13
     pdouble  shift, and go to state 14
@@ -1279,21 +1442,21 @@ State 77
     pchar    shift, and go to state 16
     pstring  shift, and go to state 17
     pvoid    shift, and go to state 24
-    id       shift, and go to state 48
+    id       shift, and go to state 56
 
-    TIPO  go to state 134
+    TIPO  go to state 149
 
 
-State 78
+State 90
 
    15 SENTENCIA: LLAMADAFUNC finalizacion .
 
     $default  reduce using rule 15 (SENTENCIA)
 
 
-State 79
+State 91
 
-   26 DECLARACION: VISIBILIDAD parreglo . TIPO LIDS DIMENSION TERMARRAY
+   30 DECLARACION: VISIBILIDAD parreglo . TIPO LIDS DIMENSION TERMARRAY
 
     pint     shift, and go to state 13
     pdouble  shift, and go to state 14
@@ -1301,609 +1464,630 @@ State 79
     pchar    shift, and go to state 16
     pstring  shift, and go to state 17
     pvoid    shift, and go to state 24
-    id       shift, and go to state 48
+    id       shift, and go to state 56
 
-    TIPO  go to state 135
+    TIPO  go to state 150
 
 
-State 80
+State 92
 
-   22 DECLARACION: VISIBILIDAD TIPO . LIDS TERMDECLAR
+   26 DECLARACION: VISIBILIDAD TIPO . LIDS TERMDECLAR
 
     id  shift, and go to state 11
 
-    LIDS  go to state 136
+    LIDS  go to state 151
 
 
-State 81
+State 93
 
     9 LIDS: LIDS coma id .
 
     $default  reduce using rule 9 (LIDS)
 
 
-State 82
+State 94
 
     5 TERMINACIONCLASE: pextender LIDS abrir_llave RELLENOCLASE . cerrar_llave
 
-    cerrar_llave  shift, and go to state 137
-
-
-State 83
-
-    9 LIDS: LIDS . coma id
-   27 DECLARACION: parreglo TIPO LIDS . DIMENSION TERMARRAY
-
-    abrir_corchete  shift, and go to state 68
-    coma            shift, and go to state 46
-
-    DIMENSION  go to state 138
-
-
-State 84
-
-  100 EXPA: numero aumento .
-
-    $default  reduce using rule 100 (EXPA)
-
-
-State 85
-
-  101 EXPA: numero decremento .
-
-    $default  reduce using rule 101 (EXPA)
-
-
-State 86
-
-  102 EXPA: decimal aumento .
-
-    $default  reduce using rule 102 (EXPA)
-
-
-State 87
-
-  103 EXPA: decimal decremento .
-
-    $default  reduce using rule 103 (EXPA)
-
-
-State 88
-
-  104 EXPA: caracter aumento .
-
-    $default  reduce using rule 104 (EXPA)
-
-
-State 89
-
-  105 EXPA: caracter decremento .
-
-    $default  reduce using rule 105 (EXPA)
-
-
-State 90
-
-  106 EXPA: id punto . id
-  108 LLAMADAFUNC: id punto . id abrir_parentesis VARF cerrar_parentesis
-
-    id  shift, and go to state 139
-
-
-State 91
-
-   98 EXPA: id aumento .
-
-    $default  reduce using rule 98 (EXPA)
-
-
-State 92
-
-   99 EXPA: id decremento .
-
-    $default  reduce using rule 99 (EXPA)
-
-
-State 93
-
-   97 EXPA: id DIMENSION .
-
-    $default  reduce using rule 97 (EXPA)
-
-
-State 94
-
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-   90     | abrir_parentesis EXPA . cerrar_parentesis
-
-    cerrar_parentesis  shift, and go to state 140
-    suma               shift, and go to state 108
-    resta              shift, and go to state 109
-    multi              shift, and go to state 110
-    division           shift, and go to state 111
-    potencia           shift, and go to state 112
+    cerrar_llave  shift, and go to state 152
 
 
 State 95
 
-   75 EXPL: opnot EXPL .
+    9 LIDS: LIDS . coma id
+   31 DECLARACION: parreglo TIPO LIDS . DIMENSION TERMARRAY
 
-    $default  reduce using rule 75 (EXPL)
+    abrir_corchete  shift, and go to state 80
+    coma            shift, and go to state 54
+
+    DIMENSION  go to state 153
 
 
 State 96
 
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-   89     | resta EXPA .
+  112 EXPA: numero aumento .
 
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    suma      [reduce using rule 89 (EXPA)]
-    resta     [reduce using rule 89 (EXPA)]
-    multi     [reduce using rule 89 (EXPA)]
-    division  [reduce using rule 89 (EXPA)]
-    potencia  [reduce using rule 89 (EXPA)]
-    $default  reduce using rule 89 (EXPA)
+    $default  reduce using rule 112 (EXPA)
 
 
 State 97
 
-   34 RETORNAR: pretornar EXPL finalizacion .
+  113 EXPA: numero decremento .
 
-    $default  reduce using rule 34 (RETORNAR)
+    $default  reduce using rule 113 (EXPA)
 
 
 State 98
 
-   71 EXPL: EXPR opor . EXPR
+  114 EXPA: decimal aumento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPR         go to state 141
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 114 (EXPA)
 
 
 State 99
 
-   73 EXPL: EXPR opand . EXPR
+  115 EXPA: decimal decremento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPR         go to state 142
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 115 (EXPA)
 
 
 State 100
 
-   74 EXPL: EXPR opnand . EXPR
+  116 EXPA: caracter aumento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPR         go to state 143
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 116 (EXPA)
 
 
 State 101
 
-   72 EXPL: EXPR opnor . EXPR
+  117 EXPA: caracter decremento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPR         go to state 144
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 117 (EXPA)
 
 
 State 102
 
-   77 EXPR: EXPA igual_igual . EXPA
+  118 EXPA: id punto . id
+  120 LLAMADAFUNC: id punto . id abrir_parentesis VARF cerrar_parentesis
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 145
-    LLAMADAFUNC  go to state 62
+    id  shift, and go to state 154
 
 
 State 103
 
-   78 EXPR: EXPA diferente_de . EXPA
+  110 EXPA: id aumento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 146
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 110 (EXPA)
 
 
 State 104
 
-   79 EXPR: EXPA menor_que . EXPA
+  111 EXPA: id decremento .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 147
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 111 (EXPA)
 
 
 State 105
 
-   81 EXPR: EXPA menorigual_que . EXPA
+  109 EXPA: id DIMENSION .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 148
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 109 (EXPA)
 
 
 State 106
 
-   80 EXPR: EXPA mayor_que . EXPA
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
+  102     | abrir_parentesis EXPA . cerrar_parentesis
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 149
-    LLAMADAFUNC  go to state 62
+    cerrar_parentesis  shift, and go to state 155
+    suma               shift, and go to state 120
+    resta              shift, and go to state 121
+    multi              shift, and go to state 122
+    division           shift, and go to state 123
+    potencia           shift, and go to state 124
 
 
 State 107
 
-   82 EXPR: EXPA mayorigual_que . EXPA
+   87 EXPL: opnot EXPL .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 150
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 87 (EXPL)
 
 
 State 108
 
-   84 EXPA: EXPA suma . EXPA
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
+  101     | resta EXPA .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    EXPA         go to state 151
-    LLAMADAFUNC  go to state 62
+    suma      [reduce using rule 101 (EXPA)]
+    resta     [reduce using rule 101 (EXPA)]
+    multi     [reduce using rule 101 (EXPA)]
+    division  [reduce using rule 101 (EXPA)]
+    potencia  [reduce using rule 101 (EXPA)]
+    $default  reduce using rule 101 (EXPA)
 
 
 State 109
 
-   85 EXPA: EXPA resta . EXPA
+   38 RETORNAR: pretornar EXPL finalizacion .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
-
-    EXPA         go to state 152
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 38 (RETORNAR)
 
 
 State 110
 
-   86 EXPA: EXPA multi . EXPA
+   83 EXPL: EXPR opor . EXPR
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    EXPA         go to state 153
-    LLAMADAFUNC  go to state 62
+    EXPR         go to state 156
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 111
 
-   87 EXPA: EXPA division . EXPA
+   85 EXPL: EXPR opand . EXPR
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    EXPA         go to state 154
-    LLAMADAFUNC  go to state 62
+    EXPR         go to state 157
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 112
 
-   88 EXPA: EXPA potencia . EXPA
+   86 EXPL: EXPR opnand . EXPR
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    EXPA         go to state 155
-    LLAMADAFUNC  go to state 62
+    EXPR         go to state 158
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 113
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL . coma EXPL cerrar_parentesis finalizacion
+   84 EXPL: EXPR opnor . EXPR
 
-    coma  shift, and go to state 156
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPR         go to state 159
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 114
 
-   35 IMPRIMIR: pimprimir abrir_parentesis EXPL . cerrar_parentesis finalizacion
+   89 EXPR: EXPA igual_igual . EXPA
 
-    cerrar_parentesis  shift, and go to state 157
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 160
+    LLAMADAFUNC  go to state 70
 
 
 State 115
 
-   37 SI: psi abrir_parentesis EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+   90 EXPR: EXPA diferente_de . EXPA
 
-    cerrar_parentesis  shift, and go to state 158
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 161
+    LLAMADAFUNC  go to state 70
 
 
 State 116
 
-   28 ASIGNACION: id . igual EXPL finalizacion
-   29           | id . DIMENSION igual EXPL finalizacion
-   30           | id . punto id igual EXPL finalizacion
-   49 TIPO: id .
+   91 EXPR: EXPA menor_que . EXPA
 
-    abrir_corchete  shift, and go to state 68
-    punto           shift, and go to state 159
-    igual           shift, and go to state 70
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    $default  reduce using rule 49 (TIPO)
-
-    DIMENSION  go to state 72
+    EXPA         go to state 162
+    LLAMADAFUNC  go to state 70
 
 
 State 117
 
-   39 PRIMERFOR: DECLARACION .
+   93 EXPR: EXPA menorigual_que . EXPA
 
-    $default  reduce using rule 39 (PRIMERFOR)
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 163
+    LLAMADAFUNC  go to state 70
 
 
 State 118
 
-   40 PRIMERFOR: ASIGNACION .
+   92 EXPR: EXPA mayor_que . EXPA
 
-    $default  reduce using rule 40 (PRIMERFOR)
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 164
+    LLAMADAFUNC  go to state 70
 
 
 State 119
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR . EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   94 EXPR: EXPA mayorigual_que . EXPA
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    EXPL         go to state 160
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    EXPA         go to state 165
+    LLAMADAFUNC  go to state 70
 
 
 State 120
 
-   31 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
+   96 EXPA: EXPA suma . EXPA
 
-    abrir_llave  shift, and go to state 161
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 166
+    LLAMADAFUNC  go to state 70
 
 
 State 121
 
-   59 DIMENSION: abrir_corchete EXPL . cerrar_corchete
-   60          | abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete
-   61          | abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   97 EXPA: EXPA resta . EXPA
 
-    cerrar_corchete  shift, and go to state 162
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 167
+    LLAMADAFUNC  go to state 70
 
 
 State 122
 
-   30 ASIGNACION: id punto id . igual EXPL finalizacion
-  108 LLAMADAFUNC: id punto id . abrir_parentesis VARF cerrar_parentesis
+   98 EXPA: EXPA multi . EXPA
 
-    igual             shift, and go to state 163
-    abrir_parentesis  shift, and go to state 164
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 168
+    LLAMADAFUNC  go to state 70
 
 
 State 123
 
-   28 ASIGNACION: id igual EXPL . finalizacion
+   99 EXPA: EXPA division . EXPA
 
-    finalizacion  shift, and go to state 165
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
+
+    EXPA         go to state 169
+    LLAMADAFUNC  go to state 70
 
 
 State 124
 
-   69 LEXP: LEXP . coma EXPL
-  111 VARF: LEXP .
+  100 EXPA: EXPA potencia . EXPA
 
-    coma  shift, and go to state 166
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    resta             shift, and go to state 66
 
-    $default  reduce using rule 111 (VARF)
+    EXPA         go to state 170
+    LLAMADAFUNC  go to state 70
 
 
 State 125
 
-   70 LEXP: EXPL .
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL . coma EXPL cerrar_parentesis finalizacion
 
-    $default  reduce using rule 70 (LEXP)
+    coma  shift, and go to state 171
 
 
 State 126
 
-  109 LLAMADAFUNC: id abrir_parentesis VARF . cerrar_parentesis
+   39 IMPRIMIR: pimprimir abrir_parentesis EXPL . cerrar_parentesis finalizacion
 
-    cerrar_parentesis  shift, and go to state 167
+    cerrar_parentesis  shift, and go to state 172
 
 
 State 127
 
-   29 ASIGNACION: id DIMENSION igual . EXPL finalizacion
+   41 SI: psi abrir_parentesis EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 168
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    cerrar_parentesis  shift, and go to state 173
 
 
 State 128
 
-   55 TERMDECLAR: finalizacion .
+   32 ASIGNACION: id . igual EXPL finalizacion
+   33           | id . DIMENSION igual EXPL finalizacion
+   34           | id . punto id igual EXPL finalizacion
+   61 TIPO: id .
 
-    $default  reduce using rule 55 (TERMDECLAR)
+    abrir_corchete  shift, and go to state 80
+    punto           shift, and go to state 174
+    igual           shift, and go to state 82
+
+    $default  reduce using rule 61 (TIPO)
+
+    DIMENSION  go to state 84
 
 
 State 129
 
-   57 TERMDECLAR: igual . EXPL finalizacion
-   58           | igual . pnew id abrir_parentesis cerrar_parentesis finalizacion
+   51 PRIMERFOR: DECLARACION .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    pnew              shift, and go to state 169
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 170
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 51 (PRIMERFOR)
 
 
 State 130
 
-   32 FUNCIONES: abrir_parentesis . LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-   33          | abrir_parentesis . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   52 PRIMERFOR: ASIGNACION .
+
+    $default  reduce using rule 52 (PRIMERFOR)
+
+
+State 131
+
+   42 PARA: ppara abrir_parentesis PRIMERFOR . EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 175
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 132
+
+   35 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
+
+    abrir_llave  shift, and go to state 176
+
+
+State 133
+
+   43 REPETIR: prepetir abrir_parentesis EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+
+    cerrar_parentesis  shift, and go to state 177
+
+
+State 134
+
+   45 MIENTRAS: pmientras abrir_parentesis EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+
+    cerrar_parentesis  shift, and go to state 178
+
+
+State 135
+
+   46 COMPROBAR: pcomprobar abrir_parentesis id . cerrar_parentesis abrir_llave CASOS cerrar_llave
+
+    cerrar_parentesis  shift, and go to state 179
+
+
+State 136
+
+   71 DIMENSION: abrir_corchete EXPL . cerrar_corchete
+   72          | abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   73          | abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+
+    cerrar_corchete  shift, and go to state 180
+
+
+State 137
+
+   34 ASIGNACION: id punto id . igual EXPL finalizacion
+  120 LLAMADAFUNC: id punto id . abrir_parentesis VARF cerrar_parentesis
+
+    igual             shift, and go to state 181
+    abrir_parentesis  shift, and go to state 182
+
+
+State 138
+
+   32 ASIGNACION: id igual EXPL . finalizacion
+
+    finalizacion  shift, and go to state 183
+
+
+State 139
+
+   81 LEXP: LEXP . coma EXPL
+  123 VARF: LEXP .
+
+    coma  shift, and go to state 184
+
+    $default  reduce using rule 123 (VARF)
+
+
+State 140
+
+   82 LEXP: EXPL .
+
+    $default  reduce using rule 82 (LEXP)
+
+
+State 141
+
+  121 LLAMADAFUNC: id abrir_parentesis VARF . cerrar_parentesis
+
+    cerrar_parentesis  shift, and go to state 185
+
+
+State 142
+
+   33 ASIGNACION: id DIMENSION igual . EXPL finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 186
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 143
+
+   67 TERMDECLAR: finalizacion .
+
+    $default  reduce using rule 67 (TERMDECLAR)
+
+
+State 144
+
+   69 TERMDECLAR: igual . EXPL finalizacion
+   70           | igual . pnew id abrir_parentesis cerrar_parentesis finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    pnew              shift, and go to state 187
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 188
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 145
+
+   36 FUNCIONES: abrir_parentesis . LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   37          | abrir_parentesis . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
     pint               shift, and go to state 13
     pdouble            shift, and go to state 14
@@ -1911,776 +2095,666 @@ State 130
     pchar              shift, and go to state 16
     pstring            shift, and go to state 17
     pvoid              shift, and go to state 24
-    id                 shift, and go to state 48
-    cerrar_parentesis  shift, and go to state 171
+    id                 shift, and go to state 56
+    cerrar_parentesis  shift, and go to state 189
 
-    TIPO    go to state 172
-    LTIPOS  go to state 173
-
-
-State 131
-
-   56 TERMDECLAR: FUNCIONES .
-
-    $default  reduce using rule 56 (TERMDECLAR)
+    TIPO    go to state 190
+    LTIPOS  go to state 191
 
 
-State 132
+State 146
 
-   24 DECLARACION: TIPO LIDS TERMDECLAR .
+   68 TERMDECLAR: FUNCIONES .
 
-    $default  reduce using rule 24 (DECLARACION)
+    $default  reduce using rule 68 (TERMDECLAR)
 
 
-State 133
+State 147
+
+   28 DECLARACION: TIPO LIDS TERMDECLAR .
+
+    $default  reduce using rule 28 (DECLARACION)
+
+
+State 148
 
     9 LIDS: LIDS . coma id
-   25 DECLARACION: SOBREESCRITURA TIPO LIDS . TERMDECLAR
+   29 DECLARACION: SOBREESCRITURA TIPO LIDS . TERMDECLAR
 
-    coma              shift, and go to state 46
-    finalizacion      shift, and go to state 128
-    igual             shift, and go to state 129
-    abrir_parentesis  shift, and go to state 130
+    coma              shift, and go to state 54
+    finalizacion      shift, and go to state 143
+    igual             shift, and go to state 144
+    abrir_parentesis  shift, and go to state 145
 
-    FUNCIONES   go to state 131
-    TERMDECLAR  go to state 174
+    FUNCIONES   go to state 146
+    TERMDECLAR  go to state 192
 
 
-State 134
+State 149
 
-   23 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO . LIDS TERMDECLAR
+   27 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO . LIDS TERMDECLAR
 
     id  shift, and go to state 11
 
-    LIDS  go to state 175
+    LIDS  go to state 193
 
 
-State 135
+State 150
 
-   26 DECLARACION: VISIBILIDAD parreglo TIPO . LIDS DIMENSION TERMARRAY
+   30 DECLARACION: VISIBILIDAD parreglo TIPO . LIDS DIMENSION TERMARRAY
 
     id  shift, and go to state 11
 
-    LIDS  go to state 176
+    LIDS  go to state 194
 
 
-State 136
+State 151
 
     9 LIDS: LIDS . coma id
-   22 DECLARACION: VISIBILIDAD TIPO LIDS . TERMDECLAR
+   26 DECLARACION: VISIBILIDAD TIPO LIDS . TERMDECLAR
 
-    coma              shift, and go to state 46
-    finalizacion      shift, and go to state 128
-    igual             shift, and go to state 129
-    abrir_parentesis  shift, and go to state 130
+    coma              shift, and go to state 54
+    finalizacion      shift, and go to state 143
+    igual             shift, and go to state 144
+    abrir_parentesis  shift, and go to state 145
 
-    FUNCIONES   go to state 131
-    TERMDECLAR  go to state 177
+    FUNCIONES   go to state 146
+    TERMDECLAR  go to state 195
 
 
-State 137
+State 152
 
     5 TERMINACIONCLASE: pextender LIDS abrir_llave RELLENOCLASE cerrar_llave .
 
     $default  reduce using rule 5 (TERMINACIONCLASE)
 
 
-State 138
-
-   27 DECLARACION: parreglo TIPO LIDS DIMENSION . TERMARRAY
-
-    finalizacion  shift, and go to state 178
-    igual         shift, and go to state 179
-
-    TERMARRAY  go to state 180
-
-
-State 139
-
-  106 EXPA: id punto id .
-  108 LLAMADAFUNC: id punto id . abrir_parentesis VARF cerrar_parentesis
-
-    abrir_parentesis  shift, and go to state 164
-
-    $default  reduce using rule 106 (EXPA)
-
-
-State 140
-
-   90 EXPA: abrir_parentesis EXPA cerrar_parentesis .
-
-    $default  reduce using rule 90 (EXPA)
-
-
-State 141
-
-   71 EXPL: EXPR opor EXPR .
-
-    $default  reduce using rule 71 (EXPL)
-
-
-State 142
-
-   73 EXPL: EXPR opand EXPR .
-
-    $default  reduce using rule 73 (EXPL)
-
-
-State 143
-
-   74 EXPL: EXPR opnand EXPR .
-
-    $default  reduce using rule 74 (EXPL)
-
-
-State 144
-
-   72 EXPL: EXPR opnor EXPR .
-
-    $default  reduce using rule 72 (EXPL)
-
-
-State 145
-
-   77 EXPR: EXPA igual_igual EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 77 (EXPR)
-
-
-State 146
-
-   78 EXPR: EXPA diferente_de EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 78 (EXPR)
-
-
-State 147
-
-   79 EXPR: EXPA menor_que EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 79 (EXPR)
-
-
-State 148
-
-   81 EXPR: EXPA menorigual_que EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 81 (EXPR)
-
-
-State 149
-
-   80 EXPR: EXPA mayor_que EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 80 (EXPR)
-
-
-State 150
-
-   82 EXPR: EXPA mayorigual_que EXPA .
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    $default  reduce using rule 82 (EXPR)
-
-
-State 151
-
-   84 EXPA: EXPA . suma EXPA
-   84     | EXPA suma EXPA .
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    resta     [reduce using rule 84 (EXPA)]
-    $default  reduce using rule 84 (EXPA)
-
-
-State 152
-
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   85     | EXPA resta EXPA .
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-
-    suma      shift, and go to state 108
-    resta     shift, and go to state 109
-    multi     shift, and go to state 110
-    division  shift, and go to state 111
-    potencia  shift, and go to state 112
-
-    suma      [reduce using rule 85 (EXPA)]
-    resta     [reduce using rule 85 (EXPA)]
-    multi     [reduce using rule 85 (EXPA)]
-    division  [reduce using rule 85 (EXPA)]
-    potencia  [reduce using rule 85 (EXPA)]
-    $default  reduce using rule 85 (EXPA)
-
-
 State 153
 
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   86     | EXPA multi EXPA .
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
+   31 DECLARACION: parreglo TIPO LIDS DIMENSION . TERMARRAY
 
-    resta     shift, and go to state 109
-    potencia  shift, and go to state 112
+    finalizacion  shift, and go to state 196
+    igual         shift, and go to state 197
 
-    resta     [reduce using rule 86 (EXPA)]
-    $default  reduce using rule 86 (EXPA)
+    TERMARRAY  go to state 198
 
 
 State 154
 
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   87     | EXPA division EXPA .
-   88     | EXPA . potencia EXPA
+  118 EXPA: id punto id .
+  120 LLAMADAFUNC: id punto id . abrir_parentesis VARF cerrar_parentesis
 
-    resta     shift, and go to state 109
-    potencia  shift, and go to state 112
+    abrir_parentesis  shift, and go to state 182
 
-    resta     [reduce using rule 87 (EXPA)]
-    $default  reduce using rule 87 (EXPA)
+    $default  reduce using rule 118 (EXPA)
 
 
 State 155
 
-   84 EXPA: EXPA . suma EXPA
-   85     | EXPA . resta EXPA
-   86     | EXPA . multi EXPA
-   87     | EXPA . division EXPA
-   88     | EXPA . potencia EXPA
-   88     | EXPA potencia EXPA .
+  102 EXPA: abrir_parentesis EXPA cerrar_parentesis .
 
-    resta  shift, and go to state 109
-
-    potencia  error (nonassociative)
-
-    resta     [reduce using rule 88 (EXPA)]
-    $default  reduce using rule 88 (EXPA)
+    $default  reduce using rule 102 (EXPA)
 
 
 State 156
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma . EXPL cerrar_parentesis finalizacion
+   83 EXPL: EXPR opor EXPR .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 181
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 83 (EXPL)
 
 
 State 157
 
-   35 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis . finalizacion
+   85 EXPL: EXPR opand EXPR .
 
-    finalizacion  shift, and go to state 182
+    $default  reduce using rule 85 (EXPL)
 
 
 State 158
 
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave TERMINSI
+   86 EXPL: EXPR opnand EXPR .
 
-    abrir_llave  shift, and go to state 183
+    $default  reduce using rule 86 (EXPL)
 
 
 State 159
 
-   30 ASIGNACION: id punto . id igual EXPL finalizacion
+   84 EXPL: EXPR opnor EXPR .
 
-    id  shift, and go to state 184
+    $default  reduce using rule 84 (EXPL)
 
 
 State 160
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL . finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   89 EXPR: EXPA igual_igual EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    finalizacion  shift, and go to state 185
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
+
+    $default  reduce using rule 89 (EXPR)
 
 
 State 161
 
-   31 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+   90 EXPR: EXPA diferente_de EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    pint                  shift, and go to state 13
-    pdouble               shift, and go to state 14
-    pbool                 shift, and go to state 15
-    pchar                 shift, and go to state 16
-    pstring               shift, and go to state 17
-    parreglo              shift, and go to state 18
-    psobrescribir         shift, and go to state 19
-    ppublico              shift, and go to state 20
-    pprivado              shift, and go to state 21
-    pprotegido            shift, and go to state 22
-    pretornar             shift, and go to state 23
-    pvoid                 shift, and go to state 24
-    pmostrarnotificacion  shift, and go to state 25
-    pimprimir             shift, and go to state 26
-    psi                   shift, and go to state 27
-    ppara                 shift, and go to state 28
-    pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    $default  reduce using rule 7 (RELLENOCLASE)
-
-    RELLENOCLASE    go to state 186
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    $default  reduce using rule 90 (EXPR)
 
 
 State 162
 
-   59 DIMENSION: abrir_corchete EXPL cerrar_corchete .
-   60          | abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete
-   61          | abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   91 EXPR: EXPA menor_que EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    abrir_corchete  shift, and go to state 187
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    $default  reduce using rule 59 (DIMENSION)
+    $default  reduce using rule 91 (EXPR)
 
 
 State 163
 
-   30 ASIGNACION: id punto id igual . EXPL finalizacion
+   93 EXPR: EXPA menorigual_que EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    EXPL         go to state 188
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 93 (EXPR)
 
 
 State 164
 
-  108 LLAMADAFUNC: id punto id abrir_parentesis . VARF cerrar_parentesis
+   92 EXPR: EXPA mayor_que EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    $default  reduce using rule 110 (VARF)
-
-    LEXP         go to state 124
-    EXPL         go to state 125
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
-    VARF         go to state 189
+    $default  reduce using rule 92 (EXPR)
 
 
 State 165
 
-   28 ASIGNACION: id igual EXPL finalizacion .
+   94 EXPR: EXPA mayorigual_que EXPA .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    $default  reduce using rule 28 (ASIGNACION)
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
+
+    $default  reduce using rule 94 (EXPR)
 
 
 State 166
 
-   69 LEXP: LEXP coma . EXPL
+   96 EXPA: EXPA . suma EXPA
+   96     | EXPA suma EXPA .
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
 
-    EXPL         go to state 190
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    resta     [reduce using rule 96 (EXPA)]
+    $default  reduce using rule 96 (EXPA)
 
 
 State 167
 
-  109 LLAMADAFUNC: id abrir_parentesis VARF cerrar_parentesis .
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   97     | EXPA resta EXPA .
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    $default  reduce using rule 109 (LLAMADAFUNC)
+    suma      shift, and go to state 120
+    resta     shift, and go to state 121
+    multi     shift, and go to state 122
+    division  shift, and go to state 123
+    potencia  shift, and go to state 124
+
+    suma      [reduce using rule 97 (EXPA)]
+    resta     [reduce using rule 97 (EXPA)]
+    multi     [reduce using rule 97 (EXPA)]
+    division  [reduce using rule 97 (EXPA)]
+    potencia  [reduce using rule 97 (EXPA)]
+    $default  reduce using rule 97 (EXPA)
 
 
 State 168
 
-   29 ASIGNACION: id DIMENSION igual EXPL . finalizacion
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   98     | EXPA multi EXPA .
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
 
-    finalizacion  shift, and go to state 191
+    resta     shift, and go to state 121
+    potencia  shift, and go to state 124
+
+    resta     [reduce using rule 98 (EXPA)]
+    $default  reduce using rule 98 (EXPA)
 
 
 State 169
 
-   58 TERMDECLAR: igual pnew . id abrir_parentesis cerrar_parentesis finalizacion
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+   99     | EXPA division EXPA .
+  100     | EXPA . potencia EXPA
 
-    id  shift, and go to state 192
+    resta     shift, and go to state 121
+    potencia  shift, and go to state 124
+
+    resta     [reduce using rule 99 (EXPA)]
+    $default  reduce using rule 99 (EXPA)
 
 
 State 170
 
-   57 TERMDECLAR: igual EXPL . finalizacion
+   96 EXPA: EXPA . suma EXPA
+   97     | EXPA . resta EXPA
+   98     | EXPA . multi EXPA
+   99     | EXPA . division EXPA
+  100     | EXPA . potencia EXPA
+  100     | EXPA potencia EXPA .
 
-    finalizacion  shift, and go to state 193
+    resta  shift, and go to state 121
+
+    potencia  error (nonassociative)
+
+    resta     [reduce using rule 100 (EXPA)]
+    $default  reduce using rule 100 (EXPA)
 
 
 State 171
 
-   33 FUNCIONES: abrir_parentesis cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma . EXPL cerrar_parentesis finalizacion
 
-    abrir_llave  shift, and go to state 194
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 199
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 172
 
-   53 LTIPOS: TIPO . id
-   54       | TIPO . id DIMENSION
+   39 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis . finalizacion
 
-    id  shift, and go to state 195
+    finalizacion  shift, and go to state 200
 
 
 State 173
 
-   32 FUNCIONES: abrir_parentesis LTIPOS . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-   51 LTIPOS: LTIPOS . coma TIPO id
-   52       | LTIPOS . coma TIPO id DIMENSION
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave TERMINSI
 
-    coma               shift, and go to state 196
-    cerrar_parentesis  shift, and go to state 197
+    abrir_llave  shift, and go to state 201
 
 
 State 174
 
-   25 DECLARACION: SOBREESCRITURA TIPO LIDS TERMDECLAR .
+   34 ASIGNACION: id punto . id igual EXPL finalizacion
 
-    $default  reduce using rule 25 (DECLARACION)
+    id  shift, and go to state 202
 
 
 State 175
 
-    9 LIDS: LIDS . coma id
-   23 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO LIDS . TERMDECLAR
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL . finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    coma              shift, and go to state 46
-    finalizacion      shift, and go to state 128
-    igual             shift, and go to state 129
-    abrir_parentesis  shift, and go to state 130
-
-    FUNCIONES   go to state 131
-    TERMDECLAR  go to state 198
+    finalizacion  shift, and go to state 203
 
 
 State 176
 
-    9 LIDS: LIDS . coma id
-   26 DECLARACION: VISIBILIDAD parreglo TIPO LIDS . DIMENSION TERMARRAY
+   35 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
 
-    abrir_corchete  shift, and go to state 68
-    coma            shift, and go to state 46
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
 
-    DIMENSION  go to state 199
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 204
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
 
 
 State 177
 
-   22 DECLARACION: VISIBILIDAD TIPO LIDS TERMDECLAR .
+   43 REPETIR: prepetir abrir_parentesis EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
 
-    $default  reduce using rule 22 (DECLARACION)
+    abrir_llave  shift, and go to state 205
 
 
 State 178
 
-   62 TERMARRAY: finalizacion .
+   45 MIENTRAS: pmientras abrir_parentesis EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
 
-    $default  reduce using rule 62 (TERMARRAY)
+    abrir_llave  shift, and go to state 206
 
 
 State 179
 
-   63 TERMARRAY: igual . LDECLARRAY finalizacion
+   46 COMPROBAR: pcomprobar abrir_parentesis id cerrar_parentesis . abrir_llave CASOS cerrar_llave
 
-    abrir_llave  shift, and go to state 200
-
-    LDECLARRAY  go to state 201
+    abrir_llave  shift, and go to state 207
 
 
 State 180
 
-   27 DECLARACION: parreglo TIPO LIDS DIMENSION TERMARRAY .
+   71 DIMENSION: abrir_corchete EXPL cerrar_corchete .
+   72          | abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete
+   73          | abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
 
-    $default  reduce using rule 27 (DECLARACION)
+    abrir_corchete  shift, and go to state 208
+
+    $default  reduce using rule 71 (DIMENSION)
 
 
 State 181
 
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL . cerrar_parentesis finalizacion
+   34 ASIGNACION: id punto id igual . EXPL finalizacion
 
-    cerrar_parentesis  shift, and go to state 202
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 209
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 182
 
-   35 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion .
+  120 LLAMADAFUNC: id punto id abrir_parentesis . VARF cerrar_parentesis
 
-    $default  reduce using rule 35 (IMPRIMIR)
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    $default  reduce using rule 122 (VARF)
+
+    LEXP         go to state 139
+    EXPL         go to state 140
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+    VARF         go to state 210
 
 
 State 183
 
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave TERMINSI
+   32 ASIGNACION: id igual EXPL finalizacion .
 
-    pint                  shift, and go to state 13
-    pdouble               shift, and go to state 14
-    pbool                 shift, and go to state 15
-    pchar                 shift, and go to state 16
-    pstring               shift, and go to state 17
-    parreglo              shift, and go to state 18
-    psobrescribir         shift, and go to state 19
-    ppublico              shift, and go to state 20
-    pprivado              shift, and go to state 21
-    pprotegido            shift, and go to state 22
-    pretornar             shift, and go to state 23
-    pvoid                 shift, and go to state 24
-    pmostrarnotificacion  shift, and go to state 25
-    pimprimir             shift, and go to state 26
-    psi                   shift, and go to state 27
-    ppara                 shift, and go to state 28
-    pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
-
-    $default  reduce using rule 7 (RELLENOCLASE)
-
-    RELLENOCLASE    go to state 203
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    $default  reduce using rule 32 (ASIGNACION)
 
 
 State 184
 
-   30 ASIGNACION: id punto id . igual EXPL finalizacion
+   81 LEXP: LEXP coma . EXPL
 
-    igual  shift, and go to state 163
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 211
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
 State 185
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+  121 LLAMADAFUNC: id abrir_parentesis VARF cerrar_parentesis .
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 204
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    $default  reduce using rule 121 (LLAMADAFUNC)
 
 
 State 186
 
-   31 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+   33 ASIGNACION: id DIMENSION igual EXPL . finalizacion
 
-    cerrar_llave  shift, and go to state 205
+    finalizacion  shift, and go to state 212
 
 
 State 187
 
-   60 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete
-   61          | abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+   70 TERMDECLAR: igual pnew . id abrir_parentesis cerrar_parentesis finalizacion
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 206
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    id  shift, and go to state 213
 
 
 State 188
 
-   30 ASIGNACION: id punto id igual EXPL . finalizacion
+   69 TERMDECLAR: igual EXPL . finalizacion
 
-    finalizacion  shift, and go to state 207
+    finalizacion  shift, and go to state 214
 
 
 State 189
 
-  108 LLAMADAFUNC: id punto id abrir_parentesis VARF . cerrar_parentesis
+   37 FUNCIONES: abrir_parentesis cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
 
-    cerrar_parentesis  shift, and go to state 208
+    abrir_llave  shift, and go to state 215
 
 
 State 190
 
-   69 LEXP: LEXP coma EXPL .
+   65 LTIPOS: TIPO . id
+   66       | TIPO . id DIMENSION
 
-    $default  reduce using rule 69 (LEXP)
+    id  shift, and go to state 216
 
 
 State 191
 
-   29 ASIGNACION: id DIMENSION igual EXPL finalizacion .
+   36 FUNCIONES: abrir_parentesis LTIPOS . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+   63 LTIPOS: LTIPOS . coma TIPO id
+   64       | LTIPOS . coma TIPO id DIMENSION
 
-    $default  reduce using rule 29 (ASIGNACION)
+    coma               shift, and go to state 217
+    cerrar_parentesis  shift, and go to state 218
 
 
 State 192
 
-   58 TERMDECLAR: igual pnew id . abrir_parentesis cerrar_parentesis finalizacion
+   29 DECLARACION: SOBREESCRITURA TIPO LIDS TERMDECLAR .
 
-    abrir_parentesis  shift, and go to state 209
+    $default  reduce using rule 29 (DECLARACION)
 
 
 State 193
 
-   57 TERMDECLAR: igual EXPL finalizacion .
+    9 LIDS: LIDS . coma id
+   27 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO LIDS . TERMDECLAR
 
-    $default  reduce using rule 57 (TERMDECLAR)
+    coma              shift, and go to state 54
+    finalizacion      shift, and go to state 143
+    igual             shift, and go to state 144
+    abrir_parentesis  shift, and go to state 145
+
+    FUNCIONES   go to state 146
+    TERMDECLAR  go to state 219
 
 
 State 194
 
-   33 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+    9 LIDS: LIDS . coma id
+   30 DECLARACION: VISIBILIDAD parreglo TIPO LIDS . DIMENSION TERMARRAY
+
+    abrir_corchete  shift, and go to state 80
+    coma            shift, and go to state 54
+
+    DIMENSION  go to state 220
+
+
+State 195
+
+   26 DECLARACION: VISIBILIDAD TIPO LIDS TERMDECLAR .
+
+    $default  reduce using rule 26 (DECLARACION)
+
+
+State 196
+
+   74 TERMARRAY: finalizacion .
+
+    $default  reduce using rule 74 (TERMARRAY)
+
+
+State 197
+
+   75 TERMARRAY: igual . LDECLARRAY finalizacion
+
+    abrir_llave  shift, and go to state 221
+
+    LDECLARRAY  go to state 222
+
+
+State 198
+
+   31 DECLARACION: parreglo TIPO LIDS DIMENSION TERMARRAY .
+
+    $default  reduce using rule 31 (DECLARACION)
+
+
+State 199
+
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL . cerrar_parentesis finalizacion
+
+    cerrar_parentesis  shift, and go to state 223
+
+
+State 200
+
+   39 IMPRIMIR: pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion .
+
+    $default  reduce using rule 39 (IMPRIMIR)
+
+
+State 201
+
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave TERMINSI
 
     pint                  shift, and go to state 13
     pdouble               shift, and go to state 14
@@ -2699,43 +2773,308 @@ State 194
     psi                   shift, and go to state 27
     ppara                 shift, and go to state 28
     pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
 
     $default  reduce using rule 7 (RELLENOCLASE)
 
-    RELLENOCLASE    go to state 210
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    RELLENOCLASE    go to state 224
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
 
 
-State 195
+State 202
 
-   53 LTIPOS: TIPO id .
-   54       | TIPO id . DIMENSION
+   34 ASIGNACION: id punto id . igual EXPL finalizacion
 
-    abrir_corchete  shift, and go to state 68
-
-    $default  reduce using rule 53 (LTIPOS)
-
-    DIMENSION  go to state 211
+    igual  shift, and go to state 181
 
 
-State 196
+State 203
 
-   51 LTIPOS: LTIPOS coma . TIPO id
-   52       | LTIPOS coma . TIPO id DIMENSION
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion . EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 225
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 204
+
+   35 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 226
+
+
+State 205
+
+   43 REPETIR: prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 227
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 206
+
+   45 MIENTRAS: pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 228
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 207
+
+   46 COMPROBAR: pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave . CASOS cerrar_llave
+
+    pcaso     shift, and go to state 229
+    pdefecto  shift, and go to state 230
+
+    CASOS  go to state 231
+
+
+State 208
+
+   72 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete
+   73          | abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 232
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 209
+
+   34 ASIGNACION: id punto id igual EXPL . finalizacion
+
+    finalizacion  shift, and go to state 233
+
+
+State 210
+
+  120 LLAMADAFUNC: id punto id abrir_parentesis VARF . cerrar_parentesis
+
+    cerrar_parentesis  shift, and go to state 234
+
+
+State 211
+
+   81 LEXP: LEXP coma EXPL .
+
+    $default  reduce using rule 81 (LEXP)
+
+
+State 212
+
+   33 ASIGNACION: id DIMENSION igual EXPL finalizacion .
+
+    $default  reduce using rule 33 (ASIGNACION)
+
+
+State 213
+
+   70 TERMDECLAR: igual pnew id . abrir_parentesis cerrar_parentesis finalizacion
+
+    abrir_parentesis  shift, and go to state 235
+
+
+State 214
+
+   69 TERMDECLAR: igual EXPL finalizacion .
+
+    $default  reduce using rule 69 (TERMDECLAR)
+
+
+State 215
+
+   37 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 236
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 216
+
+   65 LTIPOS: TIPO id .
+   66       | TIPO id . DIMENSION
+
+    abrir_corchete  shift, and go to state 80
+
+    $default  reduce using rule 65 (LTIPOS)
+
+    DIMENSION  go to state 237
+
+
+State 217
+
+   63 LTIPOS: LTIPOS coma . TIPO id
+   64       | LTIPOS coma . TIPO id DIMENSION
 
     pint     shift, and go to state 13
     pdouble  shift, and go to state 14
@@ -2743,569 +3082,991 @@ State 196
     pchar    shift, and go to state 16
     pstring  shift, and go to state 17
     pvoid    shift, and go to state 24
-    id       shift, and go to state 48
+    id       shift, and go to state 56
 
-    TIPO  go to state 212
-
-
-State 197
-
-   32 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
-
-    abrir_llave  shift, and go to state 213
-
-
-State 198
-
-   23 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR .
-
-    $default  reduce using rule 23 (DECLARACION)
-
-
-State 199
-
-   26 DECLARACION: VISIBILIDAD parreglo TIPO LIDS DIMENSION . TERMARRAY
-
-    finalizacion  shift, and go to state 178
-    igual         shift, and go to state 179
-
-    TERMARRAY  go to state 214
-
-
-State 200
-
-   65 LDECLARRAY: abrir_llave . LEXP cerrar_llave
-   66           | abrir_llave . LLLAVE cerrar_llave
-
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    abrir_llave       shift, and go to state 215
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    LLLAVE       go to state 216
-    LEXP         go to state 217
-    EXPL         go to state 125
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
-
-
-State 201
-
-   63 TERMARRAY: igual LDECLARRAY . finalizacion
-
-    finalizacion  shift, and go to state 218
-
-
-State 202
-
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis . finalizacion
-
-    finalizacion  shift, and go to state 219
-
-
-State 203
-
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave TERMINSI
-
-    cerrar_llave  shift, and go to state 220
-
-
-State 204
-
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-
-    cerrar_parentesis  shift, and go to state 221
-
-
-State 205
-
-   31 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
-
-    $default  reduce using rule 31 (PRINCIPAL)
-
-
-State 206
-
-   60 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete
-   61          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete
-
-    cerrar_corchete  shift, and go to state 222
-
-
-State 207
-
-   30 ASIGNACION: id punto id igual EXPL finalizacion .
-
-    $default  reduce using rule 30 (ASIGNACION)
-
-
-State 208
-
-  108 LLAMADAFUNC: id punto id abrir_parentesis VARF cerrar_parentesis .
-
-    $default  reduce using rule 108 (LLAMADAFUNC)
-
-
-State 209
-
-   58 TERMDECLAR: igual pnew id abrir_parentesis . cerrar_parentesis finalizacion
-
-    cerrar_parentesis  shift, and go to state 223
-
-
-State 210
-
-   33 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
-
-    cerrar_llave  shift, and go to state 224
-
-
-State 211
-
-   54 LTIPOS: TIPO id DIMENSION .
-
-    $default  reduce using rule 54 (LTIPOS)
-
-
-State 212
-
-   51 LTIPOS: LTIPOS coma TIPO . id
-   52       | LTIPOS coma TIPO . id DIMENSION
-
-    id  shift, and go to state 225
-
-
-State 213
-
-   32 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
-
-    pint                  shift, and go to state 13
-    pdouble               shift, and go to state 14
-    pbool                 shift, and go to state 15
-    pchar                 shift, and go to state 16
-    pstring               shift, and go to state 17
-    parreglo              shift, and go to state 18
-    psobrescribir         shift, and go to state 19
-    ppublico              shift, and go to state 20
-    pprivado              shift, and go to state 21
-    pprotegido            shift, and go to state 22
-    pretornar             shift, and go to state 23
-    pvoid                 shift, and go to state 24
-    pmostrarnotificacion  shift, and go to state 25
-    pimprimir             shift, and go to state 26
-    psi                   shift, and go to state 27
-    ppara                 shift, and go to state 28
-    pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
-
-    $default  reduce using rule 7 (RELLENOCLASE)
-
-    RELLENOCLASE    go to state 226
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
-
-
-State 214
-
-   26 DECLARACION: VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY .
-
-    $default  reduce using rule 26 (DECLARACION)
-
-
-State 215
-
-   68 LLLAVE: abrir_llave . LEXP cerrar_llave
-
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    LEXP         go to state 227
-    EXPL         go to state 125
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
-
-
-State 216
-
-   66 LDECLARRAY: abrir_llave LLLAVE . cerrar_llave
-   67 LLLAVE: LLLAVE . coma abrir_llave LEXP cerrar_llave
-
-    coma          shift, and go to state 228
-    cerrar_llave  shift, and go to state 229
-
-
-State 217
-
-   65 LDECLARRAY: abrir_llave LEXP . cerrar_llave
-   69 LEXP: LEXP . coma EXPL
-
-    coma          shift, and go to state 166
-    cerrar_llave  shift, and go to state 230
+    TIPO  go to state 238
 
 
 State 218
 
-   63 TERMARRAY: igual LDECLARRAY finalizacion .
-
-    $default  reduce using rule 63 (TERMARRAY)
-
-
-State 219
-
-   36 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion .
-
-    $default  reduce using rule 36 (MOSTRARNOTIFI)
-
-
-State 220
-
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave . TERMINSI
-
-    psino  shift, and go to state 231
-
-    $default  reduce using rule 41 (TERMINSI)
-
-    TERMINSI  go to state 232
-
-
-State 221
-
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
-
-    abrir_llave  shift, and go to state 233
-
-
-State 222
-
-   60 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete .
-   61          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete
-
-    abrir_corchete  shift, and go to state 234
-
-    $default  reduce using rule 60 (DIMENSION)
-
-
-State 223
-
-   58 TERMDECLAR: igual pnew id abrir_parentesis cerrar_parentesis . finalizacion
-
-    finalizacion  shift, and go to state 235
-
-
-State 224
-
-   33 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
-
-    $default  reduce using rule 33 (FUNCIONES)
-
-
-State 225
-
-   51 LTIPOS: LTIPOS coma TIPO id .
-   52       | LTIPOS coma TIPO id . DIMENSION
-
-    abrir_corchete  shift, and go to state 68
-
-    $default  reduce using rule 51 (LTIPOS)
-
-    DIMENSION  go to state 236
-
-
-State 226
-
-   32 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
-
-    cerrar_llave  shift, and go to state 237
-
-
-State 227
-
-   68 LLLAVE: abrir_llave LEXP . cerrar_llave
-   69 LEXP: LEXP . coma EXPL
-
-    coma          shift, and go to state 166
-    cerrar_llave  shift, and go to state 238
-
-
-State 228
-
-   67 LLLAVE: LLLAVE coma . abrir_llave LEXP cerrar_llave
+   36 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
 
     abrir_llave  shift, and go to state 239
 
 
-State 229
+State 219
 
-   66 LDECLARRAY: abrir_llave LLLAVE cerrar_llave .
+   27 DECLARACION: SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR .
 
-    $default  reduce using rule 66 (LDECLARRAY)
-
-
-State 230
-
-   65 LDECLARRAY: abrir_llave LEXP cerrar_llave .
-
-    $default  reduce using rule 65 (LDECLARRAY)
+    $default  reduce using rule 27 (DECLARACION)
 
 
-State 231
+State 220
 
-   42 TERMINSI: psino . abrir_llave RELLENOCLASE cerrar_llave
-   43         | psino . SI
+   30 DECLARACION: VISIBILIDAD parreglo TIPO LIDS DIMENSION . TERMARRAY
 
-    psi          shift, and go to state 27
-    abrir_llave  shift, and go to state 240
+    finalizacion  shift, and go to state 196
+    igual         shift, and go to state 197
 
-    SI  go to state 241
-
-
-State 232
-
-   37 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI .
-
-    $default  reduce using rule 37 (SI)
+    TERMARRAY  go to state 240
 
 
-State 233
+State 221
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+   77 LDECLARRAY: abrir_llave . LEXP cerrar_llave
+   78           | abrir_llave . LLLAVE cerrar_llave
 
-    pint                  shift, and go to state 13
-    pdouble               shift, and go to state 14
-    pbool                 shift, and go to state 15
-    pchar                 shift, and go to state 16
-    pstring               shift, and go to state 17
-    parreglo              shift, and go to state 18
-    psobrescribir         shift, and go to state 19
-    ppublico              shift, and go to state 20
-    pprivado              shift, and go to state 21
-    pprotegido            shift, and go to state 22
-    pretornar             shift, and go to state 23
-    pvoid                 shift, and go to state 24
-    pmostrarnotificacion  shift, and go to state 25
-    pimprimir             shift, and go to state 26
-    psi                   shift, and go to state 27
-    ppara                 shift, and go to state 28
-    pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    abrir_llave       shift, and go to state 241
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
 
-    $default  reduce using rule 7 (RELLENOCLASE)
-
-    RELLENOCLASE    go to state 242
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
+    LLLAVE       go to state 242
+    LEXP         go to state 243
+    EXPL         go to state 140
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
 
 
-State 234
+State 222
 
-   61 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete
+   75 TERMARRAY: igual LDECLARRAY . finalizacion
 
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    EXPL         go to state 243
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
+    finalizacion  shift, and go to state 244
 
 
-State 235
+State 223
 
-   58 TERMDECLAR: igual pnew id abrir_parentesis cerrar_parentesis finalizacion .
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis . finalizacion
 
-    $default  reduce using rule 58 (TERMDECLAR)
-
-
-State 236
-
-   52 LTIPOS: LTIPOS coma TIPO id DIMENSION .
-
-    $default  reduce using rule 52 (LTIPOS)
+    finalizacion  shift, and go to state 245
 
 
-State 237
+State 224
 
-   32 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
-
-    $default  reduce using rule 32 (FUNCIONES)
-
-
-State 238
-
-   68 LLLAVE: abrir_llave LEXP cerrar_llave .
-
-    $default  reduce using rule 68 (LLLAVE)
-
-
-State 239
-
-   67 LLLAVE: LLLAVE coma abrir_llave . LEXP cerrar_llave
-
-    numero            shift, and go to state 50
-    decimal           shift, and go to state 51
-    caracter          shift, and go to state 52
-    booleano          shift, and go to state 53
-    cadena            shift, and go to state 54
-    id                shift, and go to state 55
-    abrir_parentesis  shift, and go to state 56
-    opnot             shift, and go to state 57
-    resta             shift, and go to state 58
-
-    LEXP         go to state 244
-    EXPL         go to state 125
-    EXPR         go to state 60
-    EXPA         go to state 61
-    LLAMADAFUNC  go to state 62
-
-
-State 240
-
-   42 TERMINSI: psino abrir_llave . RELLENOCLASE cerrar_llave
-
-    pint                  shift, and go to state 13
-    pdouble               shift, and go to state 14
-    pbool                 shift, and go to state 15
-    pchar                 shift, and go to state 16
-    pstring               shift, and go to state 17
-    parreglo              shift, and go to state 18
-    psobrescribir         shift, and go to state 19
-    ppublico              shift, and go to state 20
-    pprivado              shift, and go to state 21
-    pprotegido            shift, and go to state 22
-    pretornar             shift, and go to state 23
-    pvoid                 shift, and go to state 24
-    pmostrarnotificacion  shift, and go to state 25
-    pimprimir             shift, and go to state 26
-    psi                   shift, and go to state 27
-    ppara                 shift, and go to state 28
-    pprincipal            shift, and go to state 29
-    id                    shift, and go to state 30
-
-    $default  reduce using rule 7 (RELLENOCLASE)
-
-    RELLENOCLASE    go to state 245
-    LSENTENCIAS     go to state 32
-    SENTENCIA       go to state 33
-    DECLARACION     go to state 34
-    ASIGNACION      go to state 35
-    PRINCIPAL       go to state 36
-    RETORNAR        go to state 37
-    IMPRIMIR        go to state 38
-    MOSTRARNOTIFI   go to state 39
-    SI              go to state 40
-    PARA            go to state 41
-    TIPO            go to state 42
-    SOBREESCRITURA  go to state 43
-    LLAMADAFUNC     go to state 44
-    VISIBILIDAD     go to state 45
-
-
-State 241
-
-   43 TERMINSI: psino SI .
-
-    $default  reduce using rule 43 (TERMINSI)
-
-
-State 242
-
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave TERMINSI
 
     cerrar_llave  shift, and go to state 246
 
 
-State 243
+State 225
 
-   61 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL . cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
 
-    cerrar_corchete  shift, and go to state 247
+    cerrar_parentesis  shift, and go to state 247
 
 
-State 244
+State 226
 
-   67 LLLAVE: LLLAVE coma abrir_llave LEXP . cerrar_llave
-   69 LEXP: LEXP . coma EXPL
+   35 PRINCIPAL: pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
 
-    coma          shift, and go to state 166
+    $default  reduce using rule 35 (PRINCIPAL)
+
+
+State 227
+
+   43 REPETIR: prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+
     cerrar_llave  shift, and go to state 248
 
 
-State 245
+State 228
 
-   42 TERMINSI: psino abrir_llave RELLENOCLASE . cerrar_llave
+   45 MIENTRAS: pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
 
     cerrar_llave  shift, and go to state 249
 
 
+State 229
+
+   49 CASOS: pcaso . EXPL dos_puntos RELLENOCLASE psalir finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 250
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 230
+
+   50 CASOS: pdefecto . dos_puntos RELLENOCLASE psalir finalizacion
+
+    dos_puntos  shift, and go to state 251
+
+
+State 231
+
+   46 COMPROBAR: pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave CASOS . cerrar_llave
+   47 CASOS: CASOS . pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
+   48      | CASOS . pdefecto dos_puntos RELLENOCLASE psalir finalizacion
+
+    cerrar_llave  shift, and go to state 252
+    pcaso         shift, and go to state 253
+    pdefecto      shift, and go to state 254
+
+
+State 232
+
+   72 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete
+   73          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete abrir_corchete EXPL cerrar_corchete
+
+    cerrar_corchete  shift, and go to state 255
+
+
+State 233
+
+   34 ASIGNACION: id punto id igual EXPL finalizacion .
+
+    $default  reduce using rule 34 (ASIGNACION)
+
+
+State 234
+
+  120 LLAMADAFUNC: id punto id abrir_parentesis VARF cerrar_parentesis .
+
+    $default  reduce using rule 120 (LLAMADAFUNC)
+
+
+State 235
+
+   70 TERMDECLAR: igual pnew id abrir_parentesis . cerrar_parentesis finalizacion
+
+    cerrar_parentesis  shift, and go to state 256
+
+
+State 236
+
+   37 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 257
+
+
+State 237
+
+   66 LTIPOS: TIPO id DIMENSION .
+
+    $default  reduce using rule 66 (LTIPOS)
+
+
+State 238
+
+   63 LTIPOS: LTIPOS coma TIPO . id
+   64       | LTIPOS coma TIPO . id DIMENSION
+
+    id  shift, and go to state 258
+
+
+State 239
+
+   36 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 259
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 240
+
+   30 DECLARACION: VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY .
+
+    $default  reduce using rule 30 (DECLARACION)
+
+
+State 241
+
+   80 LLLAVE: abrir_llave . LEXP cerrar_llave
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    LEXP         go to state 260
+    EXPL         go to state 140
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 242
+
+   78 LDECLARRAY: abrir_llave LLLAVE . cerrar_llave
+   79 LLLAVE: LLLAVE . coma abrir_llave LEXP cerrar_llave
+
+    coma          shift, and go to state 261
+    cerrar_llave  shift, and go to state 262
+
+
+State 243
+
+   77 LDECLARRAY: abrir_llave LEXP . cerrar_llave
+   81 LEXP: LEXP . coma EXPL
+
+    coma          shift, and go to state 184
+    cerrar_llave  shift, and go to state 263
+
+
+State 244
+
+   75 TERMARRAY: igual LDECLARRAY finalizacion .
+
+    $default  reduce using rule 75 (TERMARRAY)
+
+
+State 245
+
+   40 MOSTRARNOTIFI: pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion .
+
+    $default  reduce using rule 40 (MOSTRARNOTIFI)
+
+
 State 246
 
-   38 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave . TERMINSI
 
-    $default  reduce using rule 38 (PARA)
+    psino  shift, and go to state 264
+
+    $default  reduce using rule 53 (TERMINSI)
+
+    TERMINSI  go to state 265
 
 
 State 247
 
-   61 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete .
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis . abrir_llave RELLENOCLASE cerrar_llave
 
-    $default  reduce using rule 61 (DIMENSION)
+    abrir_llave  shift, and go to state 266
 
 
 State 248
 
-   67 LLLAVE: LLLAVE coma abrir_llave LEXP cerrar_llave .
+   43 REPETIR: prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
 
-    $default  reduce using rule 67 (LLLAVE)
+    $default  reduce using rule 43 (REPETIR)
 
 
 State 249
 
-   42 TERMINSI: psino abrir_llave RELLENOCLASE cerrar_llave .
+   45 MIENTRAS: pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
 
-    $default  reduce using rule 42 (TERMINSI)
+    $default  reduce using rule 45 (MIENTRAS)
+
+
+State 250
+
+   49 CASOS: pcaso EXPL . dos_puntos RELLENOCLASE psalir finalizacion
+
+    dos_puntos  shift, and go to state 267
+
+
+State 251
+
+   50 CASOS: pdefecto dos_puntos . RELLENOCLASE psalir finalizacion
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 268
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 252
+
+   46 COMPROBAR: pcomprobar abrir_parentesis id cerrar_parentesis abrir_llave CASOS cerrar_llave .
+
+    $default  reduce using rule 46 (COMPROBAR)
+
+
+State 253
+
+   47 CASOS: CASOS pcaso . EXPL dos_puntos RELLENOCLASE psalir finalizacion
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 269
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 254
+
+   48 CASOS: CASOS pdefecto . dos_puntos RELLENOCLASE psalir finalizacion
+
+    dos_puntos  shift, and go to state 270
+
+
+State 255
+
+   72 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete .
+   73          | abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete . abrir_corchete EXPL cerrar_corchete
+
+    abrir_corchete  shift, and go to state 271
+
+    $default  reduce using rule 72 (DIMENSION)
+
+
+State 256
+
+   70 TERMDECLAR: igual pnew id abrir_parentesis cerrar_parentesis . finalizacion
+
+    finalizacion  shift, and go to state 272
+
+
+State 257
+
+   37 FUNCIONES: abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
+
+    $default  reduce using rule 37 (FUNCIONES)
+
+
+State 258
+
+   63 LTIPOS: LTIPOS coma TIPO id .
+   64       | LTIPOS coma TIPO id . DIMENSION
+
+    abrir_corchete  shift, and go to state 80
+
+    $default  reduce using rule 63 (LTIPOS)
+
+    DIMENSION  go to state 273
+
+
+State 259
+
+   36 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 274
+
+
+State 260
+
+   80 LLLAVE: abrir_llave LEXP . cerrar_llave
+   81 LEXP: LEXP . coma EXPL
+
+    coma          shift, and go to state 184
+    cerrar_llave  shift, and go to state 275
+
+
+State 261
+
+   79 LLLAVE: LLLAVE coma . abrir_llave LEXP cerrar_llave
+
+    abrir_llave  shift, and go to state 276
+
+
+State 262
+
+   78 LDECLARRAY: abrir_llave LLLAVE cerrar_llave .
+
+    $default  reduce using rule 78 (LDECLARRAY)
+
+
+State 263
+
+   77 LDECLARRAY: abrir_llave LEXP cerrar_llave .
+
+    $default  reduce using rule 77 (LDECLARRAY)
+
+
+State 264
+
+   54 TERMINSI: psino . abrir_llave RELLENOCLASE cerrar_llave
+   55         | psino . SI
+
+    psi          shift, and go to state 27
+    abrir_llave  shift, and go to state 277
+
+    SI  go to state 278
+
+
+State 265
+
+   41 SI: psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI .
+
+    $default  reduce using rule 41 (SI)
+
+
+State 266
+
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 279
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 267
+
+   49 CASOS: pcaso EXPL dos_puntos . RELLENOCLASE psalir finalizacion
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 280
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 268
+
+   50 CASOS: pdefecto dos_puntos RELLENOCLASE . psalir finalizacion
+
+    psalir  shift, and go to state 281
+
+
+State 269
+
+   47 CASOS: CASOS pcaso EXPL . dos_puntos RELLENOCLASE psalir finalizacion
+
+    dos_puntos  shift, and go to state 282
+
+
+State 270
+
+   48 CASOS: CASOS pdefecto dos_puntos . RELLENOCLASE psalir finalizacion
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 283
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 271
+
+   73 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete . EXPL cerrar_corchete
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    EXPL         go to state 284
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 272
+
+   70 TERMDECLAR: igual pnew id abrir_parentesis cerrar_parentesis finalizacion .
+
+    $default  reduce using rule 70 (TERMDECLAR)
+
+
+State 273
+
+   64 LTIPOS: LTIPOS coma TIPO id DIMENSION .
+
+    $default  reduce using rule 64 (LTIPOS)
+
+
+State 274
+
+   36 FUNCIONES: abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
+
+    $default  reduce using rule 36 (FUNCIONES)
+
+
+State 275
+
+   80 LLLAVE: abrir_llave LEXP cerrar_llave .
+
+    $default  reduce using rule 80 (LLLAVE)
+
+
+State 276
+
+   79 LLLAVE: LLLAVE coma abrir_llave . LEXP cerrar_llave
+
+    numero            shift, and go to state 58
+    decimal           shift, and go to state 59
+    caracter          shift, and go to state 60
+    booleano          shift, and go to state 61
+    cadena            shift, and go to state 62
+    id                shift, and go to state 63
+    abrir_parentesis  shift, and go to state 64
+    opnot             shift, and go to state 65
+    resta             shift, and go to state 66
+
+    LEXP         go to state 285
+    EXPL         go to state 140
+    EXPR         go to state 68
+    EXPA         go to state 69
+    LLAMADAFUNC  go to state 70
+
+
+State 277
+
+   54 TERMINSI: psino abrir_llave . RELLENOCLASE cerrar_llave
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 286
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 278
+
+   55 TERMINSI: psino SI .
+
+    $default  reduce using rule 55 (TERMINSI)
+
+
+State 279
+
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 287
+
+
+State 280
+
+   49 CASOS: pcaso EXPL dos_puntos RELLENOCLASE . psalir finalizacion
+
+    psalir  shift, and go to state 288
+
+
+State 281
+
+   50 CASOS: pdefecto dos_puntos RELLENOCLASE psalir . finalizacion
+
+    finalizacion  shift, and go to state 289
+
+
+State 282
+
+   47 CASOS: CASOS pcaso EXPL dos_puntos . RELLENOCLASE psalir finalizacion
+
+    pint                  shift, and go to state 13
+    pdouble               shift, and go to state 14
+    pbool                 shift, and go to state 15
+    pchar                 shift, and go to state 16
+    pstring               shift, and go to state 17
+    parreglo              shift, and go to state 18
+    psobrescribir         shift, and go to state 19
+    ppublico              shift, and go to state 20
+    pprivado              shift, and go to state 21
+    pprotegido            shift, and go to state 22
+    pretornar             shift, and go to state 23
+    pvoid                 shift, and go to state 24
+    pmostrarnotificacion  shift, and go to state 25
+    pimprimir             shift, and go to state 26
+    psi                   shift, and go to state 27
+    ppara                 shift, and go to state 28
+    pprincipal            shift, and go to state 29
+    prepetir              shift, and go to state 30
+    promper               shift, and go to state 31
+    pmientras             shift, and go to state 32
+    pcomprobar            shift, and go to state 33
+    id                    shift, and go to state 34
+
+    $default  reduce using rule 7 (RELLENOCLASE)
+
+    RELLENOCLASE    go to state 290
+    LSENTENCIAS     go to state 36
+    SENTENCIA       go to state 37
+    DECLARACION     go to state 38
+    ASIGNACION      go to state 39
+    PRINCIPAL       go to state 40
+    RETORNAR        go to state 41
+    IMPRIMIR        go to state 42
+    MOSTRARNOTIFI   go to state 43
+    SI              go to state 44
+    PARA            go to state 45
+    REPETIR         go to state 46
+    ROMPER          go to state 47
+    MIENTRAS        go to state 48
+    COMPROBAR       go to state 49
+    TIPO            go to state 50
+    SOBREESCRITURA  go to state 51
+    LLAMADAFUNC     go to state 52
+    VISIBILIDAD     go to state 53
+
+
+State 283
+
+   48 CASOS: CASOS pdefecto dos_puntos RELLENOCLASE . psalir finalizacion
+
+    psalir  shift, and go to state 291
+
+
+State 284
+
+   73 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL . cerrar_corchete
+
+    cerrar_corchete  shift, and go to state 292
+
+
+State 285
+
+   79 LLLAVE: LLLAVE coma abrir_llave LEXP . cerrar_llave
+   81 LEXP: LEXP . coma EXPL
+
+    coma          shift, and go to state 184
+    cerrar_llave  shift, and go to state 293
+
+
+State 286
+
+   54 TERMINSI: psino abrir_llave RELLENOCLASE . cerrar_llave
+
+    cerrar_llave  shift, and go to state 294
+
+
+State 287
+
+   42 PARA: ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave .
+
+    $default  reduce using rule 42 (PARA)
+
+
+State 288
+
+   49 CASOS: pcaso EXPL dos_puntos RELLENOCLASE psalir . finalizacion
+
+    finalizacion  shift, and go to state 295
+
+
+State 289
+
+   50 CASOS: pdefecto dos_puntos RELLENOCLASE psalir finalizacion .
+
+    $default  reduce using rule 50 (CASOS)
+
+
+State 290
+
+   47 CASOS: CASOS pcaso EXPL dos_puntos RELLENOCLASE . psalir finalizacion
+
+    psalir  shift, and go to state 296
+
+
+State 291
+
+   48 CASOS: CASOS pdefecto dos_puntos RELLENOCLASE psalir . finalizacion
+
+    finalizacion  shift, and go to state 297
+
+
+State 292
+
+   73 DIMENSION: abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete .
+
+    $default  reduce using rule 73 (DIMENSION)
+
+
+State 293
+
+   79 LLLAVE: LLLAVE coma abrir_llave LEXP cerrar_llave .
+
+    $default  reduce using rule 79 (LLLAVE)
+
+
+State 294
+
+   54 TERMINSI: psino abrir_llave RELLENOCLASE cerrar_llave .
+
+    $default  reduce using rule 54 (TERMINSI)
+
+
+State 295
+
+   49 CASOS: pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion .
+
+    $default  reduce using rule 49 (CASOS)
+
+
+State 296
+
+   47 CASOS: CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir . finalizacion
+
+    finalizacion  shift, and go to state 298
+
+
+State 297
+
+   48 CASOS: CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion .
+
+    $default  reduce using rule 48 (CASOS)
+
+
+State 298
+
+   47 CASOS: CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion .
+
+    $default  reduce using rule 47 (CASOS)

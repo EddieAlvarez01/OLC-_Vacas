@@ -4,6 +4,17 @@
 asdasdadasd->
 clase persona extender asasa, id,alala{
 	doble contador = !true && false$
+	repetir(var5 *9 ){
+		imprimir(fre + "oc")$
+		romper$
+	}
+	mientras(fsada && falso){
+		si(true){
+			repetir(var - 56*7){
+				entero yy = 2$
+			}
+		}
+	}
 }
 
 clase animal {
@@ -19,6 +30,13 @@ clase los {
 	publico entero losva = 4*8$
 	c3.posas = 4564$
 	sumando()$
+	comprobar(fe){
+		caso 3:
+		entero i = 0$
+		salir$
+		defecto:
+		salir$
+	}
 	lsasoas(454, 1212)$
 	void sumar(){
 		int suma = an +vb$
