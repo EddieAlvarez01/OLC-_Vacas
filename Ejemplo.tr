@@ -27,7 +27,7 @@ clase animal {
 }
 
 clase los {
-	publico entero losva = 4*8$
+	publico entero losva = 4*8+65/8-96^8$
 	c3.posas = 4564$
 	sumando()$
 	comprobar(fe){
@@ -41,7 +41,7 @@ clase los {
 	void sumar(){
 		int suma = an +vb$
 	}
-	caracter sausa(doble var,  entero ui[3][dsda*8]){}
+	caracter sausa(doble var,  entero [3][dsda*8] ui){}
 	publico void togeter(){
 
 	}

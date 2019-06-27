@@ -32,23 +32,23 @@ int NodoAST::getTypeofValue(){
         return 4;
     }else if(type == "lids"){
         return 5;
-    }else if(type == "suma"){
+    }else if(type == "lsentencias"){
         return 6;
-    }else if(type == "resta"){
+    }else if(type == "visibilidad"){
         return 7;
-    }else if(type == "multiplicacion"){
+    }else if(type == "tipo"){
         return 8;
-    }else if(type == "division"){
+    }else if(type == "expresion"){
         return 9;
-    }else if(type == "potencia"){
+    }else if(type == "or"){
         return 10;
-    }else if(type == "operacion"){
+    }else if(type == "nor"){
         return 11;
-    }else if(type == "principal"){
+    }else if(type == "and"){
         return 12;
-    }else if(type == "argumento"){
+    }else if(type == "nand"){
         return 13;
-    }else if(type == "declaracion"){
+    }else if(type == "not"){
         return 14;
     }else if(type == "tipo"){
         return 15;
@@ -60,54 +60,60 @@ int NodoAST::getTypeofValue(){
         return 18;
     }else if(type == "not"){
         return 19;
-    }else if(type == "menor_que"){
+    }else if(type == "igual_igual"){
         return 20;
-    }else if(type == "mayor_que"){
-        return 21;
-    }else if(type == "mayor_igual"){
-        return 22;
-    }else if(type == "menor_igual"){
-        return 23;
-    }else if(type == "igual"){
-        return 24;
     }else if(type == "diferente_de"){
+        return 21;
+    }else if(type == "menor_que"){
+        return 22;
+    }else if(type == "mayor_que"){
+        return 23;
+    }else if(type == "menorigual_que"){
+        return 24;
+    }else if(type == "mayorigual_que"){
         return 25;
-    }else if(type == "variable"){
+    }else if(type == "suma"){
         return 26;
-    }else if(type == "arreglo"){
+    }else if(type == "resta"){
         return 27;
-    }else if(type == "id"){
+    }else if(type == "multi"){
         return 28;
-    }else if(type == "valor_array"){
+    }else if(type == "division"){
         return 29;
-    }else if(type == "coma"){
+    }else if(type == "potencia"){
         return 30;
-    }else if(type == "lista_expresiones"){
+    }else if(type == "numero"){
         return 31;
-    }else if(type == "parametros_show"){
+    }else if(type == "decimal"){
         return 32;
-    }else if(type == "parametros_imprimir"){
+    }else if(type == "caracter"){
         return 33;
-    }else if(type == "condicion"){
+    }else if(type == "boolean"){
         return 34;
-    }else if(type == "then"){
+    }else if(type == "cadena"){
         return 35;
-    }else if(type == "else"){
+    }else if(type == "arreglo"){
         return 36;
-    }else if(type == "if"){
-        return 37;
-    }else if(type == "para"){
-        return 38;
-    }else if(type == "instrucciones"){
-        return 39;
-    }else if(type == "repetir"){
-        return 40;
     }else if(type == "aumento"){
-        return 41;
-    }else if(type == "cout"){
-        return 42;
+        return 37;
     }else if(type == "decremento"){
+        return 38;
+    }else if(type == "objeto_var"){
+        return 39;
+    }else if(type == "lexp"){
+        return 40;
+    }else if(type == "llamadafunc"){
+        return 41;
+    }else if(type == "dimension"){
+        return 42;
+    }else if(type == "ltipos"){
         return 43;
+    }else if(type == "funciones"){
+        return 44;
+    }else if(type == "objeto"){
+        return 45;
+    }else if(type == "declaracion"){
+        return 46;
     }
     return 0;
 }

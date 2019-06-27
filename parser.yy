@@ -150,13 +150,14 @@ class NodoAST* nodito;
 %type<nodito> CONTINUAR;
 %type<nodito> INCLUIR;
 %type<nodito> TRANSFERIR;
+%type<nodito> LEXP;
 
 
 %left opor opnor
 %left opand opnand
 %right opnot
 %left igual_igual diferente_de menor_que menorigual_que mayor_que mayorigual_que
-%left suma menos
+%left suma resta
 %left multi division
 %nonassoc potencia
 
@@ -174,38 +175,40 @@ TERMINACIONCLASE : pextender LIDS abrir_llave RELLENOCLASE cerrar_llave { $$ = n
 |abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "clase", "clase"); if($2 != NULL){ $$->add(*$2); } };
 
 RELLENOCLASE : { $$ = NULL; }
-             |LSENTENCIAS { $$ = NULL; };
+             |LSENTENCIAS { $$ = $1; };
 
 LIDS : LIDS coma id { $$ = $1; NodoAST *nodo = new NodoAST(@2.first_line, @2.first_column, "id", $3); $$->add(*nodo); }
       |id { $$ = new NodoAST(@1.first_line, @1.first_column, "lids", "lids"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); } ;
 
-LSENTENCIAS : LSENTENCIAS SENTENCIA
-             |SENTENCIA;
+LSENTENCIAS : LSENTENCIAS SENTENCIA { $$ = $1; if($2 != NULL){ $$->add(*$2); } }
+|SENTENCIA { $$ = new NodoAST(@1.first_line, @1.first_column, "lsentencias", "lsentencias"); if($1 != NULL){ $$->add(*$1); } };
 
-SENTENCIA : DECLARACION
-           |ASIGNACION
-           |LLAMADAFUNC finalizacion
-           |PRINCIPAL
-           |RETORNAR
-           |IMPRIMIR
-           |MOSTRARNOTIFI
-           |SI
-           |PARA
-           |REPETIR
-           |ROMPER
-           |MIENTRAS
-           |COMPROBAR
-           |HACER
-           |CONTINUAR
-           |INCLUIR
-           |TRANSFERIR;
+SENTENCIA : DECLARACION { $$ = $1; }
+           |ASIGNACION { $$ = NULL; }
+           |LLAMADAFUNC finalizacion { $$ = NULL; }
+           |PRINCIPAL { $$ = NULL; }
+           |RETORNAR { $$ = NULL; }
+           |IMPRIMIR { $$ = NULL; }
+           |MOSTRARNOTIFI { $$ = NULL; }
+           |SI { $$ = NULL; }
+           |PARA { $$ = NULL; }
+           |REPETIR { $$ = NULL; }
+           |ROMPER { $$ = NULL; }
+           |MIENTRAS { $$ = NULL; }
+           |COMPROBAR { $$ = NULL; }
+           |HACER { $$ = NULL; }
+           |CONTINUAR { $$ = NULL; }
+           |INCLUIR { $$ = NULL; }
+           |TRANSFERIR { $$ = NULL; };
 
-DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR
-             |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR
-             |TIPO LIDS TERMDECLAR
-             |SOBREESCRITURA TIPO LIDS TERMDECLAR
-             |VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY
-             |parreglo TIPO LIDS DIMENSION TERMARRAY;
+DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$2); $$->add(*$3); if($4 != NULL){ $$->add(*$4); } }
+             |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
+             |TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$2); if($3 != NULL){ $$->add(*$3); } }
+             |SOBREESCRITURA TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); if($4 != NULL){ $$->add(*$4); } }
+             |VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } }
+             |SOBREESCRITURA VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$4); $$->add(*$5); $$->add(*$6); if($7 != NULL){ $$->add(*$7); } }
+             |parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
+             |SOBREESCRITURA parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } };
 
 ASIGNACION : id igual EXPL finalizacion
             |id DIMENSION igual EXPL finalizacion
@@ -213,8 +216,8 @@ ASIGNACION : id igual EXPL finalizacion
 
 PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
-FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave
-           |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); $$->add(*$2); if($5 != NULL){ $$->add(*$5); } }
+            |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); if($4 != NULL){ $$->add(*$4); } };
 
 RETORNAR : pretornar EXPL finalizacion;
 
@@ -255,35 +258,36 @@ TERMINSI : /* %empty */
           |psino SI;
 
 
-TIPO : pint
-      |pdouble
-      |pbool
-      |pchar
-      |pstring
-      |id
-      |pvoid
-      |parchivo
-      |pcuenta;
+TIPO : pint { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pdouble { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pbool { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pchar { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pstring { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |id { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pvoid { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |parchivo { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }
+      |pcuenta { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); };
 
-LTIPOS : LTIPOS coma TIPO id
-        |LTIPOS coma TIPO id DIMENSION
-        |TIPO id
-        |TIPO id DIMENSION;
+LTIPOS : LTIPOS coma TIPO id { $$ = $1; $$->add(*$3); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $4); $$->add(*nodo); }
+        |LTIPOS coma TIPO DIMENSION id { $$ = $1; $$->add(*$3); $$->add(*$4); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $5); $$->add(*nodo); }
+        |TIPO id { $$ = new NodoAST(@1.first_line, @1.first_column, "ltipos", "ltipos"); $$->add(*$1); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $2); $$->add(*nodo); }
+        |TIPO DIMENSION id { $$ = new NodoAST(@1.first_line, @1.first_column, "ltipos", "ltipos"); $$->add(*$1); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*$2); $$->add(*nodo); };
 
 
-TERMDECLAR : finalizacion
-            |FUNCIONES
-            |igual EXPL finalizacion
-            |igual pcrearcuenta abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion
-            |igual pcreararchivoder abrir_parentesis EXPL cerrar_parentesis finalizacion
-            |igual pnew id abrir_parentesis cerrar_parentesis finalizacion;
+TERMDECLAR : finalizacion { $$ = NULL; }
+            |FUNCIONES { $$ = $1; }
+            |igual EXPL finalizacion { $$ = $2; }
+            |igual pcrearcuenta abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $2); $$->add(*nodo); $$->add(*$4); $$->add(*$6); }
+            |igual pcreararchivoder abrir_parentesis EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $2); $$->add(*nodo); $$->add(*$4); }
+            |igual pnew id abrir_parentesis cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); };
 
-DIMENSION : abrir_corchete EXPL cerrar_corchete
-           |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete
-           |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete;
+DIMENSION : abrir_corchete EXPL cerrar_corchete { $$ = new NodoAST(@1.first_line, @1.first_column, "dimension", "dimension"); $$->add(*$2); }
+           |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete { $$ = new NodoAST(@1.first_line, @1.first_column, "dimension", "dimension"); $$->add(*$2); $$->add(*$5); }
+           |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete{ $$ = new NodoAST(@1.first_line, @1.first_column, "dimension", "dimension"); $$->add(*$2); $$->add(*$5); $$->add(*$8); } ;
 
 
 TERMARRAY : finalizacion
+           |FUNCIONES
            |igual LDECLARRAY finalizacion;
 
 SOBREESCRITURA : psobrescribir;
@@ -294,67 +298,67 @@ LDECLARRAY : abrir_llave LEXP cerrar_llave
 LLLAVE : LLLAVE coma abrir_llave LEXP cerrar_llave
         |abrir_llave LEXP cerrar_llave;
 
-LEXP : LEXP coma EXPL
-      |EXPL;
+LEXP : LEXP coma EXPL { $$ = $1; $$->add(*$3); }
+      |EXPL { $$ = new NodoAST(@1.first_line, @1.first_column, "lexp", "lexp"); $$->add(*$1); };
 
-EXPL :  EXPR opor EXPR
-       |EXPR opnor EXPR
-       |EXPR opand EXPR
-       |EXPR opnand EXPR
-       |opnot EXPL
-       |EXPR;
+EXPL :  EXPR opor EXPR { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "or", $2); nodo->add(*$1); nodo->add(*$3); $$->add(*nodo); }
+       |EXPR opnor EXPR { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "nor", $2); nodo->add(*$1); nodo->add(*$3); $$->add(*nodo); }
+       |EXPR opand EXPR { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "and", $2); nodo->add(*$1); nodo->add(*$3); $$->add(*nodo); }
+       |EXPR opnand EXPR { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "nand", $2); nodo->add(*$1); nodo->add(*$3); $$->add(*nodo); }
+       |opnot EXPL { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "not", $1); nodo->add(*$2); $$->add(*nodo); }
+       |EXPR { $$ = new NodoAST(@1.first_line, @1.first_column, "expresion", "expresion"); $$->add(*$1); };
 
-EXPR : EXPA igual_igual EXPA
-      |EXPA diferente_de EXPA
-      |EXPA menor_que EXPA
-      |EXPA mayor_que EXPA
-      |EXPA menorigual_que EXPA
-      |EXPA mayorigual_que EXPA
-      |EXPA;
+EXPR : EXPA igual_igual EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "igual_igual", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA diferente_de EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "diferente_de", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA menor_que EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "menor_que", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA mayor_que EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "mayor_que", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA menorigual_que EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "menorigual_que", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA mayorigual_que EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "mayorigual_que", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA { $$ = $1; };
 
-EXPA : EXPA suma EXPA
-      |EXPA resta EXPA
-      |EXPA multi EXPA
-      |EXPA division EXPA
-      |EXPA potencia EXPA
-      |resta EXPA
-      |abrir_parentesis EXPL cerrar_parentesis
-      |numero
-      |decimal
-      |caracter
-      |booleano
-      |cadena
-      |id
-      |id DIMENSION
-      |id aumento
-      |id decremento
-      |numero aumento
-      |numero decremento
-      |decimal aumento
-      |decimal decremento
-      |caracter aumento
-      |caracter decremento
-      |id punto id
-      |LLAMADAFUNC;
+EXPA : EXPA suma EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "suma", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA resta EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "resta", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA multi EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "multi", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA division EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "division", $2); $$->add(*$1); $$->add(*$3); }
+      |EXPA potencia EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "potencia", $2); $$->add(*$1); $$->add(*$3); }
+      |resta EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, $1, $1); $$->add(*$2); }
+      |abrir_parentesis EXPL cerrar_parentesis { $$ = $2; }
+      |numero { $$ = new NodoAST(@1.first_line, @1.first_column, "numero", $1); }
+      |decimal { $$ = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); }
+      |caracter { $$ = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); }
+      |booleano { $$ = new NodoAST(@1.first_line, @1.first_column, "boolean", $1); }
+      |cadena { $$ = new NodoAST(@1.first_line, @1.first_column, "cadena", $1); }
+      |id { $$ = new NodoAST(@1.first_line, @1.first_column, "id", $1); }
+      |id DIMENSION { $$ = new NodoAST(@1.first_line, @1.first_column, "arreglo", $1); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$2); }
+      |id aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
+      |id decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
+      |numero aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
+      |numero decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
+      |decimal aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
+      |decimal decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
+      |caracter aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); }
+      |caracter decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); }
+      |id punto id { $$ = new NodoAST(@1.first_line, @1.first_column, "objeto_var", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
+      |LLAMADAFUNC { $$ = $1; };
 
-LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis
-             |id punto pcrearconjunto abrir_parentesis EXPL coma EXPL cerrar_parentesis
-             |id punto pverificarcuenta abrir_parentesis cerrar_parentesis
-             |id punto pdepositarcuenta abrir_parentesis EXPL cerrar_parentesis
-             |id punto prestarcuenta abrir_parentesis EXPL cerrar_parentesis
-             |id punto pimprimirtransaccionescuenta abrir_parentesis cerrar_parentesis
-             |id punto pconsultarcuenta abrir_parentesis cerrar_parentesis
-             |id punto pcrearregex abrir_parentesis EXPL coma EXPL cerrar_parentesis
-             |id punto pcrearentrada abrir_parentesis EXPL coma EXPL cerrar_parentesis
-             |id punto pguardararchivo abrir_parentesis cerrar_parentesis
-             |id abrir_parentesis VARF cerrar_parentesis;
+LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); if($5 != NULL){ $$->add(*$5); } }
+             |id punto pcrearconjunto abrir_parentesis EXPL coma EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); $$->add(*$7); }
+             |id punto pverificarcuenta abrir_parentesis cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
+             |id punto pdepositarcuenta abrir_parentesis EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); }
+             |id punto prestarcuenta abrir_parentesis EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); }
+             |id punto pimprimirtransaccionescuenta abrir_parentesis cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
+             |id punto pconsultarcuenta abrir_parentesis cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
+             |id punto pcrearregex abrir_parentesis EXPL coma EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); $$->add(*$7); }
+             |id punto pcrearentrada abrir_parentesis EXPL coma EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); $$->add(*$7); }
+             |id punto pguardararchivo abrir_parentesis cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
+             |id abrir_parentesis VARF cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1);  $$->add(*nodo); if($3 != NULL){ $$->add(*$3); } };
 
-VARF : /*%empty*/
-      |LEXP;
+VARF : /*%empty*/ { $$ = NULL; }
+      |LEXP { $$ = $1; };
 
-VISIBILIDAD : ppublico
-            |pprivado
-            |pprotegido;
+VISIBILIDAD : ppublico { $$ = new NodoAST(@1.first_line, @1.first_column, "visibilidad", $1); }
+            |pprivado { $$ = new NodoAST(@1.first_line, @1.first_column, "visibilidad", $1); }
+            |pprotegido { $$ = new NodoAST(@1.first_line, @1.first_column, "visibilidad", $1); };
 
 
 %%

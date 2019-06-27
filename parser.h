@@ -125,8 +125,7 @@ extern int yydebug;
      psalir = 334,
      pdefecto = 335,
      dos_puntos = 336,
-     pcuenta = 337,
-     menos = 338
+     pcuenta = 337
    };
 #endif
 
@@ -142,7 +141,7 @@ class NodoAST* nodito;
 
 
 /* Line 2058 of yacc.c  */
-#line 146 "parser.h"
+#line 145 "parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
