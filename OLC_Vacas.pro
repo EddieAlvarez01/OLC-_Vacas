@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     nodoast.cpp \
     scanner.cpp \
-    parser.cpp
+    parser.cpp \
+    plotter.cpp
 
 HEADERS += \
         mainwindow.h \
     nodoast.h \
     scanner.h \
-    parser.h
+    parser.h \
+    plotter.h
 
 FORMS += \
         mainwindow.ui

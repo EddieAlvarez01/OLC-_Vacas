@@ -18,6 +18,8 @@ public:
 private slots:
     void on_actionCompilar_triggered();
 
+    void on_actionGenerar_AST_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

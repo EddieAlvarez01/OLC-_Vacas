@@ -163,21 +163,21 @@ class NodoAST* nodito;
 %start INICIO
 %%
 
-INICIO : LCLASES;
+INICIO : LCLASES { raiz = $$; };
 
-LCLASES : LCLASES CLASE
-          |CLASE;
+LCLASES : LCLASES CLASE { $$ = $1; $$->add(*$2); }
+         |CLASE { $$ = new NodoAST(@1.first_line, @1.first_column, "lclases", "lclases"); $$->add(*$1); } ;
 
-CLASE : pclase id TERMINACIONCLASE;
+CLASE : pclase id TERMINACIONCLASE { NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $2); $3->add(*nodo); $$ = $3; };
 
-TERMINACIONCLASE : pextender LIDS abrir_llave RELLENOCLASE cerrar_llave
-                   |abrir_llave RELLENOCLASE cerrar_llave;
+TERMINACIONCLASE : pextender LIDS abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "clase", "clase"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "extender", "extender"); nodo->add(*$2); $$->add(*nodo); if($4 != NULL){ $$->add(*$4); } }
+|abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "clase", "clase"); if($2 != NULL){ $$->add(*$2); } };
 
-RELLENOCLASE :
-              |LSENTENCIAS;
+RELLENOCLASE : { $$ = NULL; }
+             |LSENTENCIAS { $$ = NULL; };
 
-LIDS : LIDS coma id
-      |id;
+LIDS : LIDS coma id { $$ = $1; NodoAST *nodo = new NodoAST(@2.first_line, @2.first_column, "id", $3); $$->add(*nodo); }
+      |id { $$ = new NodoAST(@1.first_line, @1.first_column, "lids", "lids"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); } ;
 
 LSENTENCIAS : LSENTENCIAS SENTENCIA
              |SENTENCIA;

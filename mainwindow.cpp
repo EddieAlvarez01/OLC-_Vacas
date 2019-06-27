@@ -5,8 +5,11 @@
 #include <parser.h>
 #include <scanner.h>
 #include <qdebug.h>
+#include "plotter.h"
+#include "nodoast.h"
 
 extern int yyparse();
+extern NodoAST *raiz;
 extern int linea; // Linea del token
 extern int columna; // Columna de los tokens
 extern int yylineno;
@@ -33,7 +36,14 @@ void MainWindow::on_actionCompilar_triggered()
 
     if(yyparse() == 0){
         std::cout << "Correcto" << std::endl;
+        Plotter *plot = new Plotter(raiz);
+        plot->generarImagen();
     }else{
         std::cout << "Nel prro" << std::endl;
     }
+}
+
+void MainWindow::on_actionGenerar_AST_triggered()
+{
+    system("cmd /c start grafo.png");
 }

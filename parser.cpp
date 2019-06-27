@@ -1909,9 +1909,69 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 2:
 /* Line 1792 of yacc.c  */
-#line 1915 "parser.cpp"
+#line 166 "parser.yy"
+    { raiz = (yyval.nodito); }
+    break;
+
+  case 3:
+/* Line 1792 of yacc.c  */
+#line 168 "parser.yy"
+    { (yyval.nodito) = (yyvsp[(1) - (2)].nodito); (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); }
+    break;
+
+  case 4:
+/* Line 1792 of yacc.c  */
+#line 169 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lclases", "lclases"); (yyval.nodito)->add(*(yyvsp[(1) - (1)].nodito)); }
+    break;
+
+  case 5:
+/* Line 1792 of yacc.c  */
+#line 171 "parser.yy"
+    { NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "id", (yyvsp[(2) - (3)].TEXT)); (yyvsp[(3) - (3)].nodito)->add(*nodo); (yyval.nodito) = (yyvsp[(3) - (3)].nodito); }
+    break;
+
+  case 6:
+/* Line 1792 of yacc.c  */
+#line 173 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "clase", "clase"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "extender", "extender"); nodo->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*nodo); if((yyvsp[(4) - (5)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); } }
+    break;
+
+  case 7:
+/* Line 1792 of yacc.c  */
+#line 174 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "clase", "clase"); if((yyvsp[(2) - (3)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); } }
+    break;
+
+  case 8:
+/* Line 1792 of yacc.c  */
+#line 176 "parser.yy"
+    { (yyval.nodito) = NULL; }
+    break;
+
+  case 9:
+/* Line 1792 of yacc.c  */
+#line 177 "parser.yy"
+    { (yyval.nodito) = NULL; }
+    break;
+
+  case 10:
+/* Line 1792 of yacc.c  */
+#line 179 "parser.yy"
+    { (yyval.nodito) = (yyvsp[(1) - (3)].nodito); NodoAST *nodo = new NodoAST((yylsp[(2) - (3)]).first_line, (yylsp[(2) - (3)]).first_column, "id", (yyvsp[(3) - (3)].TEXT)); (yyval.nodito)->add(*nodo); }
+    break;
+
+  case 11:
+/* Line 1792 of yacc.c  */
+#line 180 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lids", "lids"); NodoAST *nodo = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "id", (yyvsp[(1) - (1)].TEXT)); (yyval.nodito)->add(*nodo); }
+    break;
+
+
+/* Line 1792 of yacc.c  */
+#line 1975 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
