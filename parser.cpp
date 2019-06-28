@@ -2029,7 +2029,7 @@ yyreduce:
   case 19:
 /* Line 1792 of yacc.c  */
 #line 192 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 20:
@@ -2186,6 +2186,12 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 223 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "retornar", "retornar"); (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); }
+    break;
+
+  case 46:
+/* Line 1792 of yacc.c  */
+#line 225 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "imprimir", "imprimir"); (yyval.nodito)->add(*(yyvsp[(3) - (5)].nodito)); }
     break;
 
   case 67:
@@ -2652,7 +2658,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2656 "parser.cpp"
+#line 2662 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

@@ -189,7 +189,7 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |LLAMADAFUNC finalizacion { $$ = $1; }
            |PRINCIPAL { $$ = $1; }
            |RETORNAR { $$ = $1; }
-           |IMPRIMIR { $$ = NULL; }
+           |IMPRIMIR { $$ = $1; }
            |MOSTRARNOTIFI { $$ = NULL; }
            |SI { $$ = NULL; }
            |PARA { $$ = NULL; }
@@ -222,7 +222,7 @@ FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE c
 
 RETORNAR : pretornar EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "retornar", "retornar"); $$->add(*$2); };
 
-IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion;
+IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "imprimir", "imprimir"); $$->add(*$3); };
 
 MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion;
 
