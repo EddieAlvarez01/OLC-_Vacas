@@ -188,7 +188,7 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |ASIGNACION { $$ = $1; }
            |LLAMADAFUNC finalizacion { $$ = $1; }
            |PRINCIPAL { $$ = $1; }
-           |RETORNAR { $$ = NULL; }
+           |RETORNAR { $$ = $1; }
            |IMPRIMIR { $$ = NULL; }
            |MOSTRARNOTIFI { $$ = NULL; }
            |SI { $$ = NULL; }
@@ -220,7 +220,7 @@ PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLA
 FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); $$->add(*$2); if($5 != NULL){ $$->add(*$5); } }
             |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); if($4 != NULL){ $$->add(*$4); } };
 
-RETORNAR : pretornar EXPL finalizacion;
+RETORNAR : pretornar EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "retornar", "retornar"); $$->add(*$2); };
 
 IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion;
 

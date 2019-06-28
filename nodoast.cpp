@@ -118,6 +118,8 @@ int NodoAST::getTypeofValue(){
         return 47;
     }else if(type == "main"){
         return 48;
+    }else if(type == "retornar"){
+        return 49;
     }
     return 0;
 }
