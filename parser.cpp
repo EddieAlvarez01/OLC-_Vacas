@@ -2011,7 +2011,7 @@ yyreduce:
   case 16:
 /* Line 1792 of yacc.c  */
 #line 188 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (2)].nodito); }
     break;
 
   case 17:

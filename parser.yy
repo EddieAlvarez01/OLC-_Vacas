@@ -185,7 +185,7 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA { $$ = $1; if($2 != NULL){ $$->add(*$2); } }
 
 SENTENCIA : DECLARACION { $$ = $1; }
            |ASIGNACION { $$ = $1; }
-           |LLAMADAFUNC finalizacion { $$ = NULL; }
+           |LLAMADAFUNC finalizacion { $$ = $1; }
            |PRINCIPAL { $$ = NULL; }
            |RETORNAR { $$ = NULL; }
            |IMPRIMIR { $$ = NULL; }
