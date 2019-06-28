@@ -134,6 +134,14 @@ int NodoAST::getTypeofValue(){
         return 55;
     }else if(type == "mientras"){
         return 56;
+    }else if(type == "defecto"){
+        return 57;
+    }else if(type == "caso"){
+        return 58;
+    }else if(type == "casos"){
+        return 59;
+    }else if(type == "comprobar"){
+        return 60;
     }
     return 0;
 }

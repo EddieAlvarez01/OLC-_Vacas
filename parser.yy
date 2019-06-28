@@ -196,7 +196,7 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |REPETIR { $$ = $1; }
            |ROMPER { $$ = $1; }
            |MIENTRAS { $$ = $1; }
-           |COMPROBAR { $$ = NULL; }
+           |COMPROBAR { $$ = $1; }
            |HACER { $$ = NULL; }
            |CONTINUAR { $$ = NULL; }
            |INCLUIR { $$ = NULL; }
@@ -236,12 +236,12 @@ ROMPER : promper finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column,
 
 MIENTRAS : pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "mientras", "mientras"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } };
 
-COMPROBAR : pcomprobar abrir_parentesis EXPL cerrar_parentesis abrir_llave CASOS cerrar_llave;
+COMPROBAR : pcomprobar abrir_parentesis EXPL cerrar_parentesis abrir_llave CASOS cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "comprobar", "comprobar"); $$->add(*$3); $$->add(*$6); };
 
-CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
-       |CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion
-       |pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion
-       |pdefecto dos_puntos RELLENOCLASE psalir finalizacion;
+CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion { $$ = $1; NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "caso", "caso"); nodo->add(*$3); if($5 != NULL){ nodo->add(*$5); } $$->add(*nodo); }
+       |CASOS pdefecto dos_puntos RELLENOCLASE psalir finalizacion { $$ = $1; NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "defecto", "defecto"); if($4 != NULL){ nodo->add(*$4); }  $$->add(*nodo); }
+       |pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "casos", "casos"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "caso", "caso"); nodo->add(*$2); if($4 != NULL){ nodo->add(*$4); } $$->add(*nodo); }
+       |pdefecto dos_puntos RELLENOCLASE psalir finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "casos", "casos"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "defecto", "defecto");  if($3 != NULL){ nodo->add(*$3); } $$->add(*nodo); };
 
 HACER : phacer abrir_llave RELLENOCLASE cerrar_llave pmientras abrir_parentesis EXPL cerrar_parentesis finalizacion;
 
