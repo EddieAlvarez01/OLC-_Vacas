@@ -78,8 +78,12 @@ clase omaen {
 	dd.crearConjunto(caaa, "dasda das")$
 }
 clase oc {
+	protegido arreglo booleano noxU [32][2][6] = {{{var*9, true}, {podsada}}, {{o,dasda}, {45}}$
 	principal(){
 		Omaen mm = nuevo Omaen()$
 		mm.rex(5, losm)$
+		arreglo cadena [da][2] devolverarray(){
+			imprimir("listo")$
+		}
 	}
 }

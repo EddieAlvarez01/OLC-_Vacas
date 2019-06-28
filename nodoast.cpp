@@ -142,6 +142,16 @@ int NodoAST::getTypeofValue(){
         return 59;
     }else if(type == "comprobar"){
         return 60;
+    }else if(type == "hacer"){
+        return 61;
+    }else if(type == "continuar"){
+        return 62;
+    }else if(type == "incluir"){
+        return 63;
+    }else if(type == "transferir"){
+        return 64;
+    }else if(type == "ldimensionesasig"){
+        return 65;
     }
     return 0;
 }

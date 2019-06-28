@@ -197,19 +197,23 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |ROMPER { $$ = $1; }
            |MIENTRAS { $$ = $1; }
            |COMPROBAR { $$ = $1; }
-           |HACER { $$ = NULL; }
-           |CONTINUAR { $$ = NULL; }
-           |INCLUIR { $$ = NULL; }
-           |TRANSFERIR { $$ = NULL; };
+           |HACER { $$ = $1; }
+           |CONTINUAR { $$ = $1; }
+           |INCLUIR { $$ = $1; }
+           |TRANSFERIR { $$ = $1; };
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$2); $$->add(*$3); if($4 != NULL){ $$->add(*$4); } }
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
              |TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$2); if($3 != NULL){ $$->add(*$3); } }
              |SOBREESCRITURA TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); if($4 != NULL){ $$->add(*$4); } }
              |VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } }
+             |VISIBILIDAD parreglo TIPO DIMENSION LIDS TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } }
              |SOBREESCRITURA VISIBILIDAD parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$4); $$->add(*$5); $$->add(*$6); if($7 != NULL){ $$->add(*$7); } }
+             |SOBREESCRITURA VISIBILIDAD parreglo TIPO DIMENSION LIDS TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$4); $$->add(*$5); $$->add(*$6); if($7 != NULL){ $$->add(*$7); } }
              |parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
-             |SOBREESCRITURA parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } };
+             |parreglo TIPO DIMENSION LIDS TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
+             |SOBREESCRITURA parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } }
+             |SOBREESCRITURA parreglo TIPO DIMENSION LIDS TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } };;
 
 ASIGNACION : id igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$3); }
             |id DIMENSION igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$2); $$->add(*$4); }
@@ -243,13 +247,13 @@ CASOS : CASOS pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion { $$ = $1; 
        |pcaso EXPL dos_puntos RELLENOCLASE psalir finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "casos", "casos"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "caso", "caso"); nodo->add(*$2); if($4 != NULL){ nodo->add(*$4); } $$->add(*nodo); }
        |pdefecto dos_puntos RELLENOCLASE psalir finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "casos", "casos"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_line, "defecto", "defecto");  if($3 != NULL){ nodo->add(*$3); } $$->add(*nodo); };
 
-HACER : phacer abrir_llave RELLENOCLASE cerrar_llave pmientras abrir_parentesis EXPL cerrar_parentesis finalizacion;
+HACER : phacer abrir_llave RELLENOCLASE cerrar_llave pmientras abrir_parentesis EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "hacer", "hacer"); if($3 != NULL){ $$->add(*$3); } $$->add(*$7); };
 
-CONTINUAR : pcontinuar finalizacion;
+CONTINUAR : pcontinuar finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "continuar", "continuar"); };
 
-INCLUIR : pincluir abrir_parentesis EXPL cerrar_parentesis finalizacion;
+INCLUIR : pincluir abrir_parentesis EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "incluir", "incluir"); $$->add(*$3); };
 
-TRANSFERIR : ptransferir abrir_parentesis EXPL coma EXPL coma EXPL cerrar_parentesis finalizacion;
+TRANSFERIR : ptransferir abrir_parentesis EXPL coma EXPL coma EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "transferir", "transferir"); $$->add(*$3); $$->add(*$5); $$->add(*$7); };
 
 PRIMERFOR : DECLARACION { $$ = $1; }
             |ASIGNACION { $$ = $1; };
@@ -287,17 +291,19 @@ DIMENSION : abrir_corchete EXPL cerrar_corchete { $$ = new NodoAST(@1.first_line
            |abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete abrir_corchete EXPL cerrar_corchete{ $$ = new NodoAST(@1.first_line, @1.first_column, "dimension", "dimension"); $$->add(*$2); $$->add(*$5); $$->add(*$8); } ;
 
 
-TERMARRAY : finalizacion
-           |FUNCIONES
-           |igual LDECLARRAY finalizacion;
+TERMARRAY : finalizacion { $$ = NULL; }
+           |FUNCIONES { $$ = $1; }
+           |igual LDECLARRAY finalizacion { $$ = $2; };
 
 SOBREESCRITURA : psobrescribir;
 
-LDECLARRAY : abrir_llave LEXP cerrar_llave
-            |abrir_llave LLLAVE cerrar_llave;
+LDECLARRAY : abrir_llave LEXP cerrar_llave { $$ = $2; }
+            |abrir_llave LLLAVE cerrar_llave { $$ = $2; };
 
-LLLAVE : LLLAVE coma abrir_llave LEXP cerrar_llave
-        |abrir_llave LEXP cerrar_llave;
+LLLAVE : LLLAVE coma abrir_llave LEXP cerrar_llave { $$ = $1; $$->add(*$4); }
+        |LLLAVE coma abrir_llave LLLAVE cerrar_llave { $$ = $1; $$->add(*$4); }
+        |abrir_llave LLLAVE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "ldimensionesasig", "ldimensionesasig"); $$->add(*$2); }
+        |abrir_llave LEXP cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "ldimensionesasig", "ldimensionesasig"); $$->add(*$2); };
 
 LEXP : LEXP coma EXPL { $$ = $1; $$->add(*$3); }
       |EXPL { $$ = new NodoAST(@1.first_line, @1.first_column, "lexp", "lexp"); $$->add(*$1); };
