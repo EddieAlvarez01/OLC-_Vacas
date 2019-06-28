@@ -128,6 +128,8 @@ int NodoAST::getTypeofValue(){
         return 52;
     }else if(type == "para"){
         return 53;
+    }else if(type == "repetir"){
+        return 54;
     }
     return 0;
 }

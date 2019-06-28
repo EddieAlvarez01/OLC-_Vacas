@@ -193,7 +193,7 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |MOSTRARNOTIFI { $$ = $1; }
            |SI { $$ = $1; }
            |PARA { $$ = $1; }
-           |REPETIR { $$ = NULL; }
+           |REPETIR { $$ = $1; }
            |ROMPER { $$ = NULL; }
            |MIENTRAS { $$ = NULL; }
            |COMPROBAR { $$ = NULL; }
@@ -230,7 +230,7 @@ SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar
 
 PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "para", "para"); $$->add(*$3); $$->add(*$4); $$->add(*$6); };
 
-REPETIR : prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+REPETIR : prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "repetir", "repetir"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } };
 
 ROMPER : promper finalizacion;
 
