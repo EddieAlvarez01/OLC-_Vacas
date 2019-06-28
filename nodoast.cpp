@@ -126,6 +126,8 @@ int NodoAST::getTypeofValue(){
         return 51;
     }else if(type == "si"){
         return 52;
+    }else if(type == "para"){
+        return 53;
     }
     return 0;
 }
