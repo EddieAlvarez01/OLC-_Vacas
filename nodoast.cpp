@@ -116,6 +116,8 @@ int NodoAST::getTypeofValue(){
         return 46;
     }else if(type == "asignacion"){
         return 47;
+    }else if(type == "main"){
+        return 48;
     }
     return 0;
 }

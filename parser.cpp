@@ -626,22 +626,22 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   167,   167,   169,   170,   172,   174,   175,   177,   178,
-     180,   181,   183,   184,   186,   187,   188,   189,   190,   191,
-     192,   193,   194,   195,   196,   197,   198,   199,   200,   201,
-     202,   204,   205,   206,   207,   208,   209,   210,   211,   213,
-     214,   215,   217,   219,   220,   222,   224,   226,   228,   230,
-     232,   234,   236,   238,   240,   241,   242,   243,   245,   247,
-     249,   251,   253,   254,   256,   257,   258,   261,   262,   263,
-     264,   265,   266,   267,   268,   269,   271,   272,   273,   274,
-     277,   278,   279,   280,   281,   282,   284,   285,   286,   289,
-     290,   291,   293,   295,   296,   298,   299,   301,   302,   304,
-     305,   306,   307,   308,   309,   311,   312,   313,   314,   315,
-     316,   317,   319,   320,   321,   322,   323,   324,   325,   326,
-     327,   328,   329,   330,   331,   332,   333,   334,   335,   336,
-     337,   338,   339,   340,   341,   342,   344,   345,   346,   347,
-     348,   349,   350,   351,   352,   353,   354,   356,   357,   359,
-     360,   361
+       0,   168,   168,   170,   171,   173,   175,   176,   178,   179,
+     181,   182,   184,   185,   187,   188,   189,   190,   191,   192,
+     193,   194,   195,   196,   197,   198,   199,   200,   201,   202,
+     203,   205,   206,   207,   208,   209,   210,   211,   212,   214,
+     215,   216,   218,   220,   221,   223,   225,   227,   229,   231,
+     233,   235,   237,   239,   241,   242,   243,   244,   246,   248,
+     250,   252,   254,   255,   257,   258,   259,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   272,   273,   274,   275,
+     278,   279,   280,   281,   282,   283,   285,   286,   287,   290,
+     291,   292,   294,   296,   297,   299,   300,   302,   303,   305,
+     306,   307,   308,   309,   310,   312,   313,   314,   315,   316,
+     317,   318,   320,   321,   322,   323,   324,   325,   326,   327,
+     328,   329,   330,   331,   332,   333,   334,   335,   336,   337,
+     338,   339,   340,   341,   342,   343,   345,   346,   347,   348,
+     349,   350,   351,   352,   353,   354,   355,   357,   358,   360,
+     361,   362
 };
 #endif
 
@@ -1926,721 +1926,727 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 167 "parser.yy"
+#line 168 "parser.yy"
     { raiz = (yyval.nodito); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 169 "parser.yy"
+#line 170 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (2)].nodito); (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 170 "parser.yy"
+#line 171 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lclases", "lclases"); (yyval.nodito)->add(*(yyvsp[(1) - (1)].nodito)); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 172 "parser.yy"
+#line 173 "parser.yy"
     { NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "id", (yyvsp[(2) - (3)].TEXT)); (yyvsp[(3) - (3)].nodito)->add(*nodo); (yyval.nodito) = (yyvsp[(3) - (3)].nodito); }
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 174 "parser.yy"
+#line 175 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "clase", "clase"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "extender", "extender"); nodo->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*nodo); if((yyvsp[(4) - (5)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); } }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 175 "parser.yy"
+#line 176 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "clase", "clase"); if((yyvsp[(2) - (3)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); } }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 177 "parser.yy"
+#line 178 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 178 "parser.yy"
+#line 179 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 180 "parser.yy"
+#line 181 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (3)].nodito); NodoAST *nodo = new NodoAST((yylsp[(2) - (3)]).first_line, (yylsp[(2) - (3)]).first_column, "id", (yyvsp[(3) - (3)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 181 "parser.yy"
+#line 182 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lids", "lids"); NodoAST *nodo = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "id", (yyvsp[(1) - (1)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 183 "parser.yy"
+#line 184 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (2)].nodito); if((yyvsp[(2) - (2)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); } }
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 184 "parser.yy"
+#line 185 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lsentencias", "lsentencias"); if((yyvsp[(1) - (1)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(1) - (1)].nodito)); } }
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 186 "parser.yy"
+#line 187 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 187 "parser.yy"
+#line 188 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 188 "parser.yy"
+#line 189 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (2)].nodito); }
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 189 "parser.yy"
-    { (yyval.nodito) = NULL; }
+#line 190 "parser.yy"
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 18:
-/* Line 1792 of yacc.c  */
-#line 190 "parser.yy"
-    { (yyval.nodito) = NULL; }
-    break;
-
-  case 19:
 /* Line 1792 of yacc.c  */
 #line 191 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 20:
+  case 19:
 /* Line 1792 of yacc.c  */
 #line 192 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 21:
+  case 20:
 /* Line 1792 of yacc.c  */
 #line 193 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 22:
+  case 21:
 /* Line 1792 of yacc.c  */
 #line 194 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 23:
+  case 22:
 /* Line 1792 of yacc.c  */
 #line 195 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 24:
+  case 23:
 /* Line 1792 of yacc.c  */
 #line 196 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 25:
+  case 24:
 /* Line 1792 of yacc.c  */
 #line 197 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 26:
+  case 25:
 /* Line 1792 of yacc.c  */
 #line 198 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 27:
+  case 26:
 /* Line 1792 of yacc.c  */
 #line 199 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 28:
+  case 27:
 /* Line 1792 of yacc.c  */
 #line 200 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 29:
+  case 28:
 /* Line 1792 of yacc.c  */
 #line 201 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
-  case 30:
+  case 29:
 /* Line 1792 of yacc.c  */
 #line 202 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
+  case 30:
+/* Line 1792 of yacc.c  */
+#line 203 "parser.yy"
+    { (yyval.nodito) = NULL; }
+    break;
+
   case 31:
 /* Line 1792 of yacc.c  */
-#line 204 "parser.yy"
+#line 205 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(1) - (4)].nodito)); (yyval.nodito)->add(*(yyvsp[(2) - (4)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); if((yyvsp[(4) - (4)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(4) - (4)].nodito)); } }
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 205 "parser.yy"
+#line 206 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); if((yyvsp[(5) - (5)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(5) - (5)].nodito)); } }
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 206 "parser.yy"
+#line 207 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); if((yyvsp[(3) - (3)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); } }
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 207 "parser.yy"
+#line 208 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(2) - (4)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); if((yyvsp[(4) - (4)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(4) - (4)].nodito)); } }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 208 "parser.yy"
+#line 209 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(1) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); if((yyvsp[(6) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (6)].nodito)); } }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 209 "parser.yy"
+#line 210 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(2) - (7)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (7)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (7)].nodito)); (yyval.nodito)->add(*(yyvsp[(6) - (7)].nodito)); if((yyvsp[(7) - (7)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(7) - (7)].nodito)); } }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 210 "parser.yy"
+#line 211 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); if((yyvsp[(5) - (5)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(5) - (5)].nodito)); } }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 211 "parser.yy"
+#line 212 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(3) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); if((yyvsp[(6) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (6)].nodito)); } }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 213 "parser.yy"
+#line 214 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "id", (yyvsp[(1) - (4)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 214 "parser.yy"
+#line 215 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); }
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 215 "parser.yy"
+#line 216 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_line, "asignacion", "asignacion"); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "objeto_var", (yyvsp[(2) - (6)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(1) - (6)].TEXT)); NodoAST *nodo3 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); nodo2->add(*nodo); nodo2->add(*nodo3); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); }
+    break;
+
+  case 42:
+/* Line 1792 of yacc.c  */
+#line 218 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "main", "main"); if((yyvsp[(5) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); } }
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 219 "parser.yy"
+#line 220 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "funciones", "funciones"); (yyval.nodito)->add(*(yyvsp[(2) - (6)].nodito)); if((yyvsp[(5) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); } }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 220 "parser.yy"
+#line 221 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "funciones", "funciones"); if((yyvsp[(4) - (5)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); } }
     break;
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 261 "parser.yy"
+#line 262 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 68:
 /* Line 1792 of yacc.c  */
-#line 262 "parser.yy"
+#line 263 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 69:
 /* Line 1792 of yacc.c  */
-#line 263 "parser.yy"
+#line 264 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 70:
 /* Line 1792 of yacc.c  */
-#line 264 "parser.yy"
+#line 265 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 71:
 /* Line 1792 of yacc.c  */
-#line 265 "parser.yy"
+#line 266 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 72:
 /* Line 1792 of yacc.c  */
-#line 266 "parser.yy"
+#line 267 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 73:
 /* Line 1792 of yacc.c  */
-#line 267 "parser.yy"
+#line 268 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 74:
 /* Line 1792 of yacc.c  */
-#line 268 "parser.yy"
+#line 269 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 75:
 /* Line 1792 of yacc.c  */
-#line 269 "parser.yy"
+#line 270 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "tipo", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 76:
 /* Line 1792 of yacc.c  */
-#line 271 "parser.yy"
+#line 272 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (4)].nodito); (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); NodoAST *nodo = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "id", (yyvsp[(4) - (4)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 77:
 /* Line 1792 of yacc.c  */
-#line 272 "parser.yy"
+#line 273 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (5)].nodito); (yyval.nodito)->add(*(yyvsp[(3) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(5) - (5)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 78:
 /* Line 1792 of yacc.c  */
-#line 273 "parser.yy"
+#line 274 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "ltipos", "ltipos"); (yyval.nodito)->add(*(yyvsp[(1) - (2)].nodito)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "id", (yyvsp[(2) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 79:
 /* Line 1792 of yacc.c  */
-#line 274 "parser.yy"
+#line 275 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "ltipos", "ltipos"); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "id", (yyvsp[(3) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 80:
 /* Line 1792 of yacc.c  */
-#line 277 "parser.yy"
+#line 278 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
   case 81:
 /* Line 1792 of yacc.c  */
-#line 278 "parser.yy"
+#line 279 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 82:
 /* Line 1792 of yacc.c  */
-#line 279 "parser.yy"
+#line 280 "parser.yy"
     { (yyval.nodito) = (yyvsp[(2) - (3)].nodito); }
     break;
 
   case 83:
 /* Line 1792 of yacc.c  */
-#line 280 "parser.yy"
+#line 281 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(2) - (8)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(4) - (8)].nodito)); (yyval.nodito)->add(*(yyvsp[(6) - (8)].nodito)); }
     break;
 
   case 84:
 /* Line 1792 of yacc.c  */
-#line 281 "parser.yy"
+#line 282 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(2) - (6)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(4) - (6)].nodito)); }
     break;
 
   case 85:
 /* Line 1792 of yacc.c  */
-#line 282 "parser.yy"
+#line 283 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "objeto", "objeto"); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 86:
 /* Line 1792 of yacc.c  */
-#line 284 "parser.yy"
+#line 285 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "dimension", "dimension"); (yyval.nodito)->add(*(yyvsp[(2) - (3)].nodito)); }
     break;
 
   case 87:
 /* Line 1792 of yacc.c  */
-#line 285 "parser.yy"
+#line 286 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "dimension", "dimension"); (yyval.nodito)->add(*(yyvsp[(2) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); }
     break;
 
   case 88:
 /* Line 1792 of yacc.c  */
-#line 286 "parser.yy"
+#line 287 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (9)]).first_line, (yylsp[(1) - (9)]).first_column, "dimension", "dimension"); (yyval.nodito)->add(*(yyvsp[(2) - (9)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (9)].nodito)); (yyval.nodito)->add(*(yyvsp[(8) - (9)].nodito)); }
     break;
 
   case 97:
 /* Line 1792 of yacc.c  */
-#line 301 "parser.yy"
+#line 302 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (3)].nodito); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 98:
 /* Line 1792 of yacc.c  */
-#line 302 "parser.yy"
+#line 303 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "lexp", "lexp"); (yyval.nodito)->add(*(yyvsp[(1) - (1)].nodito)); }
     break;
 
   case 99:
 /* Line 1792 of yacc.c  */
-#line 304 "parser.yy"
+#line 305 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "or", (yyvsp[(2) - (3)].TEXT)); nodo->add(*(yyvsp[(1) - (3)].nodito)); nodo->add(*(yyvsp[(3) - (3)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 100:
 /* Line 1792 of yacc.c  */
-#line 305 "parser.yy"
+#line 306 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "nor", (yyvsp[(2) - (3)].TEXT)); nodo->add(*(yyvsp[(1) - (3)].nodito)); nodo->add(*(yyvsp[(3) - (3)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 101:
 /* Line 1792 of yacc.c  */
-#line 306 "parser.yy"
+#line 307 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "and", (yyvsp[(2) - (3)].TEXT)); nodo->add(*(yyvsp[(1) - (3)].nodito)); nodo->add(*(yyvsp[(3) - (3)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 102:
 /* Line 1792 of yacc.c  */
-#line 307 "parser.yy"
+#line 308 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "nand", (yyvsp[(2) - (3)].TEXT)); nodo->add(*(yyvsp[(1) - (3)].nodito)); nodo->add(*(yyvsp[(3) - (3)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 103:
 /* Line 1792 of yacc.c  */
-#line 308 "parser.yy"
+#line 309 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "expresion", "expresion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "not", (yyvsp[(1) - (2)].TEXT)); nodo->add(*(yyvsp[(2) - (2)].nodito)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 104:
 /* Line 1792 of yacc.c  */
-#line 309 "parser.yy"
+#line 310 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "expresion", "expresion"); (yyval.nodito)->add(*(yyvsp[(1) - (1)].nodito)); }
     break;
 
   case 105:
 /* Line 1792 of yacc.c  */
-#line 311 "parser.yy"
+#line 312 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "igual_igual", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 106:
 /* Line 1792 of yacc.c  */
-#line 312 "parser.yy"
+#line 313 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "diferente_de", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 107:
 /* Line 1792 of yacc.c  */
-#line 313 "parser.yy"
+#line 314 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "menor_que", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 108:
 /* Line 1792 of yacc.c  */
-#line 314 "parser.yy"
+#line 315 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "mayor_que", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 109:
 /* Line 1792 of yacc.c  */
-#line 315 "parser.yy"
+#line 316 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "menorigual_que", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 110:
 /* Line 1792 of yacc.c  */
-#line 316 "parser.yy"
+#line 317 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "mayorigual_que", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 111:
 /* Line 1792 of yacc.c  */
-#line 317 "parser.yy"
+#line 318 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 112:
 /* Line 1792 of yacc.c  */
-#line 319 "parser.yy"
+#line 320 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "suma", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 113:
 /* Line 1792 of yacc.c  */
-#line 320 "parser.yy"
+#line 321 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "resta", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 114:
 /* Line 1792 of yacc.c  */
-#line 321 "parser.yy"
+#line 322 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "multi", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 115:
 /* Line 1792 of yacc.c  */
-#line 322 "parser.yy"
+#line 323 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "division", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 116:
 /* Line 1792 of yacc.c  */
-#line 323 "parser.yy"
+#line 324 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "potencia", (yyvsp[(2) - (3)].TEXT)); (yyval.nodito)->add(*(yyvsp[(1) - (3)].nodito)); (yyval.nodito)->add(*(yyvsp[(3) - (3)].nodito)); }
     break;
 
   case 117:
 /* Line 1792 of yacc.c  */
-#line 324 "parser.yy"
+#line 325 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, (yyvsp[(1) - (2)].TEXT), (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); }
     break;
 
   case 118:
 /* Line 1792 of yacc.c  */
-#line 325 "parser.yy"
+#line 326 "parser.yy"
     { (yyval.nodito) = (yyvsp[(2) - (3)].nodito); }
     break;
 
   case 119:
 /* Line 1792 of yacc.c  */
-#line 326 "parser.yy"
+#line 327 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "numero", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 120:
 /* Line 1792 of yacc.c  */
-#line 327 "parser.yy"
+#line 328 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "decimal", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 121:
 /* Line 1792 of yacc.c  */
-#line 328 "parser.yy"
+#line 329 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "caracter", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 122:
 /* Line 1792 of yacc.c  */
-#line 329 "parser.yy"
+#line 330 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "boolean", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 123:
 /* Line 1792 of yacc.c  */
-#line 330 "parser.yy"
+#line 331 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "cadena", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 124:
 /* Line 1792 of yacc.c  */
-#line 331 "parser.yy"
+#line 332 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "id", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 125:
 /* Line 1792 of yacc.c  */
-#line 332 "parser.yy"
+#line 333 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "arreglo", (yyvsp[(1) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "id", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); }
     break;
 
   case 126:
 /* Line 1792 of yacc.c  */
-#line 333 "parser.yy"
+#line 334 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "aumento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "id", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 127:
 /* Line 1792 of yacc.c  */
-#line 334 "parser.yy"
+#line 335 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decremento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "id", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 128:
 /* Line 1792 of yacc.c  */
-#line 335 "parser.yy"
+#line 336 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "aumento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "numero", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 129:
 /* Line 1792 of yacc.c  */
-#line 336 "parser.yy"
+#line 337 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decremento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "numero", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 130:
 /* Line 1792 of yacc.c  */
-#line 337 "parser.yy"
+#line 338 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "aumento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decimal", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 131:
 /* Line 1792 of yacc.c  */
-#line 338 "parser.yy"
+#line 339 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decremento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decimal", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 132:
 /* Line 1792 of yacc.c  */
-#line 339 "parser.yy"
+#line 340 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "aumento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "caracter", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 133:
 /* Line 1792 of yacc.c  */
-#line 340 "parser.yy"
+#line 341 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "decremento", (yyvsp[(2) - (2)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "caracter", (yyvsp[(1) - (2)].TEXT)); (yyval.nodito)->add(*nodo); }
     break;
 
   case 134:
 /* Line 1792 of yacc.c  */
-#line 341 "parser.yy"
+#line 342 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "objeto_var", (yyvsp[(2) - (3)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "id", (yyvsp[(1) - (3)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (3)]).first_line, (yylsp[(1) - (3)]).first_column, "id", (yyvsp[(3) - (3)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); }
     break;
 
   case 135:
 /* Line 1792 of yacc.c  */
-#line 342 "parser.yy"
+#line 343 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 136:
 /* Line 1792 of yacc.c  */
-#line 344 "parser.yy"
+#line 345 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(1) - (6)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); if((yyvsp[(5) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); } }
     break;
 
   case 137:
 /* Line 1792 of yacc.c  */
-#line 345 "parser.yy"
+#line 346 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(1) - (8)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(3) - (8)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (8)].nodito)); (yyval.nodito)->add(*(yyvsp[(7) - (8)].nodito)); }
     break;
 
   case 138:
 /* Line 1792 of yacc.c  */
-#line 346 "parser.yy"
+#line 347 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(3) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); }
     break;
 
   case 139:
 /* Line 1792 of yacc.c  */
-#line 347 "parser.yy"
+#line 348 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(1) - (6)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); }
     break;
 
   case 140:
 /* Line 1792 of yacc.c  */
-#line 348 "parser.yy"
+#line 349 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(1) - (6)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); }
     break;
 
   case 141:
 /* Line 1792 of yacc.c  */
-#line 349 "parser.yy"
+#line 350 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(3) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); }
     break;
 
   case 142:
 /* Line 1792 of yacc.c  */
-#line 350 "parser.yy"
+#line 351 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(3) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); }
     break;
 
   case 143:
 /* Line 1792 of yacc.c  */
-#line 351 "parser.yy"
+#line 352 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(1) - (8)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(3) - (8)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (8)].nodito)); (yyval.nodito)->add(*(yyvsp[(7) - (8)].nodito)); }
     break;
 
   case 144:
 /* Line 1792 of yacc.c  */
-#line 352 "parser.yy"
+#line 353 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(1) - (8)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "id", (yyvsp[(3) - (8)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (8)].nodito)); (yyval.nodito)->add(*(yyvsp[(7) - (8)].nodito)); }
     break;
 
   case 145:
 /* Line 1792 of yacc.c  */
-#line 353 "parser.yy"
+#line 354 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(3) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*nodo2); }
     break;
 
   case 146:
 /* Line 1792 of yacc.c  */
-#line 354 "parser.yy"
+#line 355 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "id", (yyvsp[(1) - (4)].TEXT));  (yyval.nodito)->add(*nodo); if((yyvsp[(3) - (4)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); } }
     break;
 
   case 147:
 /* Line 1792 of yacc.c  */
-#line 356 "parser.yy"
+#line 357 "parser.yy"
     { (yyval.nodito) = NULL; }
     break;
 
   case 148:
 /* Line 1792 of yacc.c  */
-#line 357 "parser.yy"
+#line 358 "parser.yy"
     { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 149:
 /* Line 1792 of yacc.c  */
-#line 359 "parser.yy"
+#line 360 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "visibilidad", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 150:
 /* Line 1792 of yacc.c  */
-#line 360 "parser.yy"
+#line 361 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "visibilidad", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
   case 151:
 /* Line 1792 of yacc.c  */
-#line 361 "parser.yy"
+#line 362 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (1)]).first_line, (yylsp[(1) - (1)]).first_column, "visibilidad", (yyvsp[(1) - (1)].TEXT)); }
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 2644 "parser.cpp"
+#line 2650 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2879,5 +2885,5 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 364 "parser.yy"
+#line 365 "parser.yy"
 

@@ -151,6 +151,7 @@ class NodoAST* nodito;
 %type<nodito> INCLUIR;
 %type<nodito> TRANSFERIR;
 %type<nodito> LEXP;
+%type<nodito> PRINCIPAL;
 
 
 %left opor opnor
@@ -186,7 +187,7 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA { $$ = $1; if($2 != NULL){ $$->add(*$2); } }
 SENTENCIA : DECLARACION { $$ = $1; }
            |ASIGNACION { $$ = $1; }
            |LLAMADAFUNC finalizacion { $$ = $1; }
-           |PRINCIPAL { $$ = NULL; }
+           |PRINCIPAL { $$ = $1; }
            |RETORNAR { $$ = NULL; }
            |IMPRIMIR { $$ = NULL; }
            |MOSTRARNOTIFI { $$ = NULL; }
@@ -214,7 +215,7 @@ ASIGNACION : id igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.fir
             |id DIMENSION igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$2); $$->add(*$4); }
             |id punto id igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "objeto_var", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo3 = new NodoAST(@1.first_line, @1.first_column, "id", $3); nodo2->add(*nodo); nodo2->add(*nodo3); $$->add(*nodo2); $$->add(*$5); };
 
-PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "main", "main"); if($5 != NULL){ $$->add(*$5); } };
 
 FUNCIONES : abrir_parentesis LTIPOS cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); $$->add(*$2); if($5 != NULL){ $$->add(*$5); } }
             |abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "funciones", "funciones"); if($4 != NULL){ $$->add(*$4); } };

@@ -77,3 +77,9 @@ clase omaen {
 	Archivo dd = crearArchivoDer(dda + da)$
 	dd.crearConjunto(caaa, "dasda das")$
 }
+clase oc {
+	principal(){
+		Omaen mm = nuevo Omaen()$
+		mm.rex(5, losm)$
+	}
+}
