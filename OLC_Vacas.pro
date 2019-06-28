@@ -30,14 +30,24 @@ SOURCES += \
     nodoast.cpp \
     scanner.cpp \
     parser.cpp \
-    plotter.cpp
+    plotter.cpp \
+    symbol.cpp \
+    lexiconode.cpp \
+    scopenode.cpp \
+    tailscope.cpp \
+    travel.cpp
 
 HEADERS += \
         mainwindow.h \
     nodoast.h \
     scanner.h \
     parser.h \
-    plotter.h
+    plotter.h \
+    symbol.h \
+    lexiconode.h \
+    scopenode.h \
+    tailscope.h \
+    travel.h
 
 FORMS += \
         mainwindow.ui

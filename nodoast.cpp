@@ -50,16 +50,6 @@ int NodoAST::getTypeofValue(){
         return 13;
     }else if(type == "not"){
         return 14;
-    }else if(type == "tipo"){
-        return 15;
-    }else if(type == "expresion"){
-        return 16;
-    }else if(type == "or"){
-        return 17;
-    }else if(type == "and"){
-        return 18;
-    }else if(type == "not"){
-        return 19;
     }else if(type == "igual_igual"){
         return 20;
     }else if(type == "diferente_de"){
@@ -152,6 +142,8 @@ int NodoAST::getTypeofValue(){
         return 64;
     }else if(type == "ldimensionesasig"){
         return 65;
+    }else if(type == "imprimir"){
+        return 66;
     }
     return 0;
 }
