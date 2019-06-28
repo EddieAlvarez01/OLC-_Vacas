@@ -120,6 +120,12 @@ int NodoAST::getTypeofValue(){
         return 48;
     }else if(type == "retornar"){
         return 49;
+    }else if(type == "mostrarNotificacion"){
+        return 50;
+    }else if(type == "else"){
+        return 51;
+    }else if(type == "si"){
+        return 52;
     }
     return 0;
 }

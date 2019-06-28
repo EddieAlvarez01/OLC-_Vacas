@@ -190,8 +190,8 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |PRINCIPAL { $$ = $1; }
            |RETORNAR { $$ = $1; }
            |IMPRIMIR { $$ = $1; }
-           |MOSTRARNOTIFI { $$ = NULL; }
-           |SI { $$ = NULL; }
+           |MOSTRARNOTIFI { $$ = $1; }
+           |SI { $$ = $1; }
            |PARA { $$ = NULL; }
            |REPETIR { $$ = NULL; }
            |ROMPER { $$ = NULL; }
@@ -224,9 +224,9 @@ RETORNAR : pretornar EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.firs
 
 IMPRIMIR : pimprimir abrir_parentesis EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "imprimir", "imprimir"); $$->add(*$3); };
 
-MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion;
+MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_parentesis finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "mostrarNotificacion", "mostrarNotificacion"); $$->add(*$3); $$->add(*$5); };
 
-SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI;
+SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI { $$ = new NodoAST(@1.first_line, @1.first_column, "si", "si"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } if($8 != NULL){ $$->add(*$8); } };
 
 PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
@@ -254,9 +254,9 @@ TRANSFERIR : ptransferir abrir_parentesis EXPL coma EXPL coma EXPL cerrar_parent
 PRIMERFOR : DECLARACION
            |ASIGNACION;
 
-TERMINSI : /* %empty */
-          |psino abrir_llave RELLENOCLASE cerrar_llave
-          |psino SI;
+TERMINSI : /* %empty */ { $$ = NULL; }
+          |psino abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_line, "else", "else"); if($3 != NULL){ $$->add(*$3); } }
+          |psino SI { $$ = new NodoAST(@1.first_line, @1.first_column, "else", "else"); $$->add(*$2); };
 
 
 TIPO : pint { $$ = new NodoAST(@1.first_line, @1.first_column, "tipo", $1); }

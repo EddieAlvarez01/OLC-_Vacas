@@ -2035,13 +2035,13 @@ yyreduce:
   case 20:
 /* Line 1792 of yacc.c  */
 #line 193 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
 #line 194 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 22:
@@ -2192,6 +2192,36 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 225 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "imprimir", "imprimir"); (yyval.nodito)->add(*(yyvsp[(3) - (5)].nodito)); }
+    break;
+
+  case 47:
+/* Line 1792 of yacc.c  */
+#line 227 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, "mostrarNotificacion", "mostrarNotificacion"); (yyval.nodito)->add(*(yyvsp[(3) - (7)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (7)].nodito)); }
+    break;
+
+  case 48:
+/* Line 1792 of yacc.c  */
+#line 229 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (8)]).first_line, (yylsp[(1) - (8)]).first_column, "si", "si"); (yyval.nodito)->add(*(yyvsp[(3) - (8)].nodito)); if((yyvsp[(6) - (8)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (8)].nodito)); } if((yyvsp[(8) - (8)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(8) - (8)].nodito)); } }
+    break;
+
+  case 64:
+/* Line 1792 of yacc.c  */
+#line 257 "parser.yy"
+    { (yyval.nodito) = NULL; }
+    break;
+
+  case 65:
+/* Line 1792 of yacc.c  */
+#line 258 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_line, "else", "else"); if((yyvsp[(3) - (4)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); } }
+    break;
+
+  case 66:
+/* Line 1792 of yacc.c  */
+#line 259 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "else", "else"); (yyval.nodito)->add(*(yyvsp[(2) - (2)].nodito)); }
     break;
 
   case 67:
@@ -2658,7 +2688,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2662 "parser.cpp"
+#line 2692 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
