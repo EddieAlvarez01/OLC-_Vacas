@@ -2059,13 +2059,13 @@ yyreduce:
   case 24:
 /* Line 1792 of yacc.c  */
 #line 197 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
 #line 198 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 26:
@@ -2216,6 +2216,18 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 233 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, "repetir", "repetir"); (yyval.nodito)->add(*(yyvsp[(3) - (7)].nodito)); if((yyvsp[(6) - (7)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (7)].nodito)); } }
+    break;
+
+  case 51:
+/* Line 1792 of yacc.c  */
+#line 235 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (2)]).first_line, (yylsp[(1) - (2)]).first_column, "romper", "romper"); }
+    break;
+
+  case 52:
+/* Line 1792 of yacc.c  */
+#line 237 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (7)]).first_line, (yylsp[(1) - (7)]).first_column, "mientras", "mientras"); (yyval.nodito)->add(*(yyvsp[(3) - (7)].nodito)); if((yyvsp[(6) - (7)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (7)].nodito)); } }
     break;
 
   case 62:
@@ -2712,7 +2724,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2716 "parser.cpp"
+#line 2728 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

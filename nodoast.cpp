@@ -130,6 +130,10 @@ int NodoAST::getTypeofValue(){
         return 53;
     }else if(type == "repetir"){
         return 54;
+    }else if(type == "romper"){
+        return 55;
+    }else if(type == "mientras"){
+        return 56;
     }
     return 0;
 }

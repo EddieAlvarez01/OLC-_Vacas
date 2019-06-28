@@ -143,7 +143,7 @@ class NodoAST* nodito;
 %type<nodito> PRIMERFOR;
 %type<nodito> REPETIR;
 %type<nodito> ROMPER;
-%type<nodtio> MIENTRAS;
+%type<nodito> MIENTRAS;
 %type<nodito> COMPROBAR;
 %type<nodito> CASOS;
 %type<nodito> HACER;
@@ -194,8 +194,8 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |SI { $$ = $1; }
            |PARA { $$ = $1; }
            |REPETIR { $$ = $1; }
-           |ROMPER { $$ = NULL; }
-           |MIENTRAS { $$ = NULL; }
+           |ROMPER { $$ = $1; }
+           |MIENTRAS { $$ = $1; }
            |COMPROBAR { $$ = NULL; }
            |HACER { $$ = NULL; }
            |CONTINUAR { $$ = NULL; }
@@ -232,9 +232,9 @@ PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis
 
 REPETIR : prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "repetir", "repetir"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } };
 
-ROMPER : promper finalizacion;
+ROMPER : promper finalizacion { $$ = new NodoAST(@1.first_line, @1.first_column, "romper", "romper"); };
 
-MIENTRAS : pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
+MIENTRAS : pmientras abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "mientras", "mientras"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } };
 
 COMPROBAR : pcomprobar abrir_parentesis EXPL cerrar_parentesis abrir_llave CASOS cerrar_llave;
 
