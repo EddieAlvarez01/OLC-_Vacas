@@ -114,6 +114,8 @@ int NodoAST::getTypeofValue(){
         return 45;
     }else if(type == "declaracion"){
         return 46;
+    }else if(type == "asignacion"){
+        return 47;
     }
     return 0;
 }

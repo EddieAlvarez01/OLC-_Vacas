@@ -2005,7 +2005,7 @@ yyreduce:
   case 15:
 /* Line 1792 of yacc.c  */
 #line 187 "parser.yy"
-    { (yyval.nodito) = NULL; }
+    { (yyval.nodito) = (yyvsp[(1) - (1)].nodito); }
     break;
 
   case 16:
@@ -2144,6 +2144,24 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 211 "parser.yy"
     { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "declaracion", "declaracion"); (yyval.nodito)->add(*(yyvsp[(3) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (6)].nodito)); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); if((yyvsp[(6) - (6)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(6) - (6)].nodito)); } }
+    break;
+
+  case 39:
+/* Line 1792 of yacc.c  */
+#line 213 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (4)]).first_line, (yylsp[(1) - (4)]).first_column, "id", (yyvsp[(1) - (4)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(3) - (4)].nodito)); }
+    break;
+
+  case 40:
+/* Line 1792 of yacc.c  */
+#line 214 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST((yylsp[(1) - (5)]).first_line, (yylsp[(1) - (5)]).first_column, "id", (yyvsp[(1) - (5)].TEXT)); (yyval.nodito)->add(*nodo); (yyval.nodito)->add(*(yyvsp[(2) - (5)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (5)].nodito)); }
+    break;
+
+  case 41:
+/* Line 1792 of yacc.c  */
+#line 215 "parser.yy"
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_line, "asignacion", "asignacion"); NodoAST *nodo2 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "objeto_var", (yyvsp[(2) - (6)].TEXT)); NodoAST *nodo = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(1) - (6)].TEXT)); NodoAST *nodo3 = new NodoAST((yylsp[(1) - (6)]).first_line, (yylsp[(1) - (6)]).first_column, "id", (yyvsp[(3) - (6)].TEXT)); nodo2->add(*nodo); nodo2->add(*nodo3); (yyval.nodito)->add(*nodo2); (yyval.nodito)->add(*(yyvsp[(5) - (6)].nodito)); }
     break;
 
   case 43:
@@ -2622,7 +2640,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2626 "parser.cpp"
+#line 2644 "parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

@@ -19,6 +19,7 @@ clase persona extender asasa, id,alala{
 
 clase animal {
 	doble ad, ser = 4*8*exex - 36 && val$
+	forest [4-2][var] = "super" + chain + pp()$
 	ser s = nuevo perro()$
 	para(entero cont = 0$ cont != 5$ cont++){
 	}

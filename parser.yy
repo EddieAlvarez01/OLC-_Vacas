@@ -184,7 +184,7 @@ LSENTENCIAS : LSENTENCIAS SENTENCIA { $$ = $1; if($2 != NULL){ $$->add(*$2); } }
 |SENTENCIA { $$ = new NodoAST(@1.first_line, @1.first_column, "lsentencias", "lsentencias"); if($1 != NULL){ $$->add(*$1); } };
 
 SENTENCIA : DECLARACION { $$ = $1; }
-           |ASIGNACION { $$ = NULL; }
+           |ASIGNACION { $$ = $1; }
            |LLAMADAFUNC finalizacion { $$ = NULL; }
            |PRINCIPAL { $$ = NULL; }
            |RETORNAR { $$ = NULL; }
@@ -210,9 +210,9 @@ DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line,
              |parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
              |SOBREESCRITURA parreglo TIPO LIDS DIMENSION TERMARRAY { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$3); $$->add(*$4); $$->add(*$5); if($6 != NULL){ $$->add(*$6); } };
 
-ASIGNACION : id igual EXPL finalizacion
-            |id DIMENSION igual EXPL finalizacion
-            |id punto id igual EXPL finalizacion;
+ASIGNACION : id igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$3); }
+            |id DIMENSION igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$2); $$->add(*$4); }
+            |id punto id igual EXPL finalizacion { $$ = new NodoAST(@1.first_line, @1.first_line, "asignacion", "asignacion"); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "objeto_var", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo3 = new NodoAST(@1.first_line, @1.first_column, "id", $3); nodo2->add(*nodo); nodo2->add(*nodo3); $$->add(*nodo2); $$->add(*$5); };
 
 PRINCIPAL : pprincipal abrir_parentesis cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave;
 
