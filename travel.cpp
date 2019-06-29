@@ -68,3 +68,20 @@ enum Choice{
     LDIMENSIONESASIG = 65,
     IMPRIMIR = 66
 };
+
+Symbol Travel::Recorrer(NodoAST *node){
+    Symbol sym;
+    sym.row = node->row;
+    sym.column = node->column;
+    switch(node->typeofValue){
+        case LCLASES:
+        {
+            for(int x=0; x<node->child.size(); x++){
+                currentEnviroment = new ScopeNode();
+                QueueScope.newScope(currentEnviroment);
+
+            }
+        }
+        break;
+    }
+}
