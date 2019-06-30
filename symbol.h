@@ -12,10 +12,11 @@ class Symbol
 {
 public:
     Symbol();
-    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol>, int, int, int, QLinkedList<LexicoNode>, NodoAST*);
+    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol>, int, int, int, QLinkedList<LexicoNode>, NodoAST*, QString);
     int row, column;
     QString id;
-    int type;
+    int type_value;
+    QString type;
     QString role;
     QString value;
     int access;  /* 0 publico, 1 privado, 2 protegido */

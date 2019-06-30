@@ -5,8 +5,12 @@
 #include "tailscope.h"
 #include "symbol.h"
 #include "nodoast.h"
+#include "semantic_error.h"
 #include <QHash>
 #include <QString>
+#include <QList>
+#include <math.h>
+#include <algorithm>
 
 class Travel
 {
@@ -16,6 +20,8 @@ public:
     TailScope QueueScope;
     QHash<QString, Symbol> listClass;
     Symbol Recorrer(NodoAST *node);
+    void CopyLIDS(QList<QString> &original, QList<QString>copy);
+    QList<Semantic_Error*> semanticError;
 };
 
 #endif // TRAVEL_H

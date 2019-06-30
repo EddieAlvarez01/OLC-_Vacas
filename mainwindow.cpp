@@ -7,6 +7,7 @@
 #include <qdebug.h>
 #include "plotter.h"
 #include "nodoast.h"
+#include "travel.h"
 
 extern int yyparse();
 extern NodoAST *raiz;
@@ -38,6 +39,9 @@ void MainWindow::on_actionCompilar_triggered()
         std::cout << "Correcto" << std::endl;
         Plotter *plot = new Plotter(raiz);
         plot->generarImagen();
+        Travel *travel = new Travel();
+        travel->Recorrer(raiz);
+        std::cout << "prueba";
     }else{
         std::cout << "Nel prro" << std::endl;
     }

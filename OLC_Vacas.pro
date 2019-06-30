@@ -35,7 +35,8 @@ SOURCES += \
     lexiconode.cpp \
     scopenode.cpp \
     tailscope.cpp \
-    travel.cpp
+    travel.cpp \
+    semantic_error.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     lexiconode.h \
     scopenode.h \
     tailscope.h \
-    travel.h
+    travel.h \
+    semantic_error.h
 
 FORMS += \
         mainwindow.ui

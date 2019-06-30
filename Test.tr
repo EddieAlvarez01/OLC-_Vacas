@@ -1,10 +1,17 @@
 clase persona {
 	
 }
-clase Operacion{
-	
+clase Operacion extender io, salmonela{
+	entero io = 34$
+	privado booleano roche$
+	caracter sasaa$
+	publico cadena lomas = "dsadas"$
 }
 
 clase umihyu{
-	
+	cadena oto = "ing" + "jose" + 15 + " " + 22.5$
+	booleano safi = (78+9-22.5 == 12) !|| 78*8 >= 4000$
+	entero cr = 65 - 10 * 'M'$
+	booleano ifter = 1$
+	caracter lk = 35$
 }

@@ -79,9 +79,2488 @@ Symbol Travel::Recorrer(NodoAST *node){
             for(int x=0; x<node->child.size(); x++){
                 currentEnviroment = new ScopeNode();
                 QueueScope.newScope(currentEnviroment);
-
+                NodoAST tmp = node->child.at(x);
+                Recorrer(&tmp);
+                listClass.insert(currentEnviroment->actuallyClass.id, currentEnviroment->actuallyClass);
+                currentEnviroment = QueueScope.deleteScope();
             }
         }
         break;
+        case CLASE:
+        {
+            currentEnviroment->actuallyClass.role = "clase";
+            if(node->child.size() == 3){
+                currentEnviroment->actuallyClass.id = node->child.at(2).value.toLower();
+                NodoAST tmp = node->child.at(0);
+                NodoAST tmp2 = node->child.at(1);
+                Recorrer(&tmp);
+                Recorrer(&tmp2);
+            }else if(node->child.size() == 2){
+                currentEnviroment->actuallyClass.id = node->child.at(1).value.toLower();
+                 NodoAST tmp = node->child.at(0);
+                 Recorrer(&tmp);
+            }else{
+                currentEnviroment->actuallyClass.id = node->child.at(0).value.toLower();
+            }
+        }
+        break;
+        case EXTENDER:
+        {
+            NodoAST tmp = node->child.at(0);
+            QList<QString> list = Recorrer(&tmp).imports;
+            CopyLIDS(currentEnviroment->actuallyClass.imports, list);
+        }
+        break;
+        case LIDS:
+        {
+            for(int x=0; x<node->child.size(); x++){
+                sym.imports.push_back(node->child.at(x).value.toLower());
+            }
+        }
+        break;
+        case LSENTENCIAS:
+        {
+            for(int x=0; x<node->child.size(); x++){
+                NodoAST tmp = node->child.at(x);
+                Recorrer(&tmp);
+            }
+        }
+        break;
+        case DECLARACION:
+        {
+            switch (node->child.at(0).typeofValue) {
+                case VISIBILIDAD:
+                {
+
+                }
+                break;
+                case TIPO:
+                {
+                    sym.type = node->child.at(0).value.toLower();
+                    sym.access = 0;
+                    NodoAST tmp = node->child.at(1);
+                    sym.imports = Recorrer(&tmp).imports;
+                    if(node->child.size() > 2){
+                        if(node->child.at(2).typeofValue == DIMENSION){
+
+                        }else if(node->child.at(2).typeofValue == FUNCIONES){
+
+                        }else if(node->child.at(2).typeofValue == EXPRESION){
+                            NodoAST tmp = node->child.at(2);
+                            Symbol ss = Recorrer(&tmp);
+                            if(sym.type == "entero"){
+                                switch(ss.type_value){
+                                    case NUMERO:
+                                    {
+                                        sym.type_value = NUMERO;
+                                        sym.value = ss.value;
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        sym.type_value = NUMERO;
+                                        int result = (int)ss.value.toDouble();
+                                        sym.value = QString::number(result);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        sym.type_value = NUMERO;
+                                        int result = ss.value[0].toLatin1();
+                                        sym.value = QString::number(result);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        sym.type_value = NUMERO;
+                                        int result = QVariant(ss.value).toBool();
+                                        sym.value = QString::number(result);
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo entero";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }else if(sym.type == "doble"){
+                                switch(ss.type_value){
+                                    case NUMERO:
+                                    {
+                                        sym.type_value = DECIMAL;
+                                        double result = ss.value.toInt();
+                                        sym.value = QString::number(result);
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        sym.type_value = DECIMAL;
+                                        sym.value = ss.value;
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        QString description = "No se puede asignar un caracter, cadena o booleano a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            else if(sym.type == "cadena"){
+                                sym.type_value = CADENA;
+                                sym.value = ss.value;
+                            }else if(sym.type == "caracter"){
+                                switch(ss.type_value){
+                                    case NUMERO:
+                                    {
+                                        sym.type_value = CARACTER;
+                                        QChar result = ss.value.toInt();
+                                        sym.value = result;
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        sym.type_value = CARACTER;
+                                        sym.value = ss.value;
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        QString description = "No se puede asignar un doble, cadena o booleano a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }else if(sym.type == "booleano"){
+                                switch (ss.type_value) {
+                                    case BOOLEAN:
+                                    {
+                                        sym.type_value = BOOLEAN;
+                                        sym.value = ss.value;
+                                    }
+                                    break;
+                                    case NUMERO:
+                                    {
+                                        int op = ss.value.toInt();
+                                        if(op == 1 || op == 0){
+                                                sym.type_value = BOOLEAN;
+                                              bool result = QVariant(op).toBool();
+                                              sym.value = result ? "true" : "false";
+                                        }else{
+                                            QString description = "No se puede asignar un entero diferente de 0 y 1, a un booleano";
+                                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                            semanticError.push_back(error);
+                                        }
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        QString description = "No se puede asignar un doble, cadena o caracter a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            for(int x=0; x<sym.imports.size(); x++){
+                                Symbol newS;
+                                newS.type = sym.type;
+                                newS.type_value = sym.type_value;
+                                newS.id = sym.imports.at(x);
+                                newS.value = sym.value;
+                                currentEnviroment->actuallyClass.propertys.insert(newS.id, newS);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case EXPRESION:
+        {
+            NodoAST tmp = node->child.at(0);
+            sym = Recorrer(&tmp);
+        }
+        break;
+        case OR:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() || QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "Para efectuar un or ambos operadores deber ser booleanos";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "Para efectuar un or ambos operadores deber ser booleanos";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case NOR:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = !(QVariant(op1.value).toBool() || QVariant(op2.value).toBool());
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "Para efectuar un nor ambos operadores deber ser booleanos";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "Para efectuar un nor ambos operadores deber ser booleanos";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case AND:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() && QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "Para efectuar un and ambos operadores deber ser booleanos";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "Para efectuar un and ambos operadores deber ser booleanos";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case NAND:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = !(QVariant(op1.value).toBool() && QVariant(op2.value).toBool());
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "Para efectuar un nand ambos operadores deber ser booleanos";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "Para efectuar un nand ambos operadores deber ser booleanos";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case NOT:
+        {
+            NodoAST der = node->child.at(1);
+            Symbol op1 = Recorrer(&der);
+            switch (op1.type_value) {
+                case BOOLEAN:
+                {
+                    sym.type_value = BOOLEAN;
+                    bool result = !(QVariant(op1.value).toBool());
+                    sym.value = result ? "true" : "false";
+                }
+                break;
+                default:
+                {
+                    QString description = "Para efectuar un not se debe operar un booleano";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case IGUAL_IGUAL:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value == op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() == op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() == op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() == QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() == op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() == op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() == op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() == QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() == op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() == op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() == op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() == QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] == op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() == op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] == op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case DIFERENTE_DE:
+            {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value != op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() != op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() != op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() != QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() != op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() != op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() != op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() != QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() != op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() != op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() != op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() != QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] != op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() != op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] != op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case MENOR_QUE:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value < op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() < op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() < op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() < QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() < op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() < op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() < op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() < QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() < op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() < op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() < op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() < QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] < op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() < op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] < op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case MAYOR_QUE:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value > op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() > op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() > op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() > QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() > op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() > op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() > op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() > QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() > op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() > op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() > op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() > QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] > op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() > op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] > op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case MENORIGUAL_QUE:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value <= op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() <= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() <= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() <= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() <= op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() <= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() <= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() <= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() <= op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() <= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() <= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() <= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] <= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() <= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] <= op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case MAYORIGUAL_QUE:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch (op1.type_value) {
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value >= op2.value;
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar una cadena a otro tipo que no sea cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() >= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() >= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() >= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toInt() >= op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() >= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() >= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() >= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value.toDouble() >= op2.value[0].toLatin1();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() >= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() >= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() >= QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un booleano con una cadena o caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] >= op2.value.toInt();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0].toLatin1() >= op2.value.toDouble();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = op1.value[0] >= op2.value[0];
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede comparar un caracter con una cadena o booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case SUMA:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case CADENA:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case NUMERO:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede sumar un booleano con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case NUMERO:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() + op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() + op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() + op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            int result = op1.value.toInt() + QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case NUMERO:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() + op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() + op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() + op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() + QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch (op2.type_value) {
+                        case CADENA:
+                        {
+                            sym.type_value = CADENA;
+                            sym.value = op1.value + op2.value;
+                        }
+                        break;
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() + op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value[0].toLatin1() + op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() + op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() + QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = QVariant(op1.value).toBool() + op2.value.toInt();
+                            sym.value = QString(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = QVariant(op1.value).toBool() + op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = QVariant(op1.value).toBool() + op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() || QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede sumar un booleano con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+        case RESTA:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case NUMERO:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() - op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() - op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() - op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() - QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede restar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() - op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() - op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() - op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() - QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede restar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() - op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value[0].toLatin1() - op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() - op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede restar un caracter con una cadena o con un booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = QVariant(op1.value).toBool() - op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = QVariant(op1.value).toBool() - op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede restar un booleano con una cadena, con un booleano o un caracter";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede restar con una cadena o cualquier tipo";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case MULTI:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case NUMERO:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() * op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() * op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() * op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value.toInt() * QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede multiplicar un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() * op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() * op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() * op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value.toDouble() * QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede multiplicar un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() * op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = op1.value[0].toLatin1() * op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() * op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = op1.value[0].toLatin1() * QVariant(op2.value).toBool();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede multilicar un caracter con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = QVariant(op1.value).toBool() * op2.value.toInt();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = QVariant(op1.value).toBool() * op2.value.toDouble();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = QVariant(op1.value).toBool() * op2.value[0].toLatin1();
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = BOOLEAN;
+                            bool result = QVariant(op1.value).toBool() && QVariant(op2.value).toBool();
+                            sym.value = result ? "true" : "false";
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede multiplicar un booleano con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede multiplicar con una cadena a cualquier tipo";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case DIVISION:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case NUMERO:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            if(op2.value.toInt() != 0){
+                                 sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            if(op2.value.toDouble() != 0.0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            if(op2.value[0].toLatin1() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value[0].toLatin1();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            if(QVariant(op2.value).toBool() != 0){
+                                sym.type_value = NUMERO;
+                                int result = op1.value.toInt() / QVariant(op2.value).toBool();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede dividir un entero con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            if(op2.value.toInt() != 0){
+                                 sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            if(op2.value.toDouble() != 0.0){
+                                 sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            if(op2.value[0].toLatin1() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / op2.value[0].toLatin1();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            if(QVariant(op2.value).toBool() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value.toDouble() / QVariant(op2.value).toBool();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede dividir un decimal con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            if(op2.value.toInt() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value[0].toLatin1() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            if(op2.value.toDouble() != 0.0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value[0].toLatin1() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            if(op2.value[0].toLatin1() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = op1.value[0].toLatin1() / op2.value[0].toLatin1();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            if(QVariant(op2.value).toBool() != 0){
+                                sym.type_value = NUMERO;
+                                double result = op1.value[0].toLatin1() / QVariant(op2.value).toBool();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede dividir un caracter con una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            if(op2.value.toInt() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = QVariant(op1.value).toBool() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            if(op2.value.toDouble() != 0.0){
+                                sym.type_value = DECIMAL;
+                                double result = QVariant(op1.value).toBool() / op2.value.toDouble();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            if(op2.value[0].toLatin1() != 0){
+                                sym.type_value = DECIMAL;
+                                double result = QVariant(op1.value).toBool() / op2.value[0].toLatin1();
+                                sym.value = QString::number(result);
+                            }else{
+                                QString description = "No se puede dividir un dentro de 0";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede dividir un booleano con una cadena o con un booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede dividir con una cadena a cualquier tipo";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case POTENCIA:
+        {
+            NodoAST izq = node->child.at(0);
+            Symbol op1 = Recorrer(&izq);
+            NodoAST der = node->child.at(1);
+            Symbol op2 = Recorrer(&der);
+            switch(op1.type_value){
+                case NUMERO:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value.toInt(), op2.value.toInt());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value.toInt(), op2.value[0].toLatin1());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value.toInt(), QVariant(op2.value).toBool());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede elevar un entero a una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case DECIMAL:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value.toDouble(), op2.value[0].toLatin1());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value.toDouble(), QVariant(op2.value).toBool());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede elevar un decimal a una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case CARACTER:
+                {
+                    switch(op2.type_value){
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value[0].toLatin1(), op2.value.toInt());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(op1.value[0].toLatin1(), op2.value.toDouble());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value[0].toLatin1(), op2.value[0].toLatin1());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case BOOLEAN:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(op1.value[0].toLatin1(), QVariant(op2.value).toBool());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede elevar un caracter a una cadena";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                case BOOLEAN:
+                {
+                    switch (op2.type_value) {
+                        case NUMERO:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(QVariant(op1.value).toBool(), op2.value.toInt());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case DECIMAL:
+                        {
+                            sym.type_value = DECIMAL;
+                            double result = pow(QVariant(op1.value).toBool(), op2.value.toDouble());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        case CARACTER:
+                        {
+                            sym.type_value = NUMERO;
+                            int result = (int)pow(QVariant(op1.value).toBool(), op2.value[0].toLatin1());
+                            sym.value = QString::number(result);
+                        }
+                        break;
+                        default:
+                        {
+                            QString description = "No se puede wlwvar un booleano con una cadena u otro booleano";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                        break;
+                    }
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede elevar una cadena a cualquier tipo";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case NUMERO:
+        {
+            sym.type_value = NUMERO;
+            sym.value = node->value;
+        }
+        break;
+        case CADENA:
+        {
+            sym.type_value = CADENA;
+            node->value.replace("\"", "");
+            sym.value = node->value;
+        }
+        break;
+        case DECIMAL:
+        {
+            sym.type_value = DECIMAL;
+            sym.value = node->value;
+        }
+        break;
+        case CARACTER:
+        {
+            sym.type_value = CARACTER;
+            sym.value = node->value.replace("'", "");
+        }
+        break;
+        case BOOLEAN:
+        {
+            sym.type_value = BOOLEAN;
+            sym.value = node->value;
+        }
+        break;
+    }
+    return sym;
+}
+
+void Travel::CopyLIDS(QList<QString> &original, QList<QString> copy){
+    for(int i=0; i<copy.size(); i++){
+        original.push_back(copy.at(i));
     }
 }
