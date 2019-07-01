@@ -11,10 +11,10 @@ clase persona {
 		entero sasa = 1000$
 		sucu = 20$
 	}
-	entero x = 2$
-	para(x = 2$ x<10$ x++){
-		entero suma = 4*9 + x$
-		imprimir(sasa)$
+	entero a$
+	repetir(sasa * 4){
+		a++$
+		imprimir("Iteracion: " + a)$
 	}
 }
 clase Operacion extender io, salmonela{

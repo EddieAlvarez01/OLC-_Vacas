@@ -139,6 +139,7 @@ Symbol* Travel::Recorrer(NodoAST *node){
                         sym->access = 2;
                     }
                     sym->type = node->child.at(1).value.toLower();
+                    sym->type_value = AsignType(sym->type);
                     NodoAST tmp = node->child.at(2);
                     sym->imports = Recorrer(&tmp)->imports;
                     if(node->child.size() > 3){
@@ -324,6 +325,7 @@ Symbol* Travel::Recorrer(NodoAST *node){
                             Symbol *newS = new Symbol();
                             newS->access = sym->access;
                             newS->type = sym->type;
+                            newS->type_value = sym->type_value;
                             newS->id = sym->imports.at(x);
                             currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
                         }
@@ -334,6 +336,7 @@ Symbol* Travel::Recorrer(NodoAST *node){
                 {
                     sym->type = node->child.at(0).value.toLower();
                     sym->access = 0;
+                    sym->type_value = AsignType(sym->type);
                     NodoAST tmp = node->child.at(1);
                     sym->imports = Recorrer(&tmp)->imports;
                     if(node->child.size() > 2){
@@ -519,6 +522,7 @@ Symbol* Travel::Recorrer(NodoAST *node){
                             Symbol *newS = new Symbol();
                             newS->access = sym->access;
                             newS->type = sym->type;
+                            newS->type_value = sym->type_value;
                             newS->id = sym->imports.at(x);
                             currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
                         }
@@ -3166,6 +3170,28 @@ Symbol* Travel::Recorrer(NodoAST *node){
             consoleMsg.push_back(msg->value);
         }
         break;
+        case REPETIR:
+        {
+            NodoAST tmp = node->child.at(0);
+            Symbol *cond = Recorrer(&tmp);
+            if(cond->type_value == NUMERO){
+                if(node->child.size() > 1){
+                    int ss = cond->value.toInt();
+                    for(int x=0; x<ss; x++){
+                        currentEnviroment = new ScopeNode();
+                        QueueScope.newScope(currentEnviroment);
+                        NodoAST tmp = node->child.at(1);
+                        Recorrer(&tmp);
+                        currentEnviroment = QueueScope.deleteScope();
+                    }
+                }
+            }else{
+                QString description = "No se puede usar en la condicion de repetir algo que no sea entero";
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
+        }
+        break;
     }
     return sym;
 }
@@ -3186,4 +3212,19 @@ Symbol* Travel::SearchidScope(QString id){
         tmp = tmp->preview;
     }
     return nullptr;
+}
+
+int Travel::AsignType(QString type){
+    if(type.toLower() == "entero"){
+        return NUMERO;
+    }else if(type.toLower() == "doble"){
+        return DECIMAL;
+    }else if(type.toLower() == "booleano"){
+        return BOOLEAN;
+    }else if(type.toLower() == "caracter"){
+        return CARACTER;
+    }else if(type.toLower() == "cadena"){
+        return CADENA;
+    }
+    return 0;
 }

@@ -152,6 +152,8 @@ class NodoAST* nodito;
 %type<nodito> TRANSFERIR;
 %type<nodito> LEXP;
 %type<nodito> PRINCIPAL;
+%type<nodito> AUMENTO;
+%type<nodito> DECREMENTO;
 
 
 %left opor opnor
@@ -200,7 +202,9 @@ SENTENCIA : DECLARACION { $$ = $1; }
            |HACER { $$ = $1; }
            |CONTINUAR { $$ = $1; }
            |INCLUIR { $$ = $1; }
-           |TRANSFERIR { $$ = $1; };
+           |TRANSFERIR { $$ = $1; }
+           |AUMENTO finalizacion {$$ = $1;}
+           |DECREMENTO finalizacion{ $$ = $1; };
 
 DECLARACION : VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$1); $$->add(*$2); $$->add(*$3); if($4 != NULL){ $$->add(*$4); } }
              |SOBREESCRITURA VISIBILIDAD TIPO LIDS TERMDECLAR { $$ = new NodoAST(@1.first_line, @1.first_column, "declaracion", "declaracion"); $$->add(*$2); $$->add(*$3); $$->add(*$4); if($5 != NULL){ $$->add(*$5); } }
@@ -337,16 +341,10 @@ EXPA : EXPA suma EXPA { $$ = new NodoAST(@1.first_line, @1.first_column, "suma",
       |cadena { $$ = new NodoAST(@1.first_line, @1.first_column, "cadena", $1); }
       |id { $$ = new NodoAST(@1.first_line, @1.first_column, "id", $1); }
       |id DIMENSION { $$ = new NodoAST(@1.first_line, @1.first_column, "arreglo", $1); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); $$->add(*$2); }
-      |id aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
-      |id decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
-      |numero aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
-      |numero decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
-      |decimal aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
-      |decimal decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
-      |caracter aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); }
-      |caracter decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); }
       |id punto id { $$ = new NodoAST(@1.first_line, @1.first_column, "objeto_var", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
-      |LLAMADAFUNC { $$ = $1; };
+      |LLAMADAFUNC { $$ = $1; }
+      |AUMENTO{ $$ = $1; }
+      |DECREMENTO{ $$ = $1; };
 
 LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); if($5 != NULL){ $$->add(*$5); } }
              |id punto pcrearconjunto abrir_parentesis EXPL coma EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); $$->add(*$7); }
@@ -359,6 +357,16 @@ LLAMADAFUNC : id punto id abrir_parentesis VARF cerrar_parentesis { $$ = new Nod
              |id punto pcrearentrada abrir_parentesis EXPL coma EXPL cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); $$->add(*$5); $$->add(*$7); }
              |id punto pguardararchivo abrir_parentesis cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); NodoAST *nodo2 = new NodoAST(@1.first_line, @1.first_column, "id", $3); $$->add(*nodo); $$->add(*nodo2); }
              |id abrir_parentesis VARF cerrar_parentesis { $$ = new NodoAST(@1.first_line, @1.first_column, "llamadafunc", "llamadafunc"); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1);  $$->add(*nodo); if($3 != NULL){ $$->add(*$3); } };
+
+AUMENTO : id aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
+            |numero aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
+            |decimal aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
+            |caracter aumento { $$ = new NodoAST(@1.first_line, @1.first_column, "aumento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); };
+
+DECREMENTO : id decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "id", $1); $$->add(*nodo); }
+            |numero decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "numero", $1); $$->add(*nodo); }
+            |decimal decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "decimal", $1); $$->add(*nodo); }
+            |caracter decremento { $$ = new NodoAST(@1.first_line, @1.first_column, "decremento", $2); NodoAST *nodo = new NodoAST(@1.first_line, @1.first_column, "caracter", $1); $$->add(*nodo); };
 
 VARF : /*%empty*/ { $$ = NULL; }
       |LEXP { $$ = $1; };

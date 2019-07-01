@@ -25,6 +25,7 @@ public:
     QList<Semantic_Error*> semanticError;
     Symbol* SearchidScope(QString id);
     QList<QString> consoleMsg;
+    int AsignType(QString type);
 };
 
 #endif // TRAVEL_H
