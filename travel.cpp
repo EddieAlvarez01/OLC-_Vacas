@@ -3192,6 +3192,29 @@ Symbol* Travel::Recorrer(NodoAST *node){
             }
         }
         break;
+        case MIENTRAS:
+        {
+            NodoAST tmp = node->child.at(0);
+            Symbol *cond = Recorrer(&tmp);
+            if(cond->type_value == BOOLEAN){
+                if(node->child.size() > 1){
+                    while(QVariant(cond->value).toBool()){
+                        currentEnviroment = new ScopeNode();
+                        QueueScope.newScope(currentEnviroment);
+                        NodoAST tmp = node->child.at(1);
+                        Recorrer(&tmp);
+                        currentEnviroment = QueueScope.deleteScope();
+                        NodoAST tmp2 = node->child.at(0);
+                        cond = Recorrer(&tmp2);
+                    }
+                }
+            }else{
+                QString description = "No se puede evaluar en mientras un no booleano";
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
+        }
+        break;
     }
     return sym;
 }

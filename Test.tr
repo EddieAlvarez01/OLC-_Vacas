@@ -12,10 +12,12 @@ clase persona {
 		sucu = 20$
 	}
 	entero a$
-	repetir(sasa * 4){
-		a++$
-		imprimir("Iteracion: " + a)$
+	sucu = sucu/10$
+	mientras( sucu < 20){
+		imprimir(sucu)$
+		sucu++$
 	}
+
 }
 clase Operacion extender io, salmonela{
 	entero io = 34$
