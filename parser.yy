@@ -232,7 +232,7 @@ MOSTRARNOTIFI : pmostrarnotificacion abrir_parentesis EXPL coma EXPL cerrar_pare
 
 SI : psi abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave TERMINSI { $$ = new NodoAST(@1.first_line, @1.first_column, "si", "si"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } if($8 != NULL){ $$->add(*$8); } };
 
-PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "para", "para"); $$->add(*$3); $$->add(*$4); $$->add(*$6); };
+PARA : ppara abrir_parentesis PRIMERFOR EXPL finalizacion EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "para", "para"); $$->add(*$3); $$->add(*$4); $$->add(*$6); if($9 != NULL){ $$->add(*$9); } };
 
 REPETIR : prepetir abrir_parentesis EXPL cerrar_parentesis abrir_llave RELLENOCLASE cerrar_llave { $$ = new NodoAST(@1.first_line, @1.first_column, "repetir", "repetir"); $$->add(*$3); if($6 != NULL){ $$->add(*$6); } };
 

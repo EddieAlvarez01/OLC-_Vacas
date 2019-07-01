@@ -24,6 +24,7 @@ public:
     void CopyLIDS(QList<QString> &original, QList<QString>copy);
     QList<Semantic_Error*> semanticError;
     Symbol* SearchidScope(QString id);
+    QList<QString> consoleMsg;
 };
 
 #endif // TRAVEL_H

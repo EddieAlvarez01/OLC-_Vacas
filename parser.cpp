@@ -2245,7 +2245,7 @@ yyreduce:
   case 53:
 /* Line 1792 of yacc.c  */
 #line 235 "parser.yy"
-    { (yyval.nodito) = new NodoAST((yylsp[(1) - (10)]).first_line, (yylsp[(1) - (10)]).first_column, "para", "para"); (yyval.nodito)->add(*(yyvsp[(3) - (10)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (10)].nodito)); (yyval.nodito)->add(*(yyvsp[(6) - (10)].nodito)); }
+    { (yyval.nodito) = new NodoAST((yylsp[(1) - (10)]).first_line, (yylsp[(1) - (10)]).first_column, "para", "para"); (yyval.nodito)->add(*(yyvsp[(3) - (10)].nodito)); (yyval.nodito)->add(*(yyvsp[(4) - (10)].nodito)); (yyval.nodito)->add(*(yyvsp[(6) - (10)].nodito)); if((yyvsp[(9) - (10)].nodito) != NULL){ (yyval.nodito)->add(*(yyvsp[(9) - (10)].nodito)); } }
     break;
 
   case 54:

@@ -3060,6 +3060,112 @@ Symbol* Travel::Recorrer(NodoAST *node){
             }
         }
         break;
+        case PARA:
+        {
+            currentEnviroment = new ScopeNode();
+            QueueScope.newScope(currentEnviroment);
+            NodoAST tmp = node->child.at(0);
+            Recorrer(&tmp);
+            NodoAST tmp2 = node->child.at(1);
+            Symbol *cond = Recorrer(&tmp2);
+            if(cond->type_value == BOOLEAN && node->child.size() > 3){
+                while(QVariant(cond->value).toBool()){
+                    currentEnviroment = new ScopeNode();
+                    QueueScope.newScope(currentEnviroment);
+                    NodoAST tmp = node->child.at(3);
+                    Recorrer(&tmp);
+                    currentEnviroment = QueueScope.deleteScope();
+                    NodoAST tmp2 = node->child.at(2);
+                    Recorrer(&tmp2);
+                    NodoAST tmp3 = node->child.at(1);
+                    cond = Recorrer(&tmp3);
+                }
+            }else{
+                QString description = "No se puede poner una condicion no boolena en el para";
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
+            currentEnviroment = QueueScope.deleteScope();
+        }
+        break;
+        case AUMENTO:
+        {
+            NodoAST tmp = node->child.at(0);
+            sym = Recorrer(&tmp);
+            switch (sym->type_value) {
+                case NUMERO:
+                {
+
+                    int result = sym->value.toInt();
+                    result++;
+                    sym->value = QString::number(result);
+                }
+                break;
+                case DECIMAL:
+                {
+                    double result = sym->value.toDouble();
+                    result++;
+                    sym->value = QString::number(result);
+                }
+                break;
+                case CARACTER:
+                {
+                    QChar result = sym->value[0].toLatin1() + 1;
+                    sym->value = result;
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede aumentar valores que no sean caracter, entero o doble";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case DECREMENTO:
+        {
+            NodoAST tmp = node->child.at(0);
+            sym = Recorrer(&tmp);
+            switch (sym->type_value) {
+                case NUMERO:
+                {
+                    int result = sym->value.toInt();
+                    result--;
+                    sym->value = QString::number(result);
+                }
+                break;
+                case DECIMAL:
+                {
+                    double result = sym->value.toDouble();
+                    result--;
+                    sym->value = QString::number(result);
+                }
+                break;
+                case CARACTER:
+                {
+                    QChar result = sym->value[0].toLatin1() - 1;
+                    sym->value = result;
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede decrementar valores que no sean caracter, entero o doble";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
+        case IMPRIMIR:
+        {
+            NodoAST tmp = node->child.at(0);
+            Symbol *msg = Recorrer(&tmp);
+            consoleMsg.push_back(msg->value);
+        }
+        break;
     }
     return sym;
 }

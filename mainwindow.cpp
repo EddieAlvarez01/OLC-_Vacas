@@ -41,7 +41,11 @@ void MainWindow::on_actionCompilar_triggered()
         plot->generarImagen();
         Travel *travel = new Travel();
         travel->Recorrer(raiz);
-        std::cout << "prueba";
+        QString chain = "";
+        for(int x=0; x<travel->consoleMsg.size(); x++){
+            chain += travel->consoleMsg.at(x) + "\n";
+        }
+        ui->textEdit->setText(chain);
     }else{
         std::cout << "Nel prro" << std::endl;
     }
