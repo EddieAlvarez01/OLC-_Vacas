@@ -146,7 +146,21 @@ Symbol* Travel::Recorrer(NodoAST *node){
                         if(node->child.at(3).typeofValue == DIMENSION){
 
                         }else if(node->child.at(3).typeofValue == FUNCIONES){
+                            NodoAST fun = node->child.at(3);
+                            if(fun.child.size() == 1){
+                                switch (fun.child.at(0).typeofValue) {
+                                    case LSENTENCIAS:
+                                    {
+                                        sym->instructions = fun.child.at(0);
+                                    }
+                                    break;
+                                    case LTIPOS:
+                                    {
 
+                                    }
+                                    break;
+                                }
+                            }
                         }else if(node->child.at(3).typeofValue == EXPRESION){
                             NodoAST tmp = node->child.at(3);
                             Symbol *ss = Recorrer(&tmp);

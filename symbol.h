@@ -12,7 +12,7 @@ class Symbol
 {
 public:
     Symbol();
-    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol*>, int, int, int, QLinkedList<LexicoNode>, NodoAST*, QString);
+    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol*>, int, int, int, QLinkedList<LexicoNode>, NodoAST, QString);
     int row, column;
     QString id;
     int type_value;
@@ -26,7 +26,7 @@ public:
     int dimension3;
     QLinkedList<LexicoNode> linearize;
     QList<QString> imports;
-    NodoAST *instructions;
+    NodoAST instructions;
 
 };
 
