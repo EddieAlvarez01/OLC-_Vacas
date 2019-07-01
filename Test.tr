@@ -13,10 +13,10 @@ clase persona {
 	}
 	entero a$
 	sucu = sucu/10$
-	mientras( sucu < 20){
-		imprimir(sucu)$
-		sucu++$
-	}
+	hacer{
+		a++$
+		imprimir("Iteracion: " + a)$
+	}mientras(a<5)$
 
 }
 clase Operacion extender io, salmonela{
