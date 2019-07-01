@@ -9,7 +9,7 @@ class ScopeNode
 public:
     ScopeNode();
     ScopeNode *preview;
-    Symbol actuallyClass;
+    Symbol *actuallyClass;
 };
 
 #endif // SCOPENODE_H

@@ -3,4 +3,5 @@
 ScopeNode::ScopeNode()
 {
     preview = nullptr;
+    actuallyClass = new Symbol();
 }

@@ -10,6 +10,7 @@
 #include <QString>
 #include <QList>
 #include <math.h>
+#include <iostream>
 #include <algorithm>
 
 class Travel
@@ -18,10 +19,11 @@ public:
     Travel();
     ScopeNode *currentEnviroment;
     TailScope QueueScope;
-    QHash<QString, Symbol> listClass;
-    Symbol Recorrer(NodoAST *node);
+    QHash<QString, Symbol*> listClass;
+    Symbol* Recorrer(NodoAST *node);
     void CopyLIDS(QList<QString> &original, QList<QString>copy);
     QList<Semantic_Error*> semanticError;
+    Symbol* SearchidScope(QString id);
 };
 
 #endif // TRAVEL_H

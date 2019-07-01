@@ -1,5 +1,6 @@
 clase persona {
-	
+	entero sasa = 45*7-20$
+	sasa = 80/2$
 }
 clase Operacion extender io, salmonela{
 	entero io = 34$
@@ -9,9 +10,8 @@ clase Operacion extender io, salmonela{
 }
 
 clase umihyu{
-	cadena oto = "ing" + "jose" + 15 + " " + 22.5$
-	booleano safi = (78+9-22.5 == 12) !|| 78*8 >= 4000$
-	entero cr = 65 - 10 * 'M'$
-	booleano ifter = 1$
-	caracter lk = 35$
+	doble isi = 4580+8 /5$
+	doble cr = 78/'@'$
+	entero ff = 7 / falso$
+	doble pp = 78 ^ 2.1$
 }

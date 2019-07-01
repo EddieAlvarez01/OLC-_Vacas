@@ -12,15 +12,15 @@ class Symbol
 {
 public:
     Symbol();
-    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol>, int, int, int, QLinkedList<LexicoNode>, NodoAST*, QString);
+    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol*>, int, int, int, QLinkedList<LexicoNode>, NodoAST*, QString);
     int row, column;
     QString id;
     int type_value;
     QString type;
     QString role;
-    QString value;
+    QString value = "";
     int access;  /* 0 publico, 1 privado, 2 protegido */
-    QHash<QString, Symbol> propertys;
+    QHash<QString, Symbol*> propertys;
     int dimension1;
     int dimension2;
     int dimension3;

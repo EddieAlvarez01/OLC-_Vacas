@@ -69,10 +69,10 @@ enum Choice{
     IMPRIMIR = 66
 };
 
-Symbol Travel::Recorrer(NodoAST *node){
-    Symbol sym;
-    sym.row = node->row;
-    sym.column = node->column;
+Symbol* Travel::Recorrer(NodoAST *node){
+    Symbol *sym = new Symbol();
+    sym->row = node->row;
+    sym->column = node->column;
     switch(node->typeofValue){
         case LCLASES:
         {
@@ -81,40 +81,40 @@ Symbol Travel::Recorrer(NodoAST *node){
                 QueueScope.newScope(currentEnviroment);
                 NodoAST tmp = node->child.at(x);
                 Recorrer(&tmp);
-                listClass.insert(currentEnviroment->actuallyClass.id, currentEnviroment->actuallyClass);
+                listClass.insert(currentEnviroment->actuallyClass->id, currentEnviroment->actuallyClass);
                 currentEnviroment = QueueScope.deleteScope();
             }
         }
         break;
         case CLASE:
         {
-            currentEnviroment->actuallyClass.role = "clase";
+            currentEnviroment->actuallyClass->role = "clase";
             if(node->child.size() == 3){
-                currentEnviroment->actuallyClass.id = node->child.at(2).value.toLower();
+                currentEnviroment->actuallyClass->id = node->child.at(2).value.toLower();
                 NodoAST tmp = node->child.at(0);
                 NodoAST tmp2 = node->child.at(1);
                 Recorrer(&tmp);
                 Recorrer(&tmp2);
             }else if(node->child.size() == 2){
-                currentEnviroment->actuallyClass.id = node->child.at(1).value.toLower();
+                currentEnviroment->actuallyClass->id = node->child.at(1).value.toLower();
                  NodoAST tmp = node->child.at(0);
                  Recorrer(&tmp);
             }else{
-                currentEnviroment->actuallyClass.id = node->child.at(0).value.toLower();
+                currentEnviroment->actuallyClass->id = node->child.at(0).value.toLower();
             }
         }
         break;
         case EXTENDER:
         {
             NodoAST tmp = node->child.at(0);
-            QList<QString> list = Recorrer(&tmp).imports;
-            CopyLIDS(currentEnviroment->actuallyClass.imports, list);
+            QList<QString> list = Recorrer(&tmp)->imports;
+            CopyLIDS(currentEnviroment->actuallyClass->imports, list);
         }
         break;
         case LIDS:
         {
             for(int x=0; x<node->child.size(); x++){
-                sym.imports.push_back(node->child.at(x).value.toLower());
+                sym->imports.push_back(node->child.at(x).value.toLower());
             }
         }
         break;
@@ -131,53 +131,54 @@ Symbol Travel::Recorrer(NodoAST *node){
             switch (node->child.at(0).typeofValue) {
                 case VISIBILIDAD:
                 {
+                    if(node->child.at(0).value.toLower() == "publico"){
+                        sym->access = 0;
+                    }else if(node->child.at(0).value.toLower() == "privado"){
+                        sym->access = 1;
+                    }else if(node->child.at(0).value.toLower() == "protegido"){
+                        sym->access = 2;
+                    }
+                    sym->type = node->child.at(1).value.toLower();
+                    NodoAST tmp = node->child.at(2);
+                    sym->imports = Recorrer(&tmp)->imports;
+                    if(node->child.size() > 3){
+                        if(node->child.at(3).typeofValue == DIMENSION){
 
-                }
-                break;
-                case TIPO:
-                {
-                    sym.type = node->child.at(0).value.toLower();
-                    sym.access = 0;
-                    NodoAST tmp = node->child.at(1);
-                    sym.imports = Recorrer(&tmp).imports;
-                    if(node->child.size() > 2){
-                        if(node->child.at(2).typeofValue == DIMENSION){
+                        }else if(node->child.at(3).typeofValue == FUNCIONES){
 
-                        }else if(node->child.at(2).typeofValue == FUNCIONES){
-
-                        }else if(node->child.at(2).typeofValue == EXPRESION){
-                            NodoAST tmp = node->child.at(2);
-                            Symbol ss = Recorrer(&tmp);
-                            if(sym.type == "entero"){
-                                switch(ss.type_value){
+                        }else if(node->child.at(3).typeofValue == EXPRESION){
+                            NodoAST tmp = node->child.at(3);
+                            Symbol *ss = Recorrer(&tmp);
+                            if(sym->type == "entero"){
+                                switch(ss->type_value){
                                     case NUMERO:
                                     {
-                                        sym.type_value = NUMERO;
-                                        sym.value = ss.value;
+                                        sym->type_value = NUMERO;
+                                        sym->value = ss->value;
                                     }
                                     break;
                                     case DECIMAL:
                                     {
-                                        sym.type_value = NUMERO;
-                                        int result = (int)ss.value.toDouble();
-                                        sym.value = QString::number(result);
+                                        sym->type_value = NUMERO;
+                                        int result = (int)ss->value.toDouble();
+                                        sym->value = QString::number(result);
                                     }
                                     break;
                                     case CARACTER:
                                     {
-                                        sym.type_value = NUMERO;
-                                        int result = ss.value[0].toLatin1();
-                                        sym.value = QString::number(result);
+                                        sym->type_value = NUMERO;
+                                        int result = ss->value[0].toLatin1();
+                                        sym->value = QString::number(result);
                                     }
                                     break;
                                     case BOOLEAN:
                                     {
-                                        sym.type_value = NUMERO;
-                                        int result = QVariant(ss.value).toBool();
-                                        sym.value = QString::number(result);
+                                        sym->type_value = NUMERO;
+                                        int result = QVariant(ss->value).toBool();
+                                        sym->value = QString::number(result);
                                     }
                                     break;
-                                    default:
+                                    case CADENA:
                                     {
                                         QString description = "No se puede asignar una cadena a un tipo entero";
                                         Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
@@ -185,71 +186,99 @@ Symbol Travel::Recorrer(NodoAST *node){
                                     }
                                     break;
                                 }
-                            }else if(sym.type == "doble"){
-                                switch(ss.type_value){
+                            }else if(sym->type == "doble"){
+                                switch(ss->type_value){
                                     case NUMERO:
                                     {
-                                        sym.type_value = DECIMAL;
-                                        double result = ss.value.toInt();
-                                        sym.value = QString::number(result);
+                                        sym->type_value = DECIMAL;
+                                        double result = ss->value.toInt();
+                                        sym->value = QString::number(result);
                                     }
                                     break;
                                     case DECIMAL:
                                     {
-                                        sym.type_value = DECIMAL;
-                                        sym.value = ss.value;
+                                        sym->type_value = DECIMAL;
+                                        sym->value = ss->value;
                                     }
                                     break;
-                                    default:
+                                    case CADENA:
                                     {
-                                        QString description = "No se puede asignar un caracter, cadena o booleano a un tipo doble";
+                                        QString description = "No se puede asignar una cadena a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo doble";
                                         Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                         semanticError.push_back(error);
                                     }
                                     break;
                                 }
                             }
-                            else if(sym.type == "cadena"){
-                                sym.type_value = CADENA;
-                                sym.value = ss.value;
-                            }else if(sym.type == "caracter"){
-                                switch(ss.type_value){
+                            else if(sym->type == "cadena"){
+                                sym->type_value = CADENA;
+                                sym->value = ss->value;
+                            }else if(sym->type == "caracter"){
+                                switch(ss->type_value){
                                     case NUMERO:
                                     {
-                                        sym.type_value = CARACTER;
-                                        QChar result = ss.value.toInt();
-                                        sym.value = result;
+                                        sym->type_value = CARACTER;
+                                        QChar result = ss->value.toInt();
+                                        sym->value = result;
                                     }
                                     break;
                                     case CARACTER:
                                     {
-                                        sym.type_value = CARACTER;
-                                        sym.value = ss.value;
+                                        sym->type_value = CARACTER;
+                                        sym->value = ss->value;
                                     }
                                     break;
-                                    default:
+                                    case DECIMAL:
                                     {
-                                        QString description = "No se puede asignar un doble, cadena o booleano a un tipo caracter";
+                                        QString description = "No se puede asignar un doble a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo caracter";
                                         Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                         semanticError.push_back(error);
                                     }
                                     break;
                                 }
-                            }else if(sym.type == "booleano"){
-                                switch (ss.type_value) {
+                            }else if(sym->type == "booleano"){
+                                switch (ss->type_value) {
                                     case BOOLEAN:
                                     {
-                                        sym.type_value = BOOLEAN;
-                                        sym.value = ss.value;
+                                        sym->type_value = BOOLEAN;
+                                        sym->value = ss->value;
                                     }
                                     break;
                                     case NUMERO:
                                     {
-                                        int op = ss.value.toInt();
+                                        int op = ss->value.toInt();
                                         if(op == 1 || op == 0){
-                                                sym.type_value = BOOLEAN;
+                                                sym->type_value = BOOLEAN;
                                               bool result = QVariant(op).toBool();
-                                              sym.value = result ? "true" : "false";
+                                              sym->value = result ? "true" : "false";
                                         }else{
                                             QString description = "No se puede asignar un entero diferente de 0 y 1, a un booleano";
                                             Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
@@ -257,23 +286,241 @@ Symbol Travel::Recorrer(NodoAST *node){
                                         }
                                     }
                                     break;
-                                    default:
+                                    case DECIMAL:
                                     {
-                                        QString description = "No se puede asignar un doble, cadena o caracter a un tipo booleano";
+                                        QString description = "No se puede asignar un doble a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo booleano";
                                         Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                         semanticError.push_back(error);
                                     }
                                     break;
                                 }
                             }
-                            for(int x=0; x<sym.imports.size(); x++){
-                                Symbol newS;
-                                newS.type = sym.type;
-                                newS.type_value = sym.type_value;
-                                newS.id = sym.imports.at(x);
-                                newS.value = sym.value;
-                                currentEnviroment->actuallyClass.propertys.insert(newS.id, newS);
+                            for(int x=0; x<sym->imports.size(); x++){
+                                Symbol *newS = new Symbol();
+                                newS->access = sym->access;
+                                newS->type = sym->type;
+                                newS->type_value = sym->type_value;
+                                newS->id = sym->imports.at(x);
+                                newS->value = sym->value;
+                                currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
                             }
+                        }
+                    }else{
+                        for(int x=0; x<sym->imports.size(); x++){
+                            Symbol *newS = new Symbol();
+                            newS->access = sym->access;
+                            newS->type = sym->type;
+                            newS->id = sym->imports.at(x);
+                            currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
+                        }
+                    }
+                }
+                break;
+                case TIPO:
+                {
+                    sym->type = node->child.at(0).value.toLower();
+                    sym->access = 0;
+                    NodoAST tmp = node->child.at(1);
+                    sym->imports = Recorrer(&tmp)->imports;
+                    if(node->child.size() > 2){
+                        if(node->child.at(2).typeofValue == DIMENSION){
+
+                        }else if(node->child.at(2).typeofValue == FUNCIONES){
+
+                        }else if(node->child.at(2).typeofValue == EXPRESION){
+                            NodoAST tmp = node->child.at(2);
+                            Symbol *ss = Recorrer(&tmp);
+                            if(sym->type == "entero"){
+                                switch(ss->type_value){
+                                    case NUMERO:
+                                    {
+                                        sym->type_value = NUMERO;
+                                        sym->value = ss->value;
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        sym->type_value = NUMERO;
+                                        int result = (int)ss->value.toDouble();
+                                        sym->value = QString::number(result);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        sym->type_value = NUMERO;
+                                        int result = ss->value[0].toLatin1();
+                                        sym->value = QString::number(result);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        sym->type_value = NUMERO;
+                                        int result = QVariant(ss->value).toBool();
+                                        sym->value = QString::number(result);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo entero";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }else if(sym->type == "doble"){
+                                switch(ss->type_value){
+                                    case NUMERO:
+                                    {
+                                        sym->type_value = DECIMAL;
+                                        double result = ss->value.toInt();
+                                        sym->value = QString::number(result);
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        sym->type_value = DECIMAL;
+                                        sym->value = ss->value;
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            else if(sym->type == "cadena"){
+                                sym->type_value = CADENA;
+                                sym->value = ss->value;
+                            }else if(sym->type == "caracter"){
+                                switch(ss->type_value){
+                                    case NUMERO:
+                                    {
+                                        sym->type_value = CARACTER;
+                                        QChar result = ss->value.toInt();
+                                        sym->value = result;
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        sym->type_value = CARACTER;
+                                        sym->value = ss->value;
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        QString description = "No se puede asignar un doble a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }else if(sym->type == "booleano"){
+                                switch (ss->type_value) {
+                                    case BOOLEAN:
+                                    {
+                                        sym->type_value = BOOLEAN;
+                                        sym->value = ss->value;
+                                    }
+                                    break;
+                                    case NUMERO:
+                                    {
+                                        int op = ss->value.toInt();
+                                        if(op == 1 || op == 0){
+                                                sym->type_value = BOOLEAN;
+                                              bool result = QVariant(op).toBool();
+                                              sym->value = result ? "true" : "false";
+                                        }else{
+                                            QString description = "No se puede asignar un entero diferente de 0 y 1, a un booleano";
+                                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                            semanticError.push_back(error);
+                                        }
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        QString description = "No se puede asignar un doble a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            for(int x=0; x<sym->imports.size(); x++){
+                                Symbol *newS = new Symbol();
+                                newS->access = sym->access;
+                                newS->type = sym->type;
+                                newS->type_value = sym->type_value;
+                                newS->id = sym->imports.at(x);
+                                newS->value = sym->value;
+                                currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
+                            }
+                        }
+                    }else{
+                        for(int x=0; x<sym->imports.size(); x++){
+                            Symbol *newS = new Symbol();
+                            newS->access = sym->access;
+                            newS->type = sym->type;
+                            newS->id = sym->imports.at(x);
+                            currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
                         }
                     }
                 }
@@ -290,18 +537,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case OR:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() || QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() || QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -327,18 +574,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case NOR:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = !(QVariant(op1.value).toBool() || QVariant(op2.value).toBool());
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = !(QVariant(op1->value).toBool() || QVariant(op2->value).toBool());
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -364,18 +611,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case AND:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() && QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() && QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -401,18 +648,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case NAND:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = !(QVariant(op1.value).toBool() && QVariant(op2.value).toBool());
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = !(QVariant(op1->value).toBool() && QVariant(op2->value).toBool());
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -438,13 +685,13 @@ Symbol Travel::Recorrer(NodoAST *node){
         case NOT:
         {
             NodoAST der = node->child.at(1);
-            Symbol op1 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op1 = Recorrer(&der);
+            switch (op1->type_value) {
                 case BOOLEAN:
                 {
-                    sym.type_value = BOOLEAN;
-                    bool result = !(QVariant(op1.value).toBool());
-                    sym.value = result ? "true" : "false";
+                    sym->type_value = BOOLEAN;
+                    bool result = !(QVariant(op1->value).toBool());
+                    sym->value = result ? "true" : "false";
                 }
                 break;
                 default:
@@ -460,18 +707,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case IGUAL_IGUAL:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value == op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value == op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -486,33 +733,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() == op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() == op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() == op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() == op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() == QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() == QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() == op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() == op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -527,33 +774,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() == op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() == op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() == op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() == op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() == QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() == QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() == op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() == op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -568,26 +815,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() == op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() == op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() == op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() == op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() == QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() == QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -602,26 +849,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] == op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] == op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() == op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() == op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] == op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] == op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -640,18 +887,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case DIFERENTE_DE:
             {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value != op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value != op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -666,33 +913,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() != op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() != op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() != op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() != op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() != QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() != QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() != op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() != op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -707,33 +954,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() != op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() != op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() != op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() != op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() != QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() != QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() != op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() != op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -748,26 +995,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() != op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() != op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() != op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() != op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() != QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() != QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -782,26 +1029,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] != op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] != op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() != op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() != op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] != op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] != op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -820,18 +1067,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case MENOR_QUE:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value < op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value < op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -846,33 +1093,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() < op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() < op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() < op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() < op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() < QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() < QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() < op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() < op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -887,33 +1134,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() < op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() < op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() < op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() < op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() < QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() < QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() < op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() < op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -928,26 +1175,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() < op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() < op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() < op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() < op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() < QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() < QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -962,26 +1209,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] < op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] < op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() < op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() < op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] < op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] < op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1000,18 +1247,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case MAYOR_QUE:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value > op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value > op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1026,33 +1273,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() > op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() > op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() > op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() > op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() > QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() > QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() > op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() > op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1067,33 +1314,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() > op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() > op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() > op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() > op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() > QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() > QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() > op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() > op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1108,26 +1355,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() > op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() > op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() > op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() > op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() > QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() > QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1142,26 +1389,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] > op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] > op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() > op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() > op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] > op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] > op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1180,18 +1427,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case MENORIGUAL_QUE:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value <= op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value <= op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1206,33 +1453,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() <= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() <= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() <= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() <= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() <= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() <= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() <= op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() <= op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1247,33 +1494,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() <= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() <= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() <= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() <= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() <= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() <= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() <= op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() <= op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1288,26 +1535,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() <= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() <= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() <= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() <= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() <= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() <= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1322,26 +1569,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] <= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] <= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() <= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() <= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] <= op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] <= op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1360,18 +1607,18 @@ Symbol Travel::Recorrer(NodoAST *node){
         case MAYORIGUAL_QUE:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch (op1.type_value) {
+            Symbol *op2 = Recorrer(&der);
+            switch (op1->type_value) {
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value >= op2.value;
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value >= op2->value;
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1386,33 +1633,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() >= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() >= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() >= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() >= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() >= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() >= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toInt() >= op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toInt() >= op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1427,33 +1674,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() >= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() >= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() >= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() >= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() >= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() >= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value.toDouble() >= op2.value[0].toLatin1();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value.toDouble() >= op2->value[0].toLatin1();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1468,26 +1715,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() >= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() >= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() >= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() >= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() >= QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() >= QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1502,26 +1749,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] >= op2.value.toInt();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] >= op2->value.toInt();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0].toLatin1() >= op2.value.toDouble();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0].toLatin1() >= op2->value.toDouble();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = op1.value[0] >= op2.value[0];
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = op1->value[0] >= op2->value[0];
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1540,35 +1787,35 @@ Symbol Travel::Recorrer(NodoAST *node){
         case SUMA:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case CADENA:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case NUMERO:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         default:
@@ -1583,39 +1830,39 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case NUMERO:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() + op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() + op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() + op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() + op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() + op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() + op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            int result = op1.value.toInt() + QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = BOOLEAN;
+                            int result = op1->value.toInt() + QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                     }
@@ -1623,39 +1870,39 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case NUMERO:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() + op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() + op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() + op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() + op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() + op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() + op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() + QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() + QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                     }
@@ -1663,39 +1910,39 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case CADENA:
                         {
-                            sym.type_value = CADENA;
-                            sym.value = op1.value + op2.value;
+                            sym->type_value = CADENA;
+                            sym->value = op1->value + op2->value;
                         }
                         break;
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() + op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() + op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value[0].toLatin1() + op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value[0].toLatin1() + op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() + op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() + op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() + QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() + QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                     }
@@ -1703,33 +1950,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = QVariant(op1.value).toBool() + op2.value.toInt();
-                            sym.value = QString(result);
+                            sym->type_value = NUMERO;
+                            int result = QVariant(op1->value).toBool() + op2->value.toInt();
+                            sym->value = QString(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = QVariant(op1.value).toBool() + op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = QVariant(op1->value).toBool() + op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = QVariant(op1.value).toBool() + op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = QVariant(op1->value).toBool() + op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() || QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() || QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -1748,39 +1995,39 @@ Symbol Travel::Recorrer(NodoAST *node){
         case RESTA:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case NUMERO:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() - op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() - op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() - op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() - op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() - op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() - op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() - QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() - QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1795,33 +2042,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() - op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() - op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() - op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() - op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() - op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() - op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() - QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() - QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1836,26 +2083,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() - op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() - op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value[0].toLatin1() - op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value[0].toLatin1() - op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() - op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() - op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1870,19 +2117,19 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = QVariant(op1.value).toBool() - op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = QVariant(op1->value).toBool() - op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = QVariant(op1.value).toBool() - op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = QVariant(op1->value).toBool() - op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1908,39 +2155,39 @@ Symbol Travel::Recorrer(NodoAST *node){
         case MULTI:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case NUMERO:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() * op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() * op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() * op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() * op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() * op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() * op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value.toInt() * QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value.toInt() * QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1955,33 +2202,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() * op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() * op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() * op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() * op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() * op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() * op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value.toDouble() * QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value.toDouble() * QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -1996,33 +2243,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() * op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() * op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = op1.value[0].toLatin1() * op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = op1->value[0].toLatin1() * op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() * op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() * op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = op1.value[0].toLatin1() * QVariant(op2.value).toBool();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = op1->value[0].toLatin1() * QVariant(op2->value).toBool();
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -2037,33 +2284,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = QVariant(op1.value).toBool() * op2.value.toInt();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = QVariant(op1->value).toBool() * op2->value.toInt();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = QVariant(op1.value).toBool() * op2.value.toDouble();
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = QVariant(op1->value).toBool() * op2->value.toDouble();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = QVariant(op1.value).toBool() * op2.value[0].toLatin1();
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = QVariant(op1->value).toBool() * op2->value[0].toLatin1();
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = BOOLEAN;
-                            bool result = QVariant(op1.value).toBool() && QVariant(op2.value).toBool();
-                            sym.value = result ? "true" : "false";
+                            sym->type_value = BOOLEAN;
+                            bool result = QVariant(op1->value).toBool() && QVariant(op2->value).toBool();
+                            sym->value = result ? "true" : "false";
                         }
                         break;
                         default:
@@ -2089,21 +2336,21 @@ Symbol Travel::Recorrer(NodoAST *node){
         case DIVISION:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case NUMERO:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            if(op2.value.toInt() != 0){
-                                 sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toInt() != 0){
+                                 sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2111,12 +2358,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case DECIMAL:
                         {
-                            if(op2.value.toDouble() != 0.0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toDouble() != 0.0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2124,12 +2371,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case CARACTER:
                         {
-                            if(op2.value[0].toLatin1() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value[0].toLatin1();
-                                sym.value = QString::number(result);
+                            if(op2->value[0].toLatin1() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value[0].toLatin1();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2137,10 +2384,10 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case BOOLEAN:
                         {
-                            if(QVariant(op2.value).toBool() != 0){
-                                sym.type_value = NUMERO;
-                                int result = op1.value.toInt() / QVariant(op2.value).toBool();
-                                sym.value = QString::number(result);
+                            if(QVariant(op2->value).toBool() != 0){
+                                sym->type_value = NUMERO;
+                                int result = op1->value.toInt() / QVariant(op2->value).toBool();
+                                sym->value = QString::number(result);
                             }else{
                                 QString description = "No se puede dividir un dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
@@ -2160,15 +2407,15 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            if(op2.value.toInt() != 0){
-                                 sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toInt() != 0){
+                                 sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2176,12 +2423,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case DECIMAL:
                         {
-                            if(op2.value.toDouble() != 0.0){
-                                 sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toDouble() != 0.0){
+                                 sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2189,12 +2436,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case CARACTER:
                         {
-                            if(op2.value[0].toLatin1() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / op2.value[0].toLatin1();
-                                sym.value = QString::number(result);
+                            if(op2->value[0].toLatin1() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / op2->value[0].toLatin1();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2202,12 +2449,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case BOOLEAN:
                         {
-                            if(QVariant(op2.value).toBool() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value.toDouble() / QVariant(op2.value).toBool();
-                                sym.value = QString::number(result);
+                            if(QVariant(op2->value).toBool() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value.toDouble() / QVariant(op2->value).toBool();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2225,15 +2472,15 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            if(op2.value.toInt() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value[0].toLatin1() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toInt() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value[0].toLatin1() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2241,12 +2488,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case DECIMAL:
                         {
-                            if(op2.value.toDouble() != 0.0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value[0].toLatin1() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toDouble() != 0.0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value[0].toLatin1() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2254,12 +2501,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case CARACTER:
                         {
-                            if(op2.value[0].toLatin1() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = op1.value[0].toLatin1() / op2.value[0].toLatin1();
-                                sym.value = QString::number(result);
+                            if(op2->value[0].toLatin1() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = op1->value[0].toLatin1() / op2->value[0].toLatin1();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2267,12 +2514,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case BOOLEAN:
                         {
-                            if(QVariant(op2.value).toBool() != 0){
-                                sym.type_value = NUMERO;
-                                double result = op1.value[0].toLatin1() / QVariant(op2.value).toBool();
-                                sym.value = QString::number(result);
+                            if(QVariant(op2->value).toBool() != 0){
+                                sym->type_value = NUMERO;
+                                double result = op1->value[0].toLatin1() / QVariant(op2->value).toBool();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2290,15 +2537,15 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            if(op2.value.toInt() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = QVariant(op1.value).toBool() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toInt() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = QVariant(op1->value).toBool() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2306,12 +2553,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case DECIMAL:
                         {
-                            if(op2.value.toDouble() != 0.0){
-                                sym.type_value = DECIMAL;
-                                double result = QVariant(op1.value).toBool() / op2.value.toDouble();
-                                sym.value = QString::number(result);
+                            if(op2->value.toDouble() != 0.0){
+                                sym->type_value = DECIMAL;
+                                double result = QVariant(op1->value).toBool() / op2->value.toDouble();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2319,12 +2566,12 @@ Symbol Travel::Recorrer(NodoAST *node){
                         break;
                         case CARACTER:
                         {
-                            if(op2.value[0].toLatin1() != 0){
-                                sym.type_value = DECIMAL;
-                                double result = QVariant(op1.value).toBool() / op2.value[0].toLatin1();
-                                sym.value = QString::number(result);
+                            if(op2->value[0].toLatin1() != 0){
+                                sym->type_value = DECIMAL;
+                                double result = QVariant(op1->value).toBool() / op2->value[0].toLatin1();
+                                sym->value = QString::number(result);
                             }else{
-                                QString description = "No se puede dividir un dentro de 0";
+                                QString description = "No se puede dividir dentro de 0";
                                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                 semanticError.push_back(error);
                             }
@@ -2353,39 +2600,39 @@ Symbol Travel::Recorrer(NodoAST *node){
         case POTENCIA:
         {
             NodoAST izq = node->child.at(0);
-            Symbol op1 = Recorrer(&izq);
+            Symbol *op1 = Recorrer(&izq);
             NodoAST der = node->child.at(1);
-            Symbol op2 = Recorrer(&der);
-            switch(op1.type_value){
+            Symbol *op2 = Recorrer(&der);
+            switch(op1->type_value){
                 case NUMERO:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value.toInt(), op2.value.toInt());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value.toInt(), op2->value.toInt());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value.toDouble(), op2->value.toDouble());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value.toInt(), op2.value[0].toLatin1());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value.toInt(), op2->value[0].toLatin1());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value.toInt(), QVariant(op2.value).toBool());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value.toInt(), QVariant(op2->value).toBool());
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -2400,33 +2647,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case DECIMAL:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value.toDouble(), op2->value.toDouble());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value.toDouble(), op2.value.toDouble());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value.toDouble(), op2->value.toDouble());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value.toDouble(), op2.value[0].toLatin1());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value.toDouble(), op2->value[0].toLatin1());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value.toDouble(), QVariant(op2.value).toBool());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value.toDouble(), QVariant(op2->value).toBool());
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -2441,33 +2688,33 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case CARACTER:
                 {
-                    switch(op2.type_value){
+                    switch(op2->type_value){
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value[0].toLatin1(), op2.value.toInt());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value[0].toLatin1(), op2->value.toInt());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(op1.value[0].toLatin1(), op2.value.toDouble());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(op1->value[0].toLatin1(), op2->value.toDouble());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value[0].toLatin1(), op2.value[0].toLatin1());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value[0].toLatin1(), op2->value[0].toLatin1());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case BOOLEAN:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(op1.value[0].toLatin1(), QVariant(op2.value).toBool());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(op1->value[0].toLatin1(), QVariant(op2->value).toBool());
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -2482,26 +2729,26 @@ Symbol Travel::Recorrer(NodoAST *node){
                 break;
                 case BOOLEAN:
                 {
-                    switch (op2.type_value) {
+                    switch (op2->type_value) {
                         case NUMERO:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(QVariant(op1.value).toBool(), op2.value.toInt());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(QVariant(op1->value).toBool(), op2->value.toInt());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case DECIMAL:
                         {
-                            sym.type_value = DECIMAL;
-                            double result = pow(QVariant(op1.value).toBool(), op2.value.toDouble());
-                            sym.value = QString::number(result);
+                            sym->type_value = DECIMAL;
+                            double result = pow(QVariant(op1->value).toBool(), op2->value.toDouble());
+                            sym->value = QString::number(result);
                         }
                         break;
                         case CARACTER:
                         {
-                            sym.type_value = NUMERO;
-                            int result = (int)pow(QVariant(op1.value).toBool(), op2.value[0].toLatin1());
-                            sym.value = QString::number(result);
+                            sym->type_value = NUMERO;
+                            int result = (int)pow(QVariant(op1->value).toBool(), op2->value[0].toLatin1());
+                            sym->value = QString::number(result);
                         }
                         break;
                         default:
@@ -2526,33 +2773,235 @@ Symbol Travel::Recorrer(NodoAST *node){
         break;
         case NUMERO:
         {
-            sym.type_value = NUMERO;
-            sym.value = node->value;
+            sym->type_value = NUMERO;
+            sym->value = node->value;
         }
         break;
         case CADENA:
         {
-            sym.type_value = CADENA;
+            sym->type_value = CADENA;
             node->value.replace("\"", "");
-            sym.value = node->value;
+            sym->value = node->value;
         }
         break;
         case DECIMAL:
         {
-            sym.type_value = DECIMAL;
-            sym.value = node->value;
+            sym->type_value = DECIMAL;
+            sym->value = node->value;
         }
         break;
         case CARACTER:
         {
-            sym.type_value = CARACTER;
-            sym.value = node->value.replace("'", "");
+            sym->type_value = CARACTER;
+            sym->value = node->value.replace("'", "");
         }
         break;
         case BOOLEAN:
         {
-            sym.type_value = BOOLEAN;
-            sym.value = node->value;
+            if(node->value == "falso"){
+                node->value = "false";
+            }else if(node->value == "verdadero"){
+                node->value = "true";
+            }
+            sym->type_value = BOOLEAN;
+            sym->value = node->value;
+        }
+        break;
+        case ID:
+        {
+            QString id = node->value.toLower();
+            Symbol *ss = SearchidScope(id);
+            if(ss != nullptr){
+                sym = ss;
+            }else{
+                QString description = "No existe la variable " + id;
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
+        }
+        break;
+        case ASIGNACION:
+        {
+            QString id = node->child.at(0).value.toLower();
+            Symbol *ss = SearchidScope(id);
+            if(ss != nullptr){
+                switch (node->child.at(1).typeofValue) {
+                    case EXPRESION:
+                    {
+                        NodoAST tmp = node->child.at(1);
+                        Symbol *exp = Recorrer(&tmp);
+                        switch (ss->type_value) {
+                            case CADENA:
+                            {
+                                ss->value = exp->value;
+                            }
+                            break;
+                            case NUMERO:
+                            {
+                                switch(exp->type_value){
+                                    case NUMERO:
+                                    {
+                                        ss->value = exp->value;
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        int result = (int)exp->value.toDouble();
+                                        ss->value = QString::number(result);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        int result = exp->value[0].toLatin1();
+                                        ss->value = QString::number(result);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        int result = QVariant(exp->value).toBool();
+                                        ss->value = QString::number(result);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo entero";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+                            case DECIMAL:
+                            {
+                                switch(exp->type_value){
+                                    case NUMERO:
+                                    {
+                                        double result = exp->value.toInt();
+                                        ss->value = QString::number(result);
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        ss->value = exp->value;
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo doble";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+                            case CARACTER:
+                            {
+                                switch(exp->type_value){
+                                    case NUMERO:
+                                    {
+                                        QChar result = exp->value.toInt();
+                                        ss->value = result;
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        ss->value = exp->value;
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        QString description = "No se puede asignar un doble a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case BOOLEAN:
+                                    {
+                                        QString description = "No se puede asignar un booleano a un tipo caracter";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+                            case BOOLEAN:
+                            {
+                                switch (exp->type_value) {
+                                    case BOOLEAN:
+                                    {
+                                        ss->value = exp->value;
+                                    }
+                                    break;
+                                    case NUMERO:
+                                    {
+                                        int op = exp->value.toInt();
+                                        if(op == 1 || op == 0){
+                                              bool result = QVariant(op).toBool();
+                                              ss->value = result ? "true" : "false";
+                                        }else{
+                                            QString description = "No se puede asignar un entero diferente de 0 y 1, a un booleano";
+                                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                            semanticError.push_back(error);
+                                        }
+                                    }
+                                    break;
+                                    case DECIMAL:
+                                    {
+                                        QString description = "No se puede asignar un doble a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CADENA:
+                                    {
+                                        QString description = "No se puede asignar una cadena a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                    case CARACTER:
+                                    {
+                                        QString description = "No se puede asignar un caracter a un tipo booleano";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }else{
+                QString description = "No existe la variable " + id;
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
         }
         break;
     }
@@ -2563,4 +3012,16 @@ void Travel::CopyLIDS(QList<QString> &original, QList<QString> copy){
     for(int i=0; i<copy.size(); i++){
         original.push_back(copy.at(i));
     }
+}
+
+Symbol* Travel::SearchidScope(QString id){
+    ScopeNode *tmp = QueueScope.actually;
+    while(tmp != nullptr){
+        Symbol *result = tmp->actuallyClass->propertys.value(id, nullptr);
+        if(result != nullptr){
+            return result;
+        }
+        tmp = tmp->preview;
+    }
+    return nullptr;
 }
