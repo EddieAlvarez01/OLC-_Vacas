@@ -17,7 +17,7 @@ public:
     QString id;
     int type_value;
     QString type;
-    QString role;
+    QString role = "";
     QString value = "";
     int access;  /* 0 publico, 1 privado, 2 protegido */
     QHash<QString, Symbol*> propertys;
@@ -27,6 +27,7 @@ public:
     QLinkedList<LexicoNode> linearize;
     QList<QString> imports;
     NodoAST instructions;
+    QList<Symbol*> parameters;
 
 };
 

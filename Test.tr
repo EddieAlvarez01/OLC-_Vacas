@@ -17,7 +17,7 @@ clase persona {
 		a++$
 		imprimir("Iteracion: " + a)$
 	}mientras(a<5)$
-	publico void extr(entero obvio, doble slo, cadena[5][5] arr){
+	publico void extr(entero obvio, doble slo){
 
 	}
 }
@@ -26,6 +26,11 @@ clase Operacion extender io, salmonela{
 	privado booleano roche$
 	caracter sasaa$
 	publico cadena lomas = "dsadas"$
+	void uta(){
+		entero i = 9$
+		imprimir(i)$
+	}
+	uta()$
 }
 
 clase umihyu{
@@ -33,4 +38,9 @@ clase umihyu{
 	doble cr = 78/'@'$
 	entero ff = 7 / falso$
 	doble pp = 78 ^ 2.1$
+	publico void suma(entero numero1, entero numero2){
+		entero suma = numero1 + numero2$
+		imprimir(suma)$
+	}
+	suma(5, 8*9)$
 }

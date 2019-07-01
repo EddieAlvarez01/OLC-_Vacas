@@ -66,7 +66,8 @@ enum Choice{
     INCLUIR = 63,
     TRANSFERIR = 64,
     LDIMENSIONESASIG = 65,
-    IMPRIMIR = 66
+    IMPRIMIR = 66,
+    VOID = 67
 };
 
 Symbol* Travel::Recorrer(NodoAST *node){
@@ -147,20 +148,35 @@ Symbol* Travel::Recorrer(NodoAST *node){
 
                         }else if(node->child.at(3).typeofValue == FUNCIONES){
                             NodoAST fun = node->child.at(3);
+                            sym->role = "funcion";
                             if(fun.child.size() == 1){
                                 switch (fun.child.at(0).typeofValue) {
                                     case LSENTENCIAS:
                                     {
                                         sym->instructions = fun.child.at(0);
+                                        sym->id = sym->imports.at(0);
                                     }
                                     break;
                                     case LTIPOS:
                                     {
-
+                                        NodoAST tmp = fun.child.at(0);
+                                        Symbol *list = Recorrer(&tmp);
+                                        sym->parameters = list->parameters;
+                                        sym->id = sym->imports.at(0);
                                     }
                                     break;
                                 }
+                            }else if(fun.child.size() == 2){
+                                NodoAST tmp = fun.child.at(0);
+                                Symbol *list = Recorrer(&tmp);
+                                sym->parameters = list->parameters;
+                                sym->id = sym->imports.at(0);
+                                sym->instructions = fun.child.at(1);
                             }
+                            for(int x=0; x<sym->parameters.size(); x++){
+                                sym->propertys.insert(sym->parameters.at(x)->id, sym->parameters.at(x));
+                            }
+                            currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
                         }else if(node->child.at(3).typeofValue == EXPRESION){
                             NodoAST tmp = node->child.at(3);
                             Symbol *ss = Recorrer(&tmp);
@@ -357,7 +373,36 @@ Symbol* Travel::Recorrer(NodoAST *node){
                         if(node->child.at(2).typeofValue == DIMENSION){
 
                         }else if(node->child.at(2).typeofValue == FUNCIONES){
-
+                            NodoAST fun = node->child.at(2);
+                            sym->role = "funcion";
+                            if(fun.child.size() == 1){
+                                switch (fun.child.at(0).typeofValue) {
+                                    case LSENTENCIAS:
+                                    {
+                                        sym->instructions = fun.child.at(0);
+                                        sym->id = sym->imports.at(0);
+                                    }
+                                    break;
+                                    case LTIPOS:
+                                    {
+                                        NodoAST tmp = fun.child.at(0);
+                                        Symbol *list = Recorrer(&tmp);
+                                        sym->parameters = list->parameters;
+                                        sym->id = sym->imports.at(0);
+                                    }
+                                    break;
+                                }
+                            }else if(fun.child.size() == 2){
+                                NodoAST tmp = fun.child.at(0);
+                                Symbol *list = Recorrer(&tmp);
+                                sym->parameters = list->parameters;
+                                sym->id = sym->imports.at(0);
+                                sym->instructions = fun.child.at(1);
+                            }
+                            for(int x=0; x<sym->parameters.size(); x++){
+                                sym->propertys.insert(sym->parameters.at(x)->id, sym->parameters.at(x));
+                            }
+                            currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
                         }else if(node->child.at(2).typeofValue == EXPRESION){
                             NodoAST tmp = node->child.at(2);
                             Symbol *ss = Recorrer(&tmp);
@@ -525,6 +570,11 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 Symbol *newS = new Symbol();
                                 newS->access = sym->access;
                                 newS->type = sym->type;
+                                newS->role = sym->role;
+                                newS->parameters = sym->parameters;
+                                for(int y=0; y<newS->parameters.size(); y++){
+                                    newS->propertys.insert(newS->parameters.at(y)->id, newS->parameters.at(y));
+                                }
                                 newS->type_value = sym->type_value;
                                 newS->id = sym->imports.at(x);
                                 newS->value = sym->value;
@@ -536,6 +586,11 @@ Symbol* Travel::Recorrer(NodoAST *node){
                             Symbol *newS = new Symbol();
                             newS->access = sym->access;
                             newS->type = sym->type;
+                            newS->role = sym->role;
+                            newS->parameters = sym->parameters;
+                            for(int y=0; y<newS->parameters.size(); y++){
+                                newS->propertys.insert(newS->parameters.at(y)->id, newS->parameters.at(y));
+                            }
                             newS->type_value = sym->type_value;
                             newS->id = sym->imports.at(x);
                             currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
@@ -3252,6 +3307,109 @@ Symbol* Travel::Recorrer(NodoAST *node){
             }
         }
         break;
+        case LTIPOS:
+        {
+            if(node->child.size() > 0){
+                for(int x=0; x<node->child.size(); x++){
+                    Symbol *tmp = new Symbol();
+                    tmp->type = node->child.at(x).value.toLower();
+                    tmp->type_value = AsignType(tmp->type);
+                    switch(node->child.at(x+1).typeofValue){
+                        case ID:
+                        {
+                            tmp->id = node->child.at(x+1).value.toLower();
+                            sym->parameters.push_back(tmp);
+                            x++;
+                        }
+                        break;
+                        case DIMENSION:
+                        {
+
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        break;
+        case LLAMADAFUNC:
+        {
+            sym->id = node->child.at(0).value.toLower();
+            if(node->child.size() == 1){
+                Symbol *fun = SearchidScope(sym->id);
+                if(fun != nullptr){
+                    if(fun->parameters.size() == 0){
+                        currentEnviroment = new ScopeNode();
+                        QueueScope.newScope(currentEnviroment);
+                        NodoAST tmp = fun->instructions;
+                        Recorrer(&tmp);
+                        currentEnviroment = QueueScope.deleteScope();
+                    }else{
+                        QString description = "La funcion " + sym->id + " esta esperando parametros";
+                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                        semanticError.push_back(error);
+                    }
+                }else{
+                    QString description = "La funcion " + sym->id + " no ha sido declarada";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+            }else{
+                switch(node->child.at(1).typeofValue){
+                    case LEXP:
+                    {
+                        Symbol *fun = SearchidScope(sym->id);
+                        if(fun != nullptr){
+                            NodoAST tmp = node->child.at(1);
+                            Symbol *lv = Recorrer(&tmp);
+                            bool error = false;
+                            if(lv->parameters.size() == fun->parameters.size()){
+                                for(int i=0; i<lv->parameters.size(); i++){
+                                    if(lv->parameters.at(i)->type_value == fun->parameters.at(i)->type_value){
+                                    }else{
+                                        error = true;
+                                        break;
+                                    }
+                                }
+                                if(!error){
+                                    for(int i=0; i<lv->parameters.size(); i++){
+                                        fun->parameters.at(i)->value = lv->parameters.at(i)->value;
+                                    }
+                                    currentEnviroment = new ScopeNode();
+                                    currentEnviroment->actuallyClass = fun;
+                                    QueueScope.newScope(currentEnviroment);
+                                    NodoAST tmp = fun->instructions;
+                                    Recorrer(&tmp);
+                                    QueueScope.deleteScope();
+                                }else{
+                                    QString description = "Error de tipos, al pasarle datos a la funcion " + sym->id;
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }else{
+                                QString description = "No hay la misma cantidad de valores que la funcion esta esperando";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }else{
+                            QString description = "La funcion " + sym->id + " no ha sido declarada";
+                            Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                            semanticError.push_back(error);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        break;
+        case LEXP:
+        {
+            for(int x=0; x<node->child.size(); x++){
+                NodoAST tmp = node->child.at(x);
+                sym->parameters.push_back(Recorrer(&tmp));
+            }
+        }
+        break;
     }
     return sym;
 }
@@ -3285,6 +3443,8 @@ int Travel::AsignType(QString type){
         return CARACTER;
     }else if(type.toLower() == "cadena"){
         return CADENA;
+    }else if(type.toLower() == "void"){
+        return VOID;
     }
     return 0;
 }
