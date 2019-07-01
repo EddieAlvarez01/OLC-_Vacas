@@ -2798,9 +2798,9 @@ Symbol* Travel::Recorrer(NodoAST *node){
         break;
         case BOOLEAN:
         {
-            if(node->value == "falso"){
+            if(node->value.toLower() == "falso"){
                 node->value = "false";
-            }else if(node->value == "verdadero"){
+            }else if(node->value.toLower() == "verdadero"){
                 node->value = "true";
             }
             sym->type_value = BOOLEAN;
@@ -2999,6 +2999,62 @@ Symbol* Travel::Recorrer(NodoAST *node){
                 }
             }else{
                 QString description = "No existe la variable " + id;
+                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                semanticError.push_back(error);
+            }
+        }
+        break;
+        case SI:
+        {
+            NodoAST tmp = node->child.at(0);
+            Symbol *cond = Recorrer(&tmp);
+            if(cond->type_value == BOOLEAN){
+                if(node->child.size() == 2){
+                    switch (node->child.at(1).typeofValue) {
+                        case LSENTENCIAS:
+                        {
+                            if(QVariant(cond->value).toBool()){
+                                currentEnviroment = new ScopeNode();
+                                QueueScope.newScope(currentEnviroment);
+                                NodoAST tmp = node->child.at(1);
+                                Recorrer(&tmp);
+                                currentEnviroment = QueueScope.deleteScope();
+                            }
+                        }
+                        break;
+                        case ELSE:
+                        {
+                            if(!QVariant(cond->value).toBool()){
+                                if(node->child.at(1).child.size() != 0){
+                                    currentEnviroment = new ScopeNode();
+                                    QueueScope.newScope(currentEnviroment);
+                                    NodoAST tmp = node->child.at(1).child.at(0);
+                                    Recorrer(&tmp);
+                                    currentEnviroment = QueueScope.deleteScope();
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }else if(node->child.size() == 3){
+                    if(QVariant(cond->value).toBool()){
+                        currentEnviroment = new ScopeNode();
+                        QueueScope.newScope(currentEnviroment);
+                        NodoAST tmp = node->child.at(1);
+                        Recorrer(&tmp);
+                        currentEnviroment = QueueScope.deleteScope();
+                    }else{
+                        if(node->child.at(2).child.size() != 0){
+                            currentEnviroment = new ScopeNode();
+                            QueueScope.newScope(currentEnviroment);
+                            NodoAST tmp = node->child.at(2).child.at(0);
+                            Recorrer(&tmp);
+                            currentEnviroment = QueueScope.deleteScope();
+                        }
+                    }
+                }
+            }else{
+                QString description = "No se puede evaluar en el si una condicion no booleana";
                 Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                 semanticError.push_back(error);
             }

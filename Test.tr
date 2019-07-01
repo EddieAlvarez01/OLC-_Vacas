@@ -1,6 +1,16 @@
 clase persona {
 	entero sasa = 45*7-20$
 	sasa = 80/2$
+	entero sucu = sasa + 5$
+	si(sasa < sucu){
+		sasa = 2$
+	}
+	si(sucu == 0){
+		entero id = 9$
+	}sino{
+		entero sasa = 1000$
+		sucu = 20$
+	}
 }
 clase Operacion extender io, salmonela{
 	entero io = 34$
