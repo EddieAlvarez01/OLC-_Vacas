@@ -41,6 +41,7 @@ void MainWindow::on_actionCompilar_triggered()
         plot->generarImagen();
         Travel *travel = new Travel();
         travel->Recorrer(raiz);
+        travel->StartProgram();
         QString chain = "";
         for(int x=0; x<travel->consoleMsg.size(); x++){
             chain += travel->consoleMsg.at(x) + "\n";

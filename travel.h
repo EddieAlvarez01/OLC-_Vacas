@@ -26,6 +26,8 @@ public:
     Symbol* SearchidScope(QString id);
     QList<QString> consoleMsg;
     int AsignType(QString type);
+    QString keyMain = "";
+    void StartProgram();
 };
 
 #endif // TRAVEL_H

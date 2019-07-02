@@ -144,6 +144,8 @@ int NodoAST::getTypeofValue(){
         return 65;
     }else if(type == "imprimir"){
         return 66;
+    }else if(type == "-"){
+        return 68;
     }
     return 0;
 }

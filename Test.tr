@@ -1,6 +1,7 @@
 clase persona {
 	entero sasa = 45*7-20$
 	sasa = 80/2$
+	entero omni = -40$
 	entero sucu = sasa + 5$
 	si(sasa < sucu){
 		sasa = 2$

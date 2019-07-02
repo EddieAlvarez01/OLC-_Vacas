@@ -67,7 +67,8 @@ enum Choice{
     TRANSFERIR = 64,
     LDIMENSIONESASIG = 65,
     IMPRIMIR = 66,
-    VOID = 67
+    VOID = 67,
+    MENOS = 68
 };
 
 Symbol* Travel::Recorrer(NodoAST *node){
@@ -172,9 +173,6 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 sym->parameters = list->parameters;
                                 sym->id = sym->imports.at(0);
                                 sym->instructions = fun.child.at(1);
-                            }
-                            for(int x=0; x<sym->parameters.size(); x++){
-                                sym->propertys.insert(sym->parameters.at(x)->id, sym->parameters.at(x));
                             }
                             currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
                         }else if(node->child.at(3).typeofValue == EXPRESION){
@@ -399,9 +397,6 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 sym->id = sym->imports.at(0);
                                 sym->instructions = fun.child.at(1);
                             }
-                            for(int x=0; x<sym->parameters.size(); x++){
-                                sym->propertys.insert(sym->parameters.at(x)->id, sym->parameters.at(x));
-                            }
                             currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
                         }else if(node->child.at(2).typeofValue == EXPRESION){
                             NodoAST tmp = node->child.at(2);
@@ -572,9 +567,6 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 newS->type = sym->type;
                                 newS->role = sym->role;
                                 newS->parameters = sym->parameters;
-                                for(int y=0; y<newS->parameters.size(); y++){
-                                    newS->propertys.insert(newS->parameters.at(y)->id, newS->parameters.at(y));
-                                }
                                 newS->type_value = sym->type_value;
                                 newS->id = sym->imports.at(x);
                                 newS->value = sym->value;
@@ -586,11 +578,6 @@ Symbol* Travel::Recorrer(NodoAST *node){
                             Symbol *newS = new Symbol();
                             newS->access = sym->access;
                             newS->type = sym->type;
-                            newS->role = sym->role;
-                            newS->parameters = sym->parameters;
-                            for(int y=0; y<newS->parameters.size(); y++){
-                                newS->propertys.insert(newS->parameters.at(y)->id, newS->parameters.at(y));
-                            }
                             newS->type_value = sym->type_value;
                             newS->id = sym->imports.at(x);
                             currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
@@ -3338,14 +3325,21 @@ Symbol* Travel::Recorrer(NodoAST *node){
             if(node->child.size() == 1){
                 Symbol *fun = SearchidScope(sym->id);
                 if(fun != nullptr){
-                    if(fun->parameters.size() == 0){
+                    Symbol *sonFun = new Symbol();
+                    sonFun->id = fun->id;
+                    sonFun->role = fun->role;
+                    sonFun->access = fun->access;
+                    sonFun->instructions = fun->instructions;
+                    sonFun->type_value = fun->type_value;
+                    sonFun->parameters = fun->parameters;
+                    if(sonFun->parameters.size() == 0){
                         currentEnviroment = new ScopeNode();
                         QueueScope.newScope(currentEnviroment);
-                        NodoAST tmp = fun->instructions;
+                        NodoAST tmp = sonFun->instructions;
                         Recorrer(&tmp);
                         currentEnviroment = QueueScope.deleteScope();
                     }else{
-                        QString description = "La funcion " + sym->id + " esta esperando parametros";
+                        QString description = "La funcion " + sonFun->id + " esta esperando parametros";
                         Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                         semanticError.push_back(error);
                     }
@@ -3360,12 +3354,19 @@ Symbol* Travel::Recorrer(NodoAST *node){
                     {
                         Symbol *fun = SearchidScope(sym->id);
                         if(fun != nullptr){
+                            Symbol *sonFun = new Symbol();
+                            sonFun->id = fun->id;
+                            sonFun->role = fun->role;
+                            sonFun->access = fun->access;
+                            sonFun->instructions = fun->instructions;
+                            sonFun->type_value = fun->type_value;
+                            sonFun->parameters = fun->parameters;
                             NodoAST tmp = node->child.at(1);
                             Symbol *lv = Recorrer(&tmp);
                             bool error = false;
-                            if(lv->parameters.size() == fun->parameters.size()){
+                            if(lv->parameters.size() == sonFun->parameters.size()){
                                 for(int i=0; i<lv->parameters.size(); i++){
-                                    if(lv->parameters.at(i)->type_value == fun->parameters.at(i)->type_value){
+                                    if(lv->parameters.at(i)->type_value == sonFun->parameters.at(i)->type_value){
                                     }else{
                                         error = true;
                                         break;
@@ -3373,16 +3374,24 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 }
                                 if(!error){
                                     for(int i=0; i<lv->parameters.size(); i++){
-                                        fun->parameters.at(i)->value = lv->parameters.at(i)->value;
+                                        sonFun->parameters.at(i)->value = lv->parameters.at(i)->value;
+                                    }
+                                    for(int x=0; x<sonFun->parameters.size(); x++){
+                                        Symbol *tmp = new Symbol();
+                                        tmp->id = sonFun->parameters.at(x)->id;
+                                        tmp->role = sonFun->parameters.at(x)->role;
+                                        tmp->type_value = sonFun->parameters.at(x)->type_value;
+                                        tmp->value = sonFun->parameters.at(x)->value;
+                                        sonFun->propertys.insert(tmp->id, tmp);
                                     }
                                     currentEnviroment = new ScopeNode();
-                                    currentEnviroment->actuallyClass = fun;
+                                    currentEnviroment->actuallyClass = sonFun;
                                     QueueScope.newScope(currentEnviroment);
-                                    NodoAST tmp = fun->instructions;
+                                    NodoAST tmp = sonFun->instructions;
                                     Recorrer(&tmp);
-                                    QueueScope.deleteScope();
+                                    currentEnviroment = QueueScope.deleteScope();
                                 }else{
-                                    QString description = "Error de tipos, al pasarle datos a la funcion " + sym->id;
+                                    QString description = "Error de tipos, al pasarle datos a la funcion " + sonFun->id;
                                     Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                                     semanticError.push_back(error);
                                 }
@@ -3392,7 +3401,7 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 semanticError.push_back(error);
                             }
                         }else{
-                            QString description = "La funcion " + sym->id + " no ha sido declarada";
+                            QString description = "La funcion " + fun->id + " no ha sido declarada";
                             Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
                             semanticError.push_back(error);
                         }
@@ -3410,8 +3419,82 @@ Symbol* Travel::Recorrer(NodoAST *node){
             }
         }
         break;
+        case MAIN:
+        {
+            if(node->child.size() > 0){
+                keyMain = currentEnviroment->actuallyClass->id;
+                sym->role = "principal";
+                sym->id = "principal";
+                sym->instructions = node->child.at(0);
+                currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
+            }else{
+                keyMain = currentEnviroment->actuallyClass->id;
+                sym->role = "principal";
+                sym->id = "principal";
+                currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
+            }
+        }
+        break;
+        case MENOS:
+        {
+            NodoAST tmp = node->child.at(0);
+            Symbol *ss = Recorrer(&tmp);
+            switch (ss->type_value) {
+                case NUMERO:
+                {
+                    sym->type_value = NUMERO;
+                    int result = -(ss->value.toInt());
+                    sym->value = QString::number(result);
+                }
+                break;
+                case DECIMAL:
+                {
+                    sym->type_value = DECIMAL;
+                    double result = -(ss->value.toDouble());
+                    sym->value = QString::number(result);
+                }
+                break;
+                default:
+                {
+                    QString description = "No se puede poner \"-\" a un no numero";
+                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                    semanticError.push_back(error);
+                }
+                break;
+            }
+        }
+        break;
     }
     return sym;
+}
+
+void Travel::StartProgram(){
+    if(keyMain != ""){
+        Symbol *cl = listClass.value(keyMain, nullptr);
+        if(cl != nullptr){
+            Symbol *mm = cl->propertys.value("principal", nullptr);
+            if(mm != nullptr){
+                currentEnviroment = new ScopeNode();
+                currentEnviroment->actuallyClass = cl;
+                QueueScope.newScope(currentEnviroment);
+                NodoAST  tmp = mm->instructions;
+                Recorrer(&tmp);
+                currentEnviroment = QueueScope.deleteScope();
+            }else{
+                QString description = "No hay una funcion principal definida";
+                Semantic_Error *error = new Semantic_Error(0, 0, "Semantico", description);
+                semanticError.push_back(error);
+            }
+        }else{
+            QString description = "No hay una funcion principal definida";
+            Semantic_Error *error = new Semantic_Error(0, 0, "Semantico", description);
+            semanticError.push_back(error);
+        }
+    }else{
+        QString description = "No hay una funcion principal definida";
+        Semantic_Error *error = new Semantic_Error(0, 0, "Semantico", description);
+        semanticError.push_back(error);
+    }
 }
 
 void Travel::CopyLIDS(QList<QString> &original, QList<QString> copy){
