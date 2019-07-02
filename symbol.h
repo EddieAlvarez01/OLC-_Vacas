@@ -28,6 +28,10 @@ public:
     QList<QString> imports;
     NodoAST instructions;
     QList<Symbol*> parameters;
+    QString path = "";
+    QString conj = "";
+    QString regx = "";
+    QString enter = "";
 
 };
 

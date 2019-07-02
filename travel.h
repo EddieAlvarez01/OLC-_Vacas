@@ -12,6 +12,8 @@
 #include <math.h>
 #include <iostream>
 #include <algorithm>
+#include <QFile>
+#include <QTextStream>
 
 class Travel
 {

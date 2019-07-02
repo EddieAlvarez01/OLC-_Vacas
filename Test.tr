@@ -37,11 +37,16 @@ clase Operacion extender io, salmonela{
 clase umihyu{
 	doble isi = 4580+8 /5$
 	doble cr = 78/'@'$
-	entero ff = 7 / falso$
 	doble pp = 78 ^ 2.1$
 	publico void suma(entero numero1, entero numero2){
 		entero suma = numero1 + numero2$
 		imprimir(suma)$
 	}
 	suma(5, 8*9)$
+	Archivo anuma = CrearArchivoDer("prueba.der")$
+	anuma.crearConjunto("letra", "a~z")$
+	anuma.crearRegex("ExpReg1", ".{letra}*|\"_\"|{letra}\'")$
+	anuma.crearEntrada("ExpReg1", "34.44")$
+	anuma.guardarArchivo()$
+	principal(){}
 }

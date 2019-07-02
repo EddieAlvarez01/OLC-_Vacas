@@ -20,6 +20,16 @@ private slots:
 
     void on_actionGenerar_AST_triggered();
 
+    void on_actionAbrir_Archivo_triggered();
+
+    void on_actionCrear_Archivo_triggered();
+
+    void on_actionReporte_de_Errores_triggered();
+
+    void on_actionGuardar_Archivo_triggered();
+
+    void on_actionGuardar_Como_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

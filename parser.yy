@@ -4,6 +4,8 @@
 #include "qdebug.h"
 #include <string.h>
 #include <iostream>
+#include <QList>
+#include <semantic_error.h>
 extern int yylineno; //linea actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON

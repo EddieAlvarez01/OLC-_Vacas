@@ -31,7 +31,7 @@ decimal [0-9]+"."[0-9]+
 id {letra}({letra}|{numero}|"_")*
 caracter "'"."'"
 caracter_especial ("\\\\"|"\\n"|"\\t"|"\\r"|"\\\""|"\\'")
-cadena "\""[^"\""]*"\""
+cadena "\""(?:[^"\"""\\"]|"\\".)*"\""
 
 
 %%
@@ -129,6 +129,7 @@ INITIAL
 /*                    errorT *nuevoE = new errorT("Lexico",yytext,linea, columna);
                     listaErrores->append(*nuevoE);
 */
+
                     std::cout <<yytext <<" Error Lexico en la linea "<< linea << " Columna:"<< columna<<  std::endl;
                 }
 }

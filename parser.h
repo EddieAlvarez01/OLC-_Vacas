@@ -134,7 +134,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 23 "parser.yy"
+#line 25 "parser.yy"
 
 char TEXT [256];
 class NodoAST* nodito;

@@ -68,7 +68,8 @@ enum Choice{
     LDIMENSIONESASIG = 65,
     IMPRIMIR = 66,
     VOID = 67,
-    MENOS = 68
+    MENOS = 68,
+    ARCHIVO = 69
 };
 
 Symbol* Travel::Recorrer(NodoAST *node){
@@ -347,6 +348,26 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 newS->value = sym->value;
                                 currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
                             }
+                        }else if(node->child.at(3).typeofValue == OBJETO){
+                            if(node->child.at(3).child.size() == 1){
+
+                            }else if(node->child.at(3).child.size() == 2){
+                                NodoAST tmp = node->child.at(3).child.at(1);
+                                Symbol *op = Recorrer(&tmp);
+                                if(op->type_value == CADENA){
+                                    sym->path = op->value.toLower();
+                                    sym->role = "objeto";
+                                    if(!sym->path.contains(".der")){
+                                        sym->path = sym->path + ".der";
+                                    }
+                                    sym->id = sym->imports.at(0);
+                                    currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
+                                }else{
+                                    QString description = "Al declarar una variable archivo se espera una cadena con el nombre";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }
                         }
                     }else{
                         for(int x=0; x<sym->imports.size(); x++){
@@ -571,6 +592,26 @@ Symbol* Travel::Recorrer(NodoAST *node){
                                 newS->id = sym->imports.at(x);
                                 newS->value = sym->value;
                                 currentEnviroment->actuallyClass->propertys.insert(newS->id, newS);
+                            }
+                        }else if(node->child.at(2).typeofValue == OBJETO){
+                            if(node->child.at(2).child.size() == 1){
+
+                            }else if(node->child.at(2).child.size() == 2){
+                                NodoAST tmp = node->child.at(2).child.at(1);
+                                Symbol *op = Recorrer(&tmp);
+                                if(op->type_value == CADENA && op->value != ""){
+                                    sym->path = op->value.toLower();
+                                    sym->role = "objeto";
+                                    if(!sym->path.contains(".der")){
+                                        sym->path = sym->path + ".der";
+                                    }
+                                    sym->id = sym->imports.at(0);
+                                    currentEnviroment->actuallyClass->propertys.insert(sym->id, sym);
+                                }else{
+                                    QString description = "Al declarar una variable archivo se espera una cadena con el nombre";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
                             }
                         }
                     }else{
@@ -2840,7 +2881,8 @@ Symbol* Travel::Recorrer(NodoAST *node){
         case CADENA:
         {
             sym->type_value = CADENA;
-            node->value.replace("\"", "");
+            node->value.replace(0,1,"");
+            node->value.replace(node->value.length()-1,1,"");
             sym->value = node->value;
         }
         break;
@@ -3407,6 +3449,91 @@ Symbol* Travel::Recorrer(NodoAST *node){
                         }
                     }
                     break;
+                    case ID:
+                    {
+                        if(node->child.at(1).value.toLower() == "crearconjunto"){
+                            Symbol *conj = SearchidScope(sym->id);
+                            if(conj != nullptr){
+                                NodoAST p1 = node->child.at(2);
+                                Symbol *op1 = Recorrer(&p1);
+                                NodoAST p2 = node->child.at(3);
+                                Symbol *op2 = Recorrer(&p2);
+                                if(op1->type_value == CADENA && op2->type_value == CADENA){
+                                    QString chain = "CONJ: " + op1->value + " -> " + op2->value + ";\n";
+                                    conj->conj += chain;
+                                }else{
+                                    QString description = "Crearconjunto recibe dos cadenas";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }else{
+                                QString description = "No existe la variable de tipo archivo";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }else if(node->child.at(1).value.toLower() == "crearregex"){
+                            Symbol *conj = SearchidScope(sym->id);
+                            if(conj != nullptr){
+                                NodoAST p1 = node->child.at(2);
+                                Symbol *op1 = Recorrer(&p1);
+                                NodoAST p2 = node->child.at(3);
+                                Symbol *op2 = Recorrer(&p2);
+                                if(op1->type_value == CADENA && op2->type_value == CADENA){
+                                    QString chain =  op1->value + " -> " + op2->value + ";\n";
+                                    conj->regx += chain;
+                                }else{
+                                    QString description = "CrearRegex recibe dos cadenas";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }else{
+                                QString description = "No existe la variable de tipo archivo";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }else if(node->child.at(1).value.toLower() == "crearentrada"){
+                            Symbol *conj = SearchidScope(sym->id);
+                            if(conj != nullptr){
+                                NodoAST p1 = node->child.at(2);
+                                Symbol *op1 = Recorrer(&p1);
+                                NodoAST p2 = node->child.at(3);
+                                Symbol *op2 = Recorrer(&p2);
+                                if(op1->type_value == CADENA && op2->type_value == CADENA){
+                                    QString chain =  op1->value + " : \"" + op2->value + "\";\n";
+                                    conj->enter += chain;
+                                }else{
+                                    QString description = "CrearEntrada recibe dos cadenas";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }else{
+                                QString description = "No existe la variable de tipo archivo";
+                                Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                semanticError.push_back(error);
+                            }
+                        }else if(node->child.at(1).value.toLower() == "guardararchivo"){
+                            Symbol *conj = SearchidScope(sym->id);
+                            if(conj != nullptr){
+                                    QFile file(conj->path);
+                                    if(file.open(QIODevice::WriteOnly | QIODevice::Text)){
+                                        QTextStream data(&file);
+                                        data << "{" << endl;
+                                        data << conj->conj << endl;
+                                        data << conj->regx << endl;
+                                        data << "%%" << endl;
+                                        data << "%%" << endl;
+                                        data << conj->enter << endl;
+                                        data << "}" << endl;
+                                    }
+                                    file.close();
+                                }else{
+                                    QString description = "CrearEntrada recibe dos cadenas";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -3528,6 +3655,8 @@ int Travel::AsignType(QString type){
         return CADENA;
     }else if(type.toLower() == "void"){
         return VOID;
+    }else if(type.toLower() == "archivo"){
+        return ARCHIVO;
     }
     return 0;
 }
