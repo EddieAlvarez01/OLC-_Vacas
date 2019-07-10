@@ -3098,6 +3098,40 @@ Symbol* Travel::Recorrer(NodoAST *node){
                         }
                     }
                     break;
+                    case DIMENSION:
+                    {}
+                    break;
+                    case OBJETO:
+                    {
+                        if(node->child.at(1).child.size() == 1){
+
+                        }else if(node->child.at(1).child.size() == 2){
+                            if(node->child.at(1).child.at(0).value.toLower() == "creararchivoder"){
+                                if(ss->type_value == ARCHIVO){
+                                    NodoAST tmp = node->child.at(1).child.at(1);
+                                    sym = Recorrer(&tmp);
+                                    if(sym->type_value == CADENA){
+                                        ss->path = sym->value.toLower();
+                                        ss->role = "objeto";
+                                        if(!ss->path.contains(".der")){
+                                            ss->path = ss->path + ".der";
+                                        }
+                                    }else{
+                                        QString description = "Al declarar una variable archivo se espera una cadena con el nombre";
+                                        Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                        semanticError.push_back(error);
+                                    }
+                                }else{
+                                    QString description = "No se puede declarar un archivo en una variable no tipo archivo";
+                                    Semantic_Error *error = new Semantic_Error(node->row, node->column, "Semantico", description);
+                                    semanticError.push_back(error);
+                                }
+                            }else{
+
+                            }
+                        }
+                    }
+                    break;
                 }
             }else{
                 QString description = "No existe la variable " + id;
