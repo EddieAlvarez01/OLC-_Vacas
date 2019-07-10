@@ -46,7 +46,7 @@ void MainWindow::on_actionCompilar_triggered()
         Travel *travel = new Travel();
         travel->Recorrer(raiz);
         travel->StartProgram();
-        if(travel->semanticError.size() == 0){
+        if(travel->semanticError.size() != 0){
             QString chain = "";
             for(int x=0; x<travel->consoleMsg.size(); x++){
                 chain += travel->consoleMsg.at(x) + "\n";
