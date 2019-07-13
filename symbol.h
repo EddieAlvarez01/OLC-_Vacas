@@ -1,7 +1,6 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
 
-#include "lexiconode.h"
 #include "nodoast.h"
 #include <QString>
 #include <QHash>
@@ -12,7 +11,8 @@ class Symbol
 {
 public:
     Symbol();
-    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol*>, int, int, int, QLinkedList<LexicoNode>, NodoAST, QString);
+    Symbol(Symbol *);
+    Symbol(int, int, QString, int, QString, QString, int, QHash<QString, Symbol*>, int, int, int, QLinkedList<Symbol*>, NodoAST, QString);
     int row, column;
     QString id;
     int type_value;
@@ -24,7 +24,7 @@ public:
     int dimension1;
     int dimension2;
     int dimension3;
-    QLinkedList<LexicoNode> linearize;
+    QLinkedList<Symbol*> linearize;
     QList<QString> imports;
     NodoAST instructions;
     QList<Symbol*> parameters;
@@ -32,7 +32,10 @@ public:
     QString conj = "";
     QString regx = "";
     QString enter = "";
-
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    Symbol *regresa;
 };
 
 #endif // SYMBOL_H

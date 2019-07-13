@@ -8,6 +8,7 @@
 #include "plotter.h"
 #include "nodoast.h"
 #include "travel.h"
+#include <QMessageBox>
 
 extern int yyparse();
 extern NodoAST *raiz;
@@ -45,13 +46,19 @@ void MainWindow::on_actionCompilar_triggered()
         plot->generarImagen();
         Travel *travel = new Travel();
         travel->Recorrer(raiz);
+        travel->InitClassValues();
+        travel->chargeImports();
         travel->StartProgram();
-        if(travel->semanticError.size() != 0){
+        if(travel->semanticError.size() == 0){
             QString chain = "";
             for(int x=0; x<travel->consoleMsg.size(); x++){
                 chain += travel->consoleMsg.at(x) + "\n";
             }
             ui->textEdit->setText(chain);
+            for(int x=0; x<travel->notifyMsg.size(); x++){
+                QMessageBox msg(travel->notifyMsg.at(x)->title, travel->notifyMsg.at(x)->message, QMessageBox::NoIcon, QMessageBox::Yes, QMessageBox::NoButton, QMessageBox::NoButton);
+                msg.exec();
+            }
             QString syt = "";
             QHash<QString, Symbol*>::const_iterator i = travel->listClass.constBegin();
             while(i != travel->listClass.constEnd()){

@@ -1,0 +1,9 @@
+clase Factorial{
+	publico entero factorial(entero num){
+		si(num == 0){
+			retornar 1$
+		}sino{
+			retornar num * factorial(num - 1)$
+		}
+	}
+}

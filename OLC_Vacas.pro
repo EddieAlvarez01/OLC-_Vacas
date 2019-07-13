@@ -32,11 +32,11 @@ SOURCES += \
     parser.cpp \
     plotter.cpp \
     symbol.cpp \
-    lexiconode.cpp \
     scopenode.cpp \
     tailscope.cpp \
     travel.cpp \
-    semantic_error.cpp
+    semantic_error.cpp \
+    notify.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,11 +45,11 @@ HEADERS += \
     parser.h \
     plotter.h \
     symbol.h \
-    lexiconode.h \
     scopenode.h \
     tailscope.h \
     travel.h \
-    semantic_error.h
+    semantic_error.h \
+    notify.h
 
 FORMS += \
         mainwindow.ui

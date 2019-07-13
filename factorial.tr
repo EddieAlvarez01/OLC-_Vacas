@@ -1,0 +1,26 @@
+clase Factorial{
+	publico entero factorial(entero num){
+		si(num == 0){
+			retornar 1$
+		}sino{
+			retornar num * factorial(num - 1)$
+		}
+	}
+}
+
+Clase Oc extender factorial{
+	void prueba(entero numero){
+		repetir(5){
+			numero = numero -1$
+			imprimir(numero)$
+		}
+	}
+	principal(){
+		entero num = 5$
+		Factorial fact$
+		imprimir("El factorial de " + num + "es de " + fact.factorial(num))$
+		prueba(6)$
+		entero a = factorial(3)$
+		imprimir(a)$
+	}
+} 
